@@ -29,30 +29,44 @@ class PairData(Data):
             return super(PairData, self).__inc__(key, value)
     
 
+class PairDataset(Dataset):
+    def __init__(self, cluster_file_dir):
+        self.clusters, self.cluster_sizes = read_cluster_file(cluster_file_dir)
+        print(self.clusters)
+        print(self.cluster_sizes)
+    
+    def __len__():
+        return sum(self.cluster_sizes)
+
+
+def read_cluster_file(cluster_file_dir):
+    """
+    Read the clustered pockets as a list of lists.
+    """
+    f = open(cluster_file_dir, 'r')
+    data_text = f.read()
+    f.close()
+    data_text = data_text.split('\n')
+    
+    while('' in data_text): 
+        data_text.remove('')
+
+    clusters = []
+    cluster_sizes = []
+    for x in data_text:
+        cluster = x.split()[3:]
+        cluster = [x.split(',')[0] for x in cluster]
+        clusters.append(cluster)
+        cluster_sizes.append(len(cluster))
+
+    return clusters, cluster_sizes
+
+
 if __name__=="__main__":
-    edge_index_a = torch.tensor([
-        [0, 0, 0, 0],
-        [1, 2, 3, 4],
-    ])
-    x_a = torch.randn(5, 8)  # 5 nodes.
-    edge_attr_a = torch.randn(4, 2)
+    cluster_file_dir = '../data/googlenet-classes'
+    dataset = PairDataset(cluster_file_dir=cluster_file_dir)
 
-    edge_index_b = torch.tensor([
-        [0, 0, 0],
-        [1, 2, 3],
-    ])
-    x_b = torch.randn(4, 8)  # 4 nodes.
-    edge_attr_b = torch.randn(3, 2)
-
-    y = torch.tensor([1])
-
-    data = PairData(x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b)
-    data_list = [data, data]
-    loader = DataLoader(data_list, batch_size=2, follow_batch=['x_a', 'x_b'])
-    batch_data = next(iter(loader))
-
-    print(batch_data)
-    print(batch_data.edge_index_a)
-    print(batch_data.edge_index_b)
-    print(batch_data.x_a_batch)
-    print(batch_data.x_b_batch)
+    #data = PairData(x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b)
+    #data_list = [data, data]
+    #loader = DataLoader(data_list, batch_size=2, follow_batch=['x_a', 'x_b'])
+    #batch_data = next(iter(loader))
