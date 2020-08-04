@@ -1,7 +1,7 @@
 """
 Dataloader for the Siamese graph neural network. 
 """
-from random import sample
+import random
 import torch
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
@@ -29,25 +29,45 @@ class PairData(Data):
         else:
             return super(PairData, self).__inc__(key, value)
     
-
+'''
 class PairDataset(Dataset):
     def __init__(self, cluster_file_dir, num_classes, th):
-        """
-        Arguments:
-        cluster_file_dir: directory of the cluster file.
-        num_classes: number of classes to keep.
-        th: threshold of maximum number of pockets in one class.
-        """
-        # read the original clustered pockets
-        self.clusters = read_cluster_file(cluster_file_dir)
 
-        # select clusters according to rank of sizes and sample large clusters
-        self.clusters, self.cluster_sizes = select_classes(self.clusters, num_classes, th)
-        print(self.clusters)
-        print(self.cluster_sizes)
+
 
     def __len__():
         return sum(self.cluster_sizes)
+
+    def __gen_pos_pairs(self):
+
+    def __gen_neg_pairs()
+'''
+
+def divide_and_gen_pairs(cluster_file_dir, num_classes, th):
+    """
+    Generate pairs of pockets for train, validation, and test.
+
+    Arguments:
+        cluster_file_dir: directory of the cluster file.
+        num_classes: number of classes to keep.
+        th: threshold of maximum number of pockets in one class.
+    """
+    # read the original clustered pockets
+    clusters = read_cluster_file(cluster_file_dir)
+
+    # select clusters according to rank of sizes and sample large clusters
+    clusters = select_classes(clusters, num_classes, th)
+
+    # divide the clusters into train, validation and test
+    train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
+
+    # train pairs
+
+    # validation pairs
+
+    # test pairs
+
+    
 
 
 def read_cluster_file(cluster_file_dir):
@@ -86,9 +106,9 @@ def select_classes(clusters, num_classes, th):
     for i in range(num_classes):
         selected_classes.append(sample_from_list(clusters[i], th))
 
-    select_classe_lengths = [len(x) for x in selected_classes]
+    #select_classe_lengths = [len(x) for x in selected_classes]
 
-    return selected_classes, select_classe_lengths
+    return selected_classes
     
 
 def sample_from_list(cluster, th):
@@ -96,14 +116,49 @@ def sample_from_list(cluster, th):
     Randomly samples th pockets if number of pockets larger than th. 
     """
     if len(cluster) > th:
-        return sample(cluster, th)
+        return random.sample(cluster, th)
     else:
         return cluster
 
 
+def divide_clusters(clusters):
+    """
+    Shuffle and divide the clusters into train, validation and test
+    """
+    # shuffle the pockets in each cluster
+    [random.shuffle(x) for x in clusters] # random.shuffle happens inplace
+
+    # sizes of the clusters
+    cluster_sizes = [len(x) for x in clusters]
+    #print(cluster_sizes)
+
+    # train
+    train_sizes = [int(0.6 * x) for x in cluster_sizes]
+
+    # validation
+    val_sizes = [int(0.2 * x) for x in cluster_sizes]
+
+    # test
+    train_val_sizes = [sum(x) for x in zip(train_sizes, val_sizes)]
+    test_sizes = [a - b for a, b in zip(cluster_sizes, train_val_sizes)]
+
+    train_clusters = []
+    val_clusters = []
+    test_clusters = []
+    for i in range(len(clusters)):
+        train_clusters.append(clusters[i][0:train_sizes[i]])
+        val_clusters.append(clusters[i][train_sizes[i]: train_sizes[i]+val_sizes[i]])
+        test_clusters.append(clusters[i][train_sizes[i]+val_sizes[i]:])
+    
+    return train_clusters, val_clusters, test_clusters
+
+
 if __name__=="__main__":
     cluster_file_dir = '../data/googlenet-classes'
-    dataset = PairDataset(cluster_file_dir=cluster_file_dir, num_classes=300, th=800)
+    #dataset = PairDataset(cluster_file_dir=cluster_file_dir, num_classes=300, th=800)
+    divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, num_classes=150, th=800)
+
+
 
     #data = PairData(x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b)
     #data_list = [data, data]
