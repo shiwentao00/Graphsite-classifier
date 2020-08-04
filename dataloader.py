@@ -12,28 +12,15 @@ from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 
 
-class PairData(Data):
-    """
-    Paired data type. Each object has 2 graphs.
-    """
-    def __init__(self,x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b, y):
-        super(PairData, self).__init__(y=y)
-        self.x_a = x_a
-        self.edge_index_a = edge_index_a
-        self.edge_attr_a = edge_attr_a
+def dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True):
+    train_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
+    val_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
+    test_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=test_pos_pairs, neg_pairs=test_neg_pairs, features_to_use=features_to_use)
+    tarin_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, follow_batch=['x_a', 'x_b'])
+    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, follow_batch=['x_a', 'x_b'])
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True, follow_batch=['x_a', 'x_b'])
+    return tarin_loader, val_loader, test_loader
 
-        self.x_b = x_b
-        self.edge_index_b = edge_index_b        
-        self.edge_attr_b = edge_attr_b
-
-    def __inc__(self, key, value):
-        if key == 'edge_index_a':
-            return self.x_a.size(0)
-        if key == 'edge_index_b':
-            return self.x_b.size(0)
-        else:
-            return super(PairData, self).__inc__(key, value)
-    
 
 class PairDataset(Dataset):
     def __init__(self, pocket_dir, pos_pairs, neg_pairs, features_to_use):
@@ -82,11 +69,6 @@ class PairDataset(Dataset):
         pocket_b_dir = self.pocket_dir + pair[1] + '/' + pair[1] + '.mol2'
         profile_b_dir = self.pocket_dir + pair[1] + '/' + pair[1][0:-2] + '.profile'
         
-        print(pocket_a_dir)
-        print(profile_a_dir)
-        print(pocket_b_dir)
-        print(profile_b_dir)
-
         x_a, edge_index_a, edge_attr_a = self.__read_pocket(pocket_a_dir, profile_a_dir)
         x_b, edge_index_b, edge_attr_b = self.__read_pocket(pocket_b_dir, profile_b_dir)
 
@@ -259,6 +241,29 @@ class PairDataset(Dataset):
         return triple
 
 
+class PairData(Data):
+    """
+    Paired data type. Each object has 2 graphs.
+    """
+    def __init__(self,x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b, y):
+        super(PairData, self).__init__(y=y)
+        self.x_a = x_a
+        self.edge_index_a = edge_index_a
+        self.edge_attr_a = edge_attr_a
+
+        self.x_b = x_b
+        self.edge_index_b = edge_index_b        
+        self.edge_attr_b = edge_attr_b
+
+    def __inc__(self, key, value):
+        if key == 'edge_index_a':
+            return self.x_a.size(0)
+        if key == 'edge_index_b':
+            return self.x_b.size(0)
+        else:
+            return super(PairData, self).__inc__(key, value)
+
+
 def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th):
     """
     Divide the dataset and generate pairs of pockets for train, validation, and test.
@@ -403,9 +408,11 @@ if __name__=="__main__":
     num_classes = 150
     cluster_th = 400
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] # missing popsa files for sasa feature at this moment
+    batch_size = 4 # number of pairs in a mini-batch
 
     train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, num_classes=num_classes, cluster_th=cluster_th)
     
+
     print('number of classes:', num_classes)
     print('max number of data of each class:', cluster_th)
     print('number of train positive pairs:', len(train_pos_pairs))
@@ -415,10 +422,13 @@ if __name__=="__main__":
     print('number of test positive pairs:', len(test_pos_pairs))
     print('number of test negative pairs:', len(test_neg_pairs))
 
-    dataset = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
-    print(dataset[0])
+    tarin_loader, val_loader, test_loader = dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True)
 
+    batch_data = next(iter(tarin_loader))
+    print(batch_data)
+    print(batch_data.x_a_batch)
+    print(batch_data.x_b_batch)
     #data = PairData(x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b)
     #data_list = [data, data]
-    #loader = DataLoader(data_list, batch_size=2, follow_batch=['x_a', 'x_b'])
+    #
     #batch_data = next(iter(loader))
