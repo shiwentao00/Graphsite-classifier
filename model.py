@@ -92,9 +92,12 @@ class SiameseNet(torch.nn.Module):
         super(SiameseNet, self).__init__():
         embedding_net = EmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
-    def forward(self, pair_data):
-        return x
+    def forward(self, pairdata):
+        embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
+        embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
+        return embedding_a, embedding_b
+
+# logistic loss
 
 # constrastive loss
 
-# logistic loss
