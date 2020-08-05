@@ -9,13 +9,13 @@ from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 
 
-def dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True):
+def dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
     train_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
     val_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
     test_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=test_pos_pairs, neg_pairs=test_neg_pairs, features_to_use=features_to_use)
-    tarin_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, follow_batch=['x_a', 'x_b'])
-    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, follow_batch=['x_a', 'x_b'])
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True, follow_batch=['x_a', 'x_b'])
+    tarin_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'])
+    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'])
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'])
     return tarin_loader, val_loader, test_loader
 
 
