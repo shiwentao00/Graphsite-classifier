@@ -56,7 +56,7 @@ class PairDataset(Dataset):
             y = torch.tensor([0]) # pair label
         else:
             pair = self.pos_pairs[idx]
-            y = torch.tensor([1]) # pair label
+            y = torch.tensor([1], dtype=torch.long) # pair label
 
         # pocket a location
         pocket_a_dir = self.pocket_dir + pair[0] + '/' + pair[0] + '.mol2'

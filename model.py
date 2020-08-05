@@ -89,7 +89,7 @@ class EmbeddingNet(torch.nn.Module):
     
 class SiameseNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(SiameseNet, self).__init__():
+        super(SiameseNet, self).__init__()
         embedding_net = EmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, pairdata):
@@ -97,7 +97,53 @@ class SiameseNet(torch.nn.Module):
         embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
         return embedding_a, embedding_b
 
-# logistic loss
 
-# constrastive loss
+class ContrastiveLoss(torch.nn.Module):
+    """
+    ContrastiveLoss introduced in the paper "Dimensionality Reduction by Learning an Invariant Mapping".
+    We add L2 normalizations to constrain the input embeddings to be on a hypersphere of radius 1. 
+    The purpose of adding the normalization is for easy choice of the margin hyper-parameter.
+    """
+    def __init__(self, margin=2.0, normalize=True, mean=True):
+        super(ContrastiveLoss, self).__init__()
+        self.margin = margin # the margin in the paper
+        self.normalize = normalize # whether to normalize input embeddings
+        self.mean = mean # mean over batch or sum over batch
+
+    def forward(self, embedding_a, embedding_b, label):
+        """
+        label = 1 for similar pairs, 0 for dissimilar pairs.
+        """
+        if self.normalize == True:
+            embedding_a = F.normalize(embedding_a)
+            embedding_b = F.normalize(embedding_b)
+
+        euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
+
+        ls = label * torch.pow(euclidean_dist, 2) # loss for similar pairs
+
+        ld = (1 - label) * torch.pow(torch.clamp(self.margin - euclidean_dist, min=0), 2) # loss for dissimilar pairs 
+
+        loss = ls + ld 
+
+        if self.mean == True:
+            return loss.mean()
+        else:
+            return loss.sum()
+
+
+# TO-DO: logistic similarity for cross-entropy loss
+
+# TO-DO: similarity by dot product of node features
+
+
+if __name__=="__main__":
+    """
+    Main function for testing and debugging only
+    """
+    a = torch.tensor([[0,0,1],[1,2,3]], dtype=torch.float32)
+    b = torch.tensor([[0,0,-1],[1,2,3]], dtype=torch.float32)
+    y = torch.tensor([0], dtype=torch.long)
+    loss=ContrastiveLoss()
+    print(loss(a,b,y))
 
