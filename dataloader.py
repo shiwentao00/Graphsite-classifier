@@ -1,6 +1,3 @@
-"""
-Dataloader for the Siamese graph neural network. 
-"""
 import random
 import itertools
 import numpy as np
