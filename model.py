@@ -90,7 +90,7 @@ class EmbeddingNet(torch.nn.Module):
 class SiameseNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(SiameseNet, self).__init__()
-        embedding_net = EmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        self.embedding_net = EmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, pairdata):
         embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
@@ -117,9 +117,7 @@ class ContrastiveLoss(torch.nn.Module):
         if self.normalize == True:
             embedding_a = F.normalize(embedding_a)
             embedding_b = F.normalize(embedding_b)
-
         euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
-
         ls = label * torch.pow(euclidean_dist, 2) # loss for similar pairs
 
         ld = (1 - label) * torch.pow(torch.clamp(self.margin - euclidean_dist, min=0), 2) # loss for dissimilar pairs 
@@ -130,6 +128,9 @@ class ContrastiveLoss(torch.nn.Module):
             return loss.mean()
         else:
             return loss.sum()
+
+    def __repr__(self):
+        return 'ContrastiveLoss(margin={}, normalize={}, mean={})'.format(self.margin, self.normalize, self.mean)
 
 
 # TO-DO: logistic similarity for cross-entropy loss

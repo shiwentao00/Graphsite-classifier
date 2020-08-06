@@ -13,10 +13,10 @@ def dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, 
     train_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
     val_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
     test_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=test_pos_pairs, neg_pairs=test_neg_pairs, features_to_use=features_to_use)
-    tarin_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'])
-    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'])
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'])
-    return tarin_loader, val_loader, test_loader
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
+    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
+    return train_loader, val_loader, test_loader
 
 
 class PairDataset(Dataset):
@@ -261,7 +261,7 @@ class PairData(Data):
             return super(PairData, self).__inc__(key, value)
 
 
-def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th):
+def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th, train_pos_th, train_neg_th, val_pos_th, val_neg_th):
     """
     Divide the dataset and generate pairs of pockets for train, validation, and test.
 
@@ -280,10 +280,10 @@ def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th):
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
 
     # train pairs
-    train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=1200, neg_pair_th=25)
+    train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)
 
     # validation pairs
-    val_pos_pairs, val_neg_pairs = gen_pairs(clusters=val_clusters, pos_pair_th=1000, neg_pair_th=10)
+    val_pos_pairs, val_neg_pairs = gen_pairs(clusters=val_clusters, pos_pair_th=val_pos_th, neg_pair_th=val_neg_th)
 
     # test pairs
     test_pos_pairs, test_neg_pairs = gen_pairs(clusters=test_clusters, pos_pair_th=1000, neg_pair_th=10)
@@ -419,9 +419,9 @@ if __name__=="__main__":
     print('number of test positive pairs:', len(test_pos_pairs))
     print('number of test negative pairs:', len(test_neg_pairs))
 
-    tarin_loader, val_loader, test_loader = dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True)
+    train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True)
 
-    batch_data = next(iter(tarin_loader))
+    batch_data = next(iter(train_loader))
     print(batch_data)
     print(batch_data.x_a_batch)
     print(batch_data.x_b_batch)
