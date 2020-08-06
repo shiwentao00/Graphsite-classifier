@@ -278,6 +278,12 @@ def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th, train_pos_th
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
+    num_train_pockets = sum([len(x) for x in train_clusters])
+    num_val_pockets = sum([len(x) for x in val_clusters])
+    num_test_pockets = sum([len(x) for x in test_clusters])
+    print('number of pockets in training set: ', num_train_pockets)
+    print('number of pockets in validation set: ', num_val_pockets)
+    print('number of pockets in test set: ', num_test_pockets)
 
     # train pairs
     train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)
