@@ -56,6 +56,7 @@ def validate(batch_interval):
     Global vars: val_loader, val_size, device, model
     """
     model.eval()
+    
     val_loss = []
     total_loss = 0
     for cnt, data in enumerate(val_loader):
