@@ -64,8 +64,8 @@ class EmbeddingNet(torch.nn.Module):
         #self.conv6 = GINConv(nn6)
         #self.bn6 = torch.nn.BatchNorm1d(dim)
 
-        self.fc1 = Linear(dim, dim)
-        self.fc2 = Linear(dim, dim) # generate embedding here
+        #self.fc1 = Linear(dim, dim)
+        #self.fc2 = Linear(dim, dim) # generate embedding here
 
     def forward(self, x, edge_index, edge_attr, batch):
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
@@ -81,9 +81,9 @@ class EmbeddingNet(torch.nn.Module):
         #x = F.relu(self.conv6(x, edge_index))
         #x = self.bn6(x)
         x = global_add_pool(x, batch)
-        x = F.leaky_relu(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = F.leaky_relu(self.fc2(x))
+        #x = F.leaky_relu(self.fc1(x))
+        #x = F.dropout(x, p=0.5, training=self.training)
+        #x = F.leaky_relu(self.fc2(x))
         return x
 
     

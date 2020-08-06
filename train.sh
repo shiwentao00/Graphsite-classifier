@@ -11,7 +11,7 @@ module purge
 source activate graph
 cd /work/derick/siamese-monet-project/Siamese-MoNet
 
-singularity exec --nv -B /work,/project,/usr/lib64 /home/admin/singularity/pytorch-1.5.1-dockerhub-v4.simg python train.py &> ./train.txt 2>&1
+singularity exec --nv -B /work,/project,/usr/lib64 /home/admin/singularity/pytorch-1.5.1-dockerhub-v4.simg python train.py -loss_dir ./results/train_results_1.json &> ./results/train_1.txt 2>&1
 
 
 
