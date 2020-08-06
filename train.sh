@@ -3,8 +3,8 @@
 #PBS -q v100
 #PBS -l nodes=1:ppn=36
 #PBS -l walltime=72:00:00
-#PBS -N GINMolecule
-#PBS -A hpc_michal01
+#PBS -N Siamese-Monet
+#PBS -A hpc_gcn03
 #PBS -j oe
 
 module purge
