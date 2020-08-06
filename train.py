@@ -56,7 +56,7 @@ def validate(batch_interval):
     Global vars: val_loader, val_size, device, model
     """
     model.eval()
-    
+
     val_loss = []
     total_loss = 0
     for cnt, data in enumerate(val_loader):
@@ -173,7 +173,6 @@ if __name__=="__main__":
         if  epoch_loss < best_val_loss:
             best_val_loss = epoch_loss
             best_val_epoch = epoch
-        break
 
     print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
 
