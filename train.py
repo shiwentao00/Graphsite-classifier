@@ -64,10 +64,10 @@ def validate(batch_interval):
         loss = loss_function(embedding_a, embedding_b, data.y)
         total_loss += loss.item() * batch_size # last incomplete batch is dropped, so just use batch_size
 
-    # log average loss every batch_interval batches
-    if (cnt+1) % batch_interval == 0:
-        val_loss.append(total_loss / (batch_size*batch_interval))
-        total_loss = 0
+        # log average loss every batch_interval batches
+        if (cnt+1) % batch_interval == 0:
+            val_loss.append(total_loss / (batch_size*batch_interval))
+            total_loss = 0
 
     return val_loss
 
