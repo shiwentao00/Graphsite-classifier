@@ -370,10 +370,10 @@ def divide_clusters(clusters):
     #print(cluster_sizes)
 
     # train
-    train_sizes = [int(0.6 * x) for x in cluster_sizes]
+    train_sizes = [int(0.7 * x) for x in cluster_sizes]
 
     # validation
-    val_sizes = [int(0.2 * x) for x in cluster_sizes]
+    val_sizes = [int(0.15 * x) for x in cluster_sizes]
 
     # test
     train_val_sizes = [sum(x) for x in zip(train_sizes, val_sizes)]
@@ -386,7 +386,6 @@ def divide_clusters(clusters):
         train_clusters.append(clusters[i][0:train_sizes[i]])
         val_clusters.append(clusters[i][train_sizes[i]: train_sizes[i]+val_sizes[i]])
         test_clusters.append(clusters[i][train_sizes[i]+val_sizes[i]:])
-    
     return train_clusters, val_clusters, test_clusters
 
 

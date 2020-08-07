@@ -1,4 +1,5 @@
 import argparse
+import random
 import os
 import torch
 from torch_geometric.nn import DataParallel
@@ -20,6 +21,11 @@ def get_args():
                         default='../data/googlenet-dataset/',
                         required=False,
                         help='directory of pockets')
+
+    parser.add_argument('-trained_model_dir',
+                        default='../trained_models/trained_model_.pt/',
+                        required=False,
+                        help='directory to store the trained model.')                        
 
     parser.add_argument('-loss_dir',
                         default='./results/train_results.json/',
@@ -83,15 +89,17 @@ def compute_metrics(label, out):
 
 
 if __name__=="__main__":
+    random.seed(666) # deterministic sampled pockets and pairs from dataset
     args = get_args()
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
+    trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
     num_classes = 60
     print('number of classes:', num_classes)
-    cluster_th = 5000 # threshold of number of pockets in a class
-    print('max number of data of each class:', cluster_th)
+    cluster_th = 10000 # threshold of number of pockets in a class
+    #print('max number of data of each class:', cluster_th)
     
     train_pos_th = 3000 # threshold of number of positive train pairs for each class
     train_neg_th = 100 # threshold of number of negative train pairs for each combination
@@ -135,9 +143,6 @@ if __name__=="__main__":
     print('number of validation negative pairs:', len(val_neg_pairs))
     val_size = len(val_pos_pairs) + len(val_neg_pairs)
     
-    #print('number of test positive pairs:', len(test_pos_pairs))
-    #print('number of test negative pairs:', len(test_neg_pairs))
-
     train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, 
                                                            train_pos_pairs, 
                                                            train_neg_pairs, 
@@ -153,6 +158,9 @@ if __name__=="__main__":
     model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
+    #print("Model's state_dict:")
+    #for param_tensor in model.state_dict():
+    #    print(param_tensor, "\t", model.state_dict()[param_tensor].size())
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0002, amsgrad=False)
     print('optimizer:')
@@ -178,6 +186,7 @@ if __name__=="__main__":
         if  val_loss < best_val_loss:
             best_val_loss = val_loss
             best_val_epoch = epoch
+            torch.save(model.state_dict(), trained_model_dir)
 
     print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
 
