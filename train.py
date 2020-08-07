@@ -1,7 +1,8 @@
 import argparse
 import os
 import torch
-from dataloader import divide_and_gen_pairs, dataloader_gen
+from torch_geometric.nn import DataParallel
+from dataloader import divide_and_gen_pairs, dataloader_gen, dataloader_gen_multi_gpu
 from model import SiameseNet, ContrastiveLoss
 import sklearn.metrics as metrics
 import json
@@ -92,14 +93,14 @@ if __name__=="__main__":
     cluster_th = 900 # threshold of number of pockets in a class
     print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 1400 # threshold of number of positive train pairs for each class
-    train_neg_th = 50 # threshold of number of negative train pairs for each combination
+    train_pos_th = 1800 # threshold of number of positive train pairs for each class
+    train_neg_th = 60 # threshold of number of negative train pairs for each combination
     val_pos_th = 400 # threshold of number of positive validation pairs for each class
     val_neg_th = 15 # threshold of number of negative validation pairs for each combination
 
-    num_epochs = 200
+    num_epochs = 150
     
-    batch_size = 256
+    batch_size = 512
     print('batch size:', batch_size)
     
     num_workers = os.cpu_count()
@@ -108,6 +109,11 @@ if __name__=="__main__":
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
     print('device: ', device)
+
+    num_gpu = 0
+    if torch.cuda.is_available():
+        num_gpu = torch.cuda.device_count()
+    print('number of gpus: ', num_gpu)
 
     # missing popsa files for sasa feature at this moment
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
@@ -132,7 +138,20 @@ if __name__=="__main__":
     #print('number of test positive pairs:', len(test_pos_pairs))
     #print('number of test negative pairs:', len(test_neg_pairs))
 
-    train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, 
+    if num_gpu > 1:
+        train_loader, val_loader, test_loader = dataloader_gen_multi_gpu(pocket_dir, 
+                                                           train_pos_pairs, 
+                                                           train_neg_pairs, 
+                                                           val_pos_pairs, 
+                                                           val_neg_pairs, 
+                                                           test_pos_pairs, 
+                                                           test_neg_pairs, 
+                                                           features_to_use, 
+                                                           batch_size, 
+                                                           shuffle=True,
+                                                           num_workers=num_workers)        
+    else:
+        train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, 
                                                            train_pos_pairs, 
                                                            train_neg_pairs, 
                                                            val_pos_pairs, 
@@ -145,6 +164,8 @@ if __name__=="__main__":
                                                            num_workers=num_workers)
 
     model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    if num_gpu > 1:
+        DataParallel(model)
     print('model architecture:')
     print(model)
     
@@ -153,6 +174,8 @@ if __name__=="__main__":
     print(optimizer)
 
     loss_function = ContrastiveLoss(margin=2.0, normalize=True, mean=True) # differentiable, no parameters to train.
+    if num_gpu > 1:
+        DataParallel(loss_function)    
     print('loss function:')
     print(loss_function)
 
@@ -166,6 +189,8 @@ if __name__=="__main__":
         
         val_loss = validate() # list of losses every 50 mini-batches
         val_losses.append(val_loss)
+
+        print('train loss: {}, validation loss: {}.'.format(train_loss, val_loss))
 
         if  val_loss < best_val_loss:
             best_val_loss = val_loss
