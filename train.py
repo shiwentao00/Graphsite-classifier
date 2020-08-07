@@ -90,15 +90,15 @@ if __name__=="__main__":
     
     num_classes = 60
     print('number of classes:', num_classes)
-    cluster_th = 900 # threshold of number of pockets in a class
+    cluster_th = 5000 # threshold of number of pockets in a class
     print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 1800 # threshold of number of positive train pairs for each class
-    train_neg_th = 60 # threshold of number of negative train pairs for each combination
+    train_pos_th = 3000 # threshold of number of positive train pairs for each class
+    train_neg_th = 100 # threshold of number of negative train pairs for each combination
     val_pos_th = 400 # threshold of number of positive validation pairs for each class
     val_neg_th = 15 # threshold of number of negative validation pairs for each combination
 
-    num_epochs = 150
+    num_epochs = 100
     
     batch_size = 256
     print('batch size:', batch_size)
