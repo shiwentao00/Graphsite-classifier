@@ -100,7 +100,7 @@ if __name__=="__main__":
 
     num_epochs = 100
     
-    batch_size = 256
+    batch_size = 512
     print('batch size:', batch_size)
     
     num_workers = os.cpu_count()
