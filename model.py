@@ -97,6 +97,13 @@ class SiameseNet(torch.nn.Module):
         embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
         return embedding_a, embedding_b
 
+    def get_embedding(self, data):
+        """
+        Used to get the embedding of a pocket after training.
+        data: standard PyG graph data.
+        """
+        embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+
 
 class ContrastiveLoss(torch.nn.Module):
     """
