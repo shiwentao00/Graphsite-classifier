@@ -6,7 +6,8 @@ Classify unseean pockets with trained similary model. This module contains:
 """
 import random
 import argparse
-from dataloader import read_cluster_file, select_classes, divide_clusters
+import os
+from dataloader import read_cluster_file, select_classes, divide_clusters, test_loader_gen
 
 
 def get_args():
@@ -37,6 +38,13 @@ if __name__=="__main__":
     pocket_dir = args.pocket_dir
     trained_model_dir = args.trained_model_dir
 
+    batch_size = 8
+    print('batch size:', batch_size)
+    
+    num_workers = os.cpu_count()
+    num_workers = int(min(batch_size, num_workers))
+    print('number of workers to load data: ', num_workers)
+
     num_classes = 60
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
@@ -56,7 +64,15 @@ if __name__=="__main__":
     print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
 
-    print(train_clusters[-1])
+    # missing popsa files for sasa feature at this moment
+    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+
+    test_loader = test_loader_gen(pocket_dir=pocket_dir, 
+                                  clusters=test_clusters, 
+                                  features_to_use=features_to_use, 
+                                  batch_size=batch_size, 
+                                  shuffle=False, 
+                                  num_workers=num_workers)
 
     '''
     model = TheModelClass(*args, **kwargs)

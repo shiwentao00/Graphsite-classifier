@@ -9,17 +9,19 @@ from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader, DataListLoader
 
 
-def dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
+def dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
+    """Dataloader used to wrap PairDataset. Used for training and validation """
     train_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
     val_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
-    test_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=test_pos_pairs, neg_pairs=test_neg_pairs, features_to_use=features_to_use)
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
-    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
-    return train_loader, val_loader, test_loader
+    
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
+    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
+
+    return train_loader, val_loader
 
 
 def dataloader_gen_multi_gpu(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
+    """Not used"""
     train_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
     val_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
     test_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=test_pos_pairs, neg_pairs=test_neg_pairs, features_to_use=features_to_use)
@@ -29,7 +31,61 @@ def dataloader_gen_multi_gpu(pocket_dir, train_pos_pairs, train_neg_pairs, val_p
     return train_loader, val_loader, test_loader
 
 
+def test_loader_gen(pocket_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
+    """Dataloader used to wrap Pocket Dataset. Used for inference/testing."""
+    test_set = PocketDataset(pocket_dir=pocket_dir, clusters=clusters, features_to_use=features_to_use)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+    return test_loader
+
+
+class PocketDataset(Dataset):
+    """Dataset to generate single pocket graphs for inference/testing."""
+    def __init__(self, pocket_dir, clusters, features_to_use):
+        self.pocket_dir = pocket_dir
+        self.clusters = clusters 
+        self.threshold = 4.5 # distance threshold to form an undirected edge between two atoms
+        
+        # hard coded info to generate 2 node features
+        self.hydrophobicity = {'ALA':1.8,'ARG':-4.5,'ASN':-3.5,'ASP':-3.5,
+                               'CYS':2.5,'GLN':-3.5,'GLU':-3.5,'GLY':-0.4,
+                               'HIS':-3.2,'ILE':4.5,'LEU':3.8,'LYS':-3.9,
+                               'MET':1.9,'PHE':2.8,'PRO':-1.6,'SER':-0.8,
+                               'THR':-0.7,'TRP':-0.9,'TYR':-1.3,'VAL':4.2}
+        self.binding_probability = {'ALA':0.701,'ARG':0.916,'ASN':0.811,'ASP':1.015,
+                                    'CYS':1.650,'GLN':0.669,'GLU':0.956,'GLY':0.788,
+                                    'HIS':2.286,'ILE':1.006,'LEU':1.045,'LYS':0.468,
+                                    'MET':1.894,'PHE':1.952,'PRO':0.212,'SER':0.883,
+                                    'THR':0.730,'TRP':3.084,'TYR':1.672,'VAL':0.884}
+
+        total_features = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
+        assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of total_features
+        self.features_to_use = features_to_use
+
+        
+        self.class_labels = []
+        self.pockets = []
+        for label, cluster in enumerate(self.clusters):
+            self.pockets.extend(cluster) # flatten the clusters list
+            for pocket in cluster:
+                self.class_labels.append(label) # class labels for all the pockets
+
+    def __len__(self):
+        cluster_lengths = [len(x) for x in self.clusters]
+        return sum(cluster_lengths)
+
+    def __getitem__(self, idx):
+        pocket = self.pockets[idx]
+        label = self.class_labels[idx]
+        pocket_dir = self.pocket_dir + pocket + '/' + pocket + '.mol2'
+        profile_dir = self.pocket_dir + pocket + '/' + pocket[0:-2] + '.profile'
+
+        x, edge_index, edge_attr = read_pocket(pocket_dir, profile_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
+        data =  Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=torch.tensor([label]))
+        return data
+
+
 class PairDataset(Dataset):
+    """Dataset to generate pairs of data for training and validation."""
     def __init__(self, pocket_dir, pos_pairs, neg_pairs, features_to_use):
         self.pocket_dir = pocket_dir
         self.pos_pairs = pos_pairs
@@ -51,7 +107,7 @@ class PairDataset(Dataset):
                                     'THR':0.730,'TRP':3.084,'TYR':1.672,'VAL':0.884}
 
         total_features = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
-        assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
+        assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of total_features
         self.features_to_use = features_to_use
 
     def __len__(self):
@@ -304,10 +360,7 @@ def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th, train_pos_th
     # validation pairs
     val_pos_pairs, val_neg_pairs = gen_pairs(clusters=val_clusters, pos_pair_th=val_pos_th, neg_pair_th=val_neg_th)
 
-    # test pairs
-    test_pos_pairs, test_neg_pairs = gen_pairs(clusters=test_clusters, pos_pair_th=1000, neg_pair_th=10)
-
-    return train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs
+    return train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs
 
 
 def read_cluster_file(cluster_file_dir):

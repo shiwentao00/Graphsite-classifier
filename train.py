@@ -126,7 +126,7 @@ if __name__=="__main__":
     # missing popsa files for sasa feature at this moment
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
 
-    train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs = divide_and_gen_pairs(
+    train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs = divide_and_gen_pairs(
                                                                                                     cluster_file_dir=cluster_file_dir, 
                                                                                                     num_classes=num_classes, 
                                                                                                     cluster_th=cluster_th,
@@ -143,13 +143,11 @@ if __name__=="__main__":
     print('number of validation negative pairs:', len(val_neg_pairs))
     val_size = len(val_pos_pairs) + len(val_neg_pairs)
     
-    train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, 
+    train_loader, val_loader = dataloader_gen(pocket_dir, 
                                                            train_pos_pairs, 
                                                            train_neg_pairs, 
                                                            val_pos_pairs, 
                                                            val_neg_pairs, 
-                                                           test_pos_pairs, 
-                                                           test_neg_pairs, 
                                                            features_to_use, 
                                                            batch_size, 
                                                            shuffle=True,
