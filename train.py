@@ -7,10 +7,6 @@ from model import SiameseNet, ContrastiveLoss
 import sklearn.metrics as metrics
 import json
 
-# handle the OSError: [Errno 24] Too many open files 
-import torch.multiprocessing
-torch.multiprocessing.set_sharing_strategy('file_system')
-
 
 def get_args():
     parser = argparse.ArgumentParser('python')
@@ -104,7 +100,7 @@ if __name__=="__main__":
 
     num_epochs = 150
     
-    batch_size = 512
+    batch_size = 256
     print('batch size:', batch_size)
     
     num_workers = os.cpu_count()
