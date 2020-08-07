@@ -30,6 +30,16 @@ def get_args():
 
     return parser.parse_args()
 
+def compute_geo_center(train_loader, model):
+    """Compute the geometric centers of clusters in the training datset.
+       The centers will be used as anchor points for classification."""
+    embeddings = []
+    labels = []
+    for data in train_loader:
+        labels.append(data.y)
+        embeddings = model.get_embedding(data)
+    return None
+
 
 if __name__=="__main__":
     random.seed(666) # seed has to be the same as seed in train.py to generate the same clusters
@@ -37,6 +47,9 @@ if __name__=="__main__":
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
     trained_model_dir = args.trained_model_dir
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
+    print('device: ', device)
 
     batch_size = 8
     print('batch size:', batch_size)
@@ -67,15 +80,29 @@ if __name__=="__main__":
     # missing popsa files for sasa feature at this moment
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
 
+    # train loader, used to compute the geometric center of the embeddings of each cluster
+    train_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+                                    clusters=train_clusters, 
+                                    features_to_use=features_to_use, 
+                                    batch_size=batch_size, 
+                                    shuffle=False, 
+                                    num_workers=num_workers)
+
+    # load trained model
+    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model.load_state_dict(torch.load(trained_model_dir))
+    model.eval()
+
+    # test loader
+    '''
     test_loader = test_loader_gen(pocket_dir=pocket_dir, 
                                   clusters=test_clusters, 
                                   features_to_use=features_to_use, 
                                   batch_size=batch_size, 
                                   shuffle=False, 
                                   num_workers=num_workers)
+    '''
 
     '''
-    model = TheModelClass(*args, **kwargs)
-    model.load_state_dict(torch.load(PATH))
-    model.eval()
+
     '''

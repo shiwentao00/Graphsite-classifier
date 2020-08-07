@@ -31,11 +31,11 @@ def dataloader_gen_multi_gpu(pocket_dir, train_pos_pairs, train_neg_pairs, val_p
     return train_loader, val_loader, test_loader
 
 
-def test_loader_gen(pocket_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
+def pocket_loader_gen(pocket_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
     """Dataloader used to wrap Pocket Dataset. Used for inference/testing."""
-    test_set = PocketDataset(pocket_dir=pocket_dir, clusters=clusters, features_to_use=features_to_use)
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-    return test_loader
+    pocketset = PocketDataset(pocket_dir=pocket_dir, clusters=clusters, features_to_use=features_to_use)
+    pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+    return pocketloader
 
 
 class PocketDataset(Dataset):

@@ -103,7 +103,8 @@ class SiameseNet(torch.nn.Module):
         data: standard PyG graph data.
         """
         embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-
+        return embedding
+        
 
 class ContrastiveLoss(torch.nn.Module):
     """
