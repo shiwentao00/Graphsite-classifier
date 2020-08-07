@@ -138,20 +138,7 @@ if __name__=="__main__":
     #print('number of test positive pairs:', len(test_pos_pairs))
     #print('number of test negative pairs:', len(test_neg_pairs))
 
-    if num_gpu > 1:
-        train_loader, val_loader, test_loader = dataloader_gen_multi_gpu(pocket_dir, 
-                                                           train_pos_pairs, 
-                                                           train_neg_pairs, 
-                                                           val_pos_pairs, 
-                                                           val_neg_pairs, 
-                                                           test_pos_pairs, 
-                                                           test_neg_pairs, 
-                                                           features_to_use, 
-                                                           batch_size, 
-                                                           shuffle=True,
-                                                           num_workers=num_workers)        
-    else:
-        train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, 
+    train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, 
                                                            train_pos_pairs, 
                                                            train_neg_pairs, 
                                                            val_pos_pairs, 
@@ -164,18 +151,14 @@ if __name__=="__main__":
                                                            num_workers=num_workers)
 
     model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
-    if num_gpu > 1:
-        DataParallel(model)
     print('model architecture:')
     print(model)
-    
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0003, amsgrad=False)
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0002, amsgrad=False)
     print('optimizer:')
     print(optimizer)
 
-    loss_function = ContrastiveLoss(margin=2.0, normalize=True, mean=True).to(device) # differentiable, no parameters to train.
-    if num_gpu > 1:
-        DataParallel(loss_function)    
+    loss_function = ContrastiveLoss(margin=2.0, normalize=True, mean=True).to(device) # differentiable, no parameters to train. 
     print('loss function:')
     print(loss_function)
 
@@ -202,4 +185,4 @@ if __name__=="__main__":
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
 
-# TO-DO: multi-GPU training
+# TO-DO: multi-GPU support
