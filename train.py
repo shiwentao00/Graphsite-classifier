@@ -53,7 +53,6 @@ def train():
         loss.backward()
         total_loss += loss.item() * batch_size # last incomplete batch is dropped, so just use batch_size
         optimizer.step()
-    
     train_loss = total_loss / train_size
     return train_loss
 
@@ -103,13 +102,16 @@ if __name__=="__main__":
     
     train_pos_th = 3000 # threshold of number of positive train pairs for each class
     train_neg_th = 100 # threshold of number of negative train pairs for each combination
-    val_pos_th = 400 # threshold of number of positive validation pairs for each class
-    val_neg_th = 15 # threshold of number of negative validation pairs for each combination
+    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
+    val_neg_th = 25 # threshold of number of negative validation pairs for each combination
 
-    num_epochs = 100
-    
-    batch_size = 512
+    # tunable hyper-parameters
+    num_epochs = 50
+    print('number of epochs to train:', num_epochs)
+    batch_size = 128
     print('batch size:', batch_size)
+    learning_rate = 0.001
+    weight_decay = 0.0002
     
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -159,7 +161,7 @@ if __name__=="__main__":
     #for param_tensor in model.state_dict():
     #    print(param_tensor, "\t", model.state_dict()[param_tensor].size())
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0002, amsgrad=False)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
     print('optimizer:')
     print(optimizer)
 
@@ -167,7 +169,6 @@ if __name__=="__main__":
     print('loss function:')
     print(loss_function)
 
-    print('number of epochs to train:', num_epochs)
     train_losses = []
     val_losses = []
     best_val_loss = 9999999
