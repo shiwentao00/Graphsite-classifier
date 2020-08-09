@@ -110,8 +110,8 @@ if __name__=="__main__":
     print('number of epochs to train:', num_epochs)
     batch_size = 256
     print('batch size:', batch_size)
-    learning_rate = 0.003
-    weight_decay = 0.0005
+    learning_rate = 0.001
+    weight_decay = 0.0002
     
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
