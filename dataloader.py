@@ -172,12 +172,12 @@ def bond_parser(pocket_path):
     bond_end = -1
     df_bonds = f_text[bond_start:bond_end].replace('@<TRIPOS>BOND\n','')
     df_bonds = df_bonds.replace('am', '1') # amide
-    df_bonds = df_bonds.replace('ar', '1') # aromatic
+    df_bonds = df_bonds.replace('ar', '1.5') # aromatic
     df_bonds = df_bonds.replace('du', '1') # dummy
     df_bonds = df_bonds.replace('un', '1') # unknown
     df_bonds = df_bonds.replace('nc', '0') # not connected
     df_bonds = df_bonds.replace('\n',' ')
-    df_bonds = np.array([int(x) for x in df_bonds.split()]).reshape((-1,4)) # convert the the elements to integer
+    df_bonds = np.array([np.float(x) for x in df_bonds.split()]).reshape((-1,4)) # convert the the elements to integer
     df_bonds = pd.DataFrame(df_bonds, columns=['bond_id', 'atom1', 'atom2', 'bond_type'])
     df_bonds.set_index(['bond_id'], inplace=True)
     return df_bonds
