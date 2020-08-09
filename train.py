@@ -165,7 +165,7 @@ if __name__=="__main__":
     print('optimizer:')
     print(optimizer)
 
-    loss_function = ContrastiveLoss(margin=2.0, normalize=True, mean=True).to(device) # differentiable, no parameters to train. 
+    loss_function = ContrastiveLoss(margin=2.0, normalize=False, mean=True).to(device) # differentiable, no parameters to train. 
     print('loss function:')
     print(loss_function)
 
