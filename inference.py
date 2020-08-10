@@ -29,7 +29,7 @@ def get_args():
                         help='directory of pockets')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_6.pt',
+                        default='../trained_models/trained_model_7.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -80,6 +80,14 @@ def compute_acc(dataloader, model, class_centers, device, normalize=True):
     predictions = np.argmin(distances_to_centers, axis=1) # same label as closest center
 
     acc = metrics.accuracy_score(labels, predictions)
+    
+    # compute the accuracy for each cluster
+    for cluster in cluster_set:
+        cluster_idx = np.nonzero(labels == cluster)[0]
+        cluster_labels = labels[cluster_idx]
+        cluster_predictions = predictions[cluster_idx]
+        cluster_acc = metrics.accuracy_score(cluster_labels, cluster_predictions)
+        print('cluster {} accuracy: {}.'.format(cluster, cluster_acc))
     return acc 
 
 
@@ -105,6 +113,8 @@ if __name__=="__main__":
     num_classes = 60
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
+
+    normalize = True
 
     # read the original clustered pockets
     clusters = read_cluster_file(cluster_file_dir)
@@ -138,11 +148,12 @@ if __name__=="__main__":
     model.eval()
 
     # compute geometric centers of classes in train set
-    class_centers = compute_geo_centers(train_loader, model, device, normalize=True)
+    class_centers = compute_geo_centers(train_loader, model, device, normalize=normalize)
 
     # train accuracy
-    train_acc = compute_acc(train_loader, model, class_centers, device, normalize=True)
+    train_acc = compute_acc(train_loader, model, class_centers, device, normalize=normalize)
     print('training accuracy: ', train_acc)
+    print('----------------------------------------------------------')
 
     # validation accuracy
     val_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
@@ -151,8 +162,9 @@ if __name__=="__main__":
                                    batch_size=batch_size, 
                                    shuffle=False, 
                                    num_workers=num_workers)    
-    val_acc = compute_acc(val_loader, model, class_centers, device, normalize=True)
+    val_acc = compute_acc(val_loader, model, class_centers, device, normalize=normalize)
     print('validation accuracy: ', val_acc)
+    print('----------------------------------------------------------')
 
     # test accuracy
     test_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
@@ -161,8 +173,9 @@ if __name__=="__main__":
                                    batch_size=batch_size, 
                                    shuffle=False, 
                                    num_workers=num_workers)    
-    test_acc = compute_acc(test_loader, model, class_centers, device, normalize=True)
+    test_acc = compute_acc(test_loader, model, class_centers, device, normalize=normalize)
     print('test accuracy: ', test_acc)
+    print('----------------------------------------------------------')
 
     
 

@@ -95,23 +95,24 @@ if __name__=="__main__":
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
-    num_classes = 60
+    num_classes = 10
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 3000 # threshold of number of positive train pairs for each class
-    train_neg_th = 100 # threshold of number of negative train pairs for each combination
-    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
-    val_neg_th = 25 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 9000 # threshold of number of positive train pairs for each class
+    train_neg_th = 2000 # threshold of number of negative train pairs for each combination
+    val_pos_th = 2700 # threshold of number of positive validation pairs for each class
+    val_neg_th = 600 # threshold of number of negative validation pairs for each combination
 
     # tunable hyper-parameters
-    num_epochs = 50
+    num_epochs = 60
     print('number of epochs to train:', num_epochs)
     batch_size = 256
     print('batch size:', batch_size)
     learning_rate = 0.001
     weight_decay = 0.0002
+    normalize = True # whether to normalize the embeddings
     
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -165,7 +166,7 @@ if __name__=="__main__":
     print('optimizer:')
     print(optimizer)
 
-    loss_function = ContrastiveLoss(margin=2.0, normalize=False, mean=True).to(device) # differentiable, no parameters to train. 
+    loss_function = ContrastiveLoss(margin=2.0, normalize=normalize, mean=True).to(device) # differentiable, no parameters to train. 
     print('loss function:')
     print(loss_function)
 
