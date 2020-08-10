@@ -1,13 +1,13 @@
 
+run=9
+
 #!/bin/bash
 #PBS -q v100
 #PBS -l nodes=1:ppn=36
 #PBS -l walltime=72:00:00
-#PBS -N Siamese-Monet
+#PBS -N Siamese-Monet${run}
 #PBS -A hpc_gcn03
 #PBS -j oe
-
-run=9
 
 module purge
 source activate graph
