@@ -11,9 +11,9 @@ class GINMolecularConv(GINConv):
         num_features: number of features of input nodes.
         """
         super(GINMolecularConv, self).__init__(nn=nn, train_eps=train_eps)
-        self.edge_transformer = Sequential(Linear(num_edge_attr, num_features), 
+        self.edge_transformer = Sequential(Linear(num_edge_attr, 8), 
                                            LeakyReLU(), 
-                                           Linear(num_features, num_features),
+                                           Linear(8, num_features),
                                            ELU()) # make it possible to reach -1
 
     def forward(self, x, edge_index, edge_attr, size = None):

@@ -109,7 +109,6 @@ def compute_top5_acc(dataloader, model, class_centers, device, normalize=True):
     return acc 
 
 
-
 if __name__=="__main__":
     random.seed(666) # seed has to be the same as seed in train.py to generate the same clusters
     args = get_args()

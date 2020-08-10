@@ -22,6 +22,11 @@ def get_args():
                         required=False,
                         help='directory of pockets')
 
+    parser.add_argument('-pop_dir',
+                        default='../data/pops-googlenet/',
+                        required=False,
+                        help='directory of popsa files for sasa feature')
+
     parser.add_argument('-trained_model_dir',
                         default='../trained_models/trained_model_.pt/',
                         required=False,
@@ -89,21 +94,27 @@ def compute_metrics(label, out):
 
 if __name__=="__main__":
     random.seed(666) # deterministic sampled pockets and pairs from dataset
+    print('seed: ', 666)
     args = get_args()
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
+    pop_dir = args.pop_dir
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
-    num_classes = 10
+    num_classes = 60
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 9000 # threshold of number of positive train pairs for each class
-    train_neg_th = 2000 # threshold of number of negative train pairs for each combination
-    val_pos_th = 2700 # threshold of number of positive validation pairs for each class
-    val_neg_th = 600 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 3000 # threshold of number of positive train pairs for each class
+    train_neg_th = 100 # threshold of number of negative train pairs for each combination
+    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
+    val_neg_th = 25 # threshold of number of negative validation pairs for each combination
+    print('positive training pair sampling threshold: ', train_pos_th)
+    print('negative training pair sampling threshold: ', train_neg_th)
+    print('positive validation pair sampling threshold: ', val_pos_th)
+    print('negative validation pair sampling threshold: ', val_neg_th)
 
     # tunable hyper-parameters
     num_epochs = 60
@@ -127,7 +138,8 @@ if __name__=="__main__":
     print('number of gpus: ', num_gpu)
 
     # missing popsa files for sasa feature at this moment
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
+    print('features to use: ', features_to_use)
 
     train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, 
                                                                                           num_classes=num_classes, 
@@ -146,14 +158,15 @@ if __name__=="__main__":
     val_size = len(val_pos_pairs) + len(val_neg_pairs)
     
     train_loader, val_loader = dataloader_gen(pocket_dir, 
-                                                           train_pos_pairs, 
-                                                           train_neg_pairs, 
-                                                           val_pos_pairs, 
-                                                           val_neg_pairs, 
-                                                           features_to_use, 
-                                                           batch_size, 
-                                                           shuffle=True,
-                                                           num_workers=num_workers)
+                                              pop_dir,
+                                              train_pos_pairs, 
+                                              train_neg_pairs, 
+                                              val_pos_pairs, 
+                                              val_neg_pairs, 
+                                              features_to_use, 
+                                              batch_size, 
+                                              shuffle=True,
+                                              num_workers=num_workers)
 
     model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
