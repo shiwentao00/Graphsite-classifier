@@ -108,7 +108,7 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 50
     print('number of epochs to train:', num_epochs)
-    batch_size = 64
+    batch_size = 256
     print('batch size:', batch_size)
     learning_rate = 0.001
     weight_decay = 0.0002

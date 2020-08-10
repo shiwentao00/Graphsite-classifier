@@ -147,6 +147,8 @@ class ContrastiveLoss(torch.nn.Module):
         return 'ContrastiveLoss(margin={}, normalize={}, mean={})'.format(self.margin, self.normalize, self.mean)
 
 
+# TO-DO: functions to accumulate/reset ls and ld for analysis.
+
 # TO-DO: logistic similarity for cross-entropy loss
 
 # TO-DO: similarity by dot product of node features

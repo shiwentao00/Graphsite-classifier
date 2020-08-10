@@ -7,7 +7,7 @@
 #PBS -A hpc_gcn03
 #PBS -j oe
 
-run=10
+run=9
 
 module purge
 source activate graph
