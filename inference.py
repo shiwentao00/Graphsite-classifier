@@ -7,8 +7,10 @@ Classify unseean pockets with trained similary model. This module contains:
 import random
 import argparse
 import os
-from dataloader import read_cluster_file, select_classes, divide_clusters, test_loader_gen
-
+import torch
+import numpy as np
+from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen
+from model import SiameseNet, ContrastiveLoss
 
 def get_args():
     parser = argparse.ArgumentParser('python')
@@ -24,7 +26,7 @@ def get_args():
                         help='directory of pockets')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model.pt/',
+                        default='../trained_models/trained_model_6.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -36,9 +38,21 @@ def compute_geo_center(train_loader, model):
     embeddings = []
     labels = []
     for data in train_loader:
-        labels.append(data.y)
-        embeddings = model.get_embedding(data)
-    return None
+        data = data.to(device)
+        labels.append(data.y.cpu().detach().numpy())
+        embedding = model.get_embedding(data=data, normalize=True)
+        embeddings.append(embedding.cpu().detach().numpy())
+    embeddings = np.vstack(embeddings)
+    labels = np.hstack(labels)
+    cluster_set = list(set(labels)) # list of the clusters/classes
+
+    class_centers = {}
+    for cluster in cluster_set:
+        cluster_idx = np.nonzero(labels == cluster)[0] # indices of the embeddings that belong to this cluster
+        cluster_embedding = embeddings[cluster_idx] # embeddings of this cluster
+        cluster_embedding = np.mean(cluster_embedding, axis=0) # geometric center of the embeddings
+        class_centers.update({cluster:cluster_embedding})
+    return class_centers
 
 
 if __name__=="__main__":
@@ -51,7 +65,7 @@ if __name__=="__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
     print('device: ', device)
 
-    batch_size = 8
+    batch_size = 4
     print('batch size:', batch_size)
     
     num_workers = os.cpu_count()
@@ -85,7 +99,7 @@ if __name__=="__main__":
                                     clusters=train_clusters, 
                                     features_to_use=features_to_use, 
                                     batch_size=batch_size, 
-                                    shuffle=False, 
+                                    shuffle=True, 
                                     num_workers=num_workers)
 
     # load trained model
@@ -93,9 +107,12 @@ if __name__=="__main__":
     model.load_state_dict(torch.load(trained_model_dir))
     model.eval()
 
+    # compute geometric centers of classes in train set
+    class_centers = compute_geo_center(train_loader, model)
+
     # test loader
     '''
-    test_loader = test_loader_gen(pocket_dir=pocket_dir, 
+    test_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
                                   clusters=test_clusters, 
                                   features_to_use=features_to_use, 
                                   batch_size=batch_size, 
