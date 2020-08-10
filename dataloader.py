@@ -134,7 +134,7 @@ class PairDataset(Dataset):
         # pocket b location
         pocket_b_dir = self.pocket_dir + pair[1] + '/' + pair[1] + '.mol2'
         profile_b_dir = self.pocket_dir + pair[1] + '/' + pair[1][0:-2] + '.profile'
-        pop_b_dir = self.pop_dir + '/' + pair[1][0:-2] + '.pops' 
+        pop_b_dir = self.pop_dir + pair[1][0:-2] + '.pops' 
 
         x_a, edge_index_a, edge_attr_a = read_pocket(pocket_a_dir, profile_a_dir, pop_a_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
         x_b, edge_index_b, edge_attr_b = read_pocket(pocket_b_dir, profile_b_dir, pop_b_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
