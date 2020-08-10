@@ -129,7 +129,7 @@ class PairDataset(Dataset):
         # pocket a location
         pocket_a_dir = self.pocket_dir + pair[0] + '/' + pair[0] + '.mol2'
         profile_a_dir = self.pocket_dir + pair[0] + '/' + pair[0][0:-2] + '.profile'
-        pop_a_dir = self.pop_dir + '/' + pair[0][0:-2] + '.pops'
+        pop_a_dir = self.pop_dir + pair[0][0:-2] + '.pops'
 
         # pocket b location
         pocket_b_dir = self.pocket_dir + pair[1] + '/' + pair[1] + '.mol2'
