@@ -11,6 +11,9 @@ import torch
 import numpy as np
 from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen
 from model import SiameseNet, ContrastiveLoss
+from scipy.spatial.distance import cdist
+import sklearn.metrics as metrics
+
 
 def get_args():
     parser = argparse.ArgumentParser('python')
@@ -32,27 +35,53 @@ def get_args():
 
     return parser.parse_args()
 
-def compute_geo_center(train_loader, model):
+
+def compute_geo_centers(train_loader, model, device, normalize=True):
     """Compute the geometric centers of clusters in the training datset.
        The centers will be used as anchor points for classification."""
-    embeddings = []
-    labels = []
-    for data in train_loader:
-        data = data.to(device)
-        labels.append(data.y.cpu().detach().numpy())
-        embedding = model.get_embedding(data=data, normalize=True)
-        embeddings.append(embedding.cpu().detach().numpy())
-    embeddings = np.vstack(embeddings)
-    labels = np.hstack(labels)
-    cluster_set = list(set(labels)) # list of the clusters/classes
+    embeddings, labels, cluster_set = compute_embeddings(train_loader, model, device, normalize)
+    cluster_set.sort()# sort the labels
 
-    class_centers = {}
+    class_centers = []
     for cluster in cluster_set:
         cluster_idx = np.nonzero(labels == cluster)[0] # indices of the embeddings that belong to this cluster
         cluster_embedding = embeddings[cluster_idx] # embeddings of this cluster
-        cluster_embedding = np.mean(cluster_embedding, axis=0) # geometric center of the embeddings
-        class_centers.update({cluster:cluster_embedding})
+        cluster_center = np.mean(cluster_embedding, axis=0) # geometric center of the embeddings
+        class_centers.append(cluster_center)
+    class_centers = np.vstack(class_centers)
     return class_centers
+
+
+def compute_embeddings(dataloader, model, device, normalize=True):
+    """
+    Compute embeddings, labels, and set of labels/clusters of a dataloader.
+    """
+    embeddings = []
+    labels = []
+    for cnt, data in enumerate(dataloader):
+        data = data.to(device)
+        labels.append(data.y.cpu().detach().numpy())
+        embedding = model.get_embedding(data=data, normalize=normalize)
+        embeddings.append(embedding.cpu().detach().numpy())
+        #if cnt == 200:
+        #    break
+    embeddings = np.vstack(embeddings)
+    labels = np.hstack(labels)
+    cluster_set = list(set(labels)) # list of the clusters/classes
+    return embeddings, labels, cluster_set
+
+
+def compute_acc(dataloader, model, class_centers, device, normalize=True):
+    """Compute the classification accuracy."""
+    embeddings, labels, cluster_set = compute_embeddings(dataloader, model, device, normalize)
+    
+    distances_to_centers = cdist(embeddings, class_centers)
+
+    predictions = np.argmin(distances_to_centers, axis=1) # same label as closest center
+
+    acc = metrics.accuracy_score(labels, predictions)
+    return acc 
+
 
 
 if __name__=="__main__":
@@ -61,6 +90,7 @@ if __name__=="__main__":
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
     trained_model_dir = args.trained_model_dir
+    print('computing classification accuracies of {}'.format(trained_model_dir))
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
     print('device: ', device)
@@ -96,11 +126,11 @@ if __name__=="__main__":
 
     # train loader, used to compute the geometric center of the embeddings of each cluster
     train_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
-                                    clusters=train_clusters, 
-                                    features_to_use=features_to_use, 
-                                    batch_size=batch_size, 
-                                    shuffle=True, 
-                                    num_workers=num_workers)
+                                     clusters=train_clusters, 
+                                     features_to_use=features_to_use, 
+                                     batch_size=batch_size, 
+                                     shuffle=False, 
+                                     num_workers=num_workers)
 
     # load trained model
     model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
@@ -108,15 +138,31 @@ if __name__=="__main__":
     model.eval()
 
     # compute geometric centers of classes in train set
-    class_centers = compute_geo_center(train_loader, model)
+    class_centers = compute_geo_centers(train_loader, model, device, normalize=True)
 
-    # test loader
-    '''
+    # train accuracy
+    train_acc = compute_acc(train_loader, model, class_centers, device, normalize=True)
+    print('training accuracy: ', train_acc)
+
+    # validation accuracy
+    val_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+                                   clusters=val_clusters, 
+                                   features_to_use=features_to_use, 
+                                   batch_size=batch_size, 
+                                   shuffle=False, 
+                                   num_workers=num_workers)    
+    val_acc = compute_acc(val_loader, model, class_centers, device, normalize=True)
+    print('validation accuracy: ', val_acc)
+
+    # test accuracy
     test_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
-                                  clusters=test_clusters, 
-                                  features_to_use=features_to_use, 
-                                  batch_size=batch_size, 
-                                  shuffle=False, 
-                                  num_workers=num_workers)
-    '''
+                                   clusters=test_clusters, 
+                                   features_to_use=features_to_use, 
+                                   batch_size=batch_size, 
+                                   shuffle=False, 
+                                   num_workers=num_workers)    
+    test_acc = compute_acc(test_loader, model, class_centers, device, normalize=True)
+    print('test accuracy: ', test_acc)
+
+    
 
