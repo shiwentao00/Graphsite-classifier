@@ -82,12 +82,30 @@ def compute_acc(dataloader, model, class_centers, device, normalize=True):
     acc = metrics.accuracy_score(labels, predictions)
     
     # compute the accuracy for each cluster
-    for cluster in cluster_set:
-        cluster_idx = np.nonzero(labels == cluster)[0]
-        cluster_labels = labels[cluster_idx]
-        cluster_predictions = predictions[cluster_idx]
-        cluster_acc = metrics.accuracy_score(cluster_labels, cluster_predictions)
-        print('cluster {} accuracy: {}.'.format(cluster, cluster_acc))
+    #for cluster in cluster_set:
+    #    cluster_idx = np.nonzero(labels == cluster)[0]
+    #    cluster_labels = labels[cluster_idx]
+    #    cluster_predictions = predictions[cluster_idx]
+    #    cluster_acc = metrics.accuracy_score(cluster_labels, cluster_predictions)
+    #    print('cluster {} accuracy: {}.'.format(cluster, cluster_acc))
+    return acc 
+
+
+def compute_top5_acc(dataloader, model, class_centers, device, normalize=True):
+    """Compute the top-5 classification accuracy."""
+    embeddings, labels, cluster_set = compute_embeddings(dataloader, model, device, normalize)
+    
+    distances_to_centers = cdist(embeddings, class_centers)
+
+    predictions = np.argsort(distances_to_centers, axis=1) # same label as closest center
+    predictions = predictions[:,0:5] # first 5 columns
+
+    total_data = embeddings.shape[0]
+    correct = 0 
+    for idx, row in enumerate(predictions):
+        if labels[idx] in list(row):
+            correct = correct + 1
+    acc = correct / total_data
     return acc 
 
 
@@ -153,6 +171,8 @@ if __name__=="__main__":
     # train accuracy
     train_acc = compute_acc(train_loader, model, class_centers, device, normalize=normalize)
     print('training accuracy: ', train_acc)
+    top5_train_acc = compute_top5_acc(train_loader, model, class_centers, device, normalize=normalize)
+    print('top-5 training accuracy: ', top5_train_acc)
     print('----------------------------------------------------------')
 
     # validation accuracy
@@ -164,6 +184,8 @@ if __name__=="__main__":
                                    num_workers=num_workers)    
     val_acc = compute_acc(val_loader, model, class_centers, device, normalize=normalize)
     print('validation accuracy: ', val_acc)
+    top5_val_acc = compute_top5_acc(val_loader, model, class_centers, device, normalize=normalize)
+    print('top-5 validation accuracy: ', top5_val_acc)
     print('----------------------------------------------------------')
 
     # test accuracy
@@ -175,6 +197,8 @@ if __name__=="__main__":
                                    num_workers=num_workers)    
     test_acc = compute_acc(test_loader, model, class_centers, device, normalize=normalize)
     print('test accuracy: ', test_acc)
+    top5_test_acc = compute_top5_acc(test_loader, model, class_centers, device, normalize=normalize)
+    print('top-5 test accuracy: ', top5_test_acc)
     print('----------------------------------------------------------')
 
     
