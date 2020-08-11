@@ -154,8 +154,8 @@ def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probab
     center_distances = compute_dist_to_center(atoms[['x','y','z']].to_numpy())
     atoms['distance_to_center'] = center_distances
     siteresidue_list = atoms['subst_name'].tolist()
-    qsasa_data = extract_sasa_data(siteresidue_list, pop_path)
-    atoms['sasa'] = qsasa_data
+    #qsasa_data = extract_sasa_data(siteresidue_list, pop_path)
+    #atoms['sasa'] = qsasa_data
     seq_entropy_data = extract_seq_entropy_data(siteresidue_list, profile_path) # sequence entropy data with subst_name as keys
     atoms['sequence_entropy'] = atoms['subst_name'].apply(lambda x: seq_entropy_data[x])
     
@@ -416,7 +416,7 @@ def read_cluster_file(cluster_file_dir):
         clusters.append(cluster)
         #cluster_sizes.append(len(cluster))
 
-    return clusters
+    return clusters[1:] # !!!!!! testing performance without first large cluster.
 
 
 def select_classes(clusters, num_classes, th):
@@ -456,7 +456,6 @@ def divide_clusters(clusters):
 
     # sizes of the clusters
     cluster_sizes = [len(x) for x in clusters]
-    #print(cluster_sizes)
 
     # train
     train_sizes = [int(0.7 * x) for x in cluster_sizes]
@@ -508,7 +507,7 @@ if __name__=="__main__":
     pocket_dir = '../data/googlenet-dataset/'
     num_classes = 150
     cluster_th = 400
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] # missing popsa files for sasa feature at this moment
+    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy']
     batch_size = 4 # number of pairs in a mini-batch
 
     train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, num_classes=num_classes, cluster_th=cluster_th)

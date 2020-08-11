@@ -102,7 +102,7 @@ if __name__=="__main__":
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
-    num_classes = 60
+    num_classes = 59
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
@@ -138,7 +138,8 @@ if __name__=="__main__":
     print('number of gpus: ', num_gpu)
 
     # missing popsa files for sasa feature at this moment
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
+    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
     print('features to use: ', features_to_use)
 
     train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, 
