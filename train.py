@@ -119,10 +119,10 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    batch_size = 256
+    batch_size = 64
     print('batch size:', batch_size)
-    learning_rate = 0.003
-    weight_decay = 0.001
+    learning_rate = 0.001
+    weight_decay = 0.0002
     normalize = True # whether to normalize the embeddings
     
     num_workers = os.cpu_count()
