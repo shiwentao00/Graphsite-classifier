@@ -119,10 +119,10 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    batch_size = 64
+    batch_size = 256
     print('batch size:', batch_size)
-    learning_rate = 0.001
-    weight_decay = 0.0002
+    learning_rate = 0.003
+    weight_decay = 0.001
     normalize = True # whether to normalize the embeddings
     
     num_workers = os.cpu_count()
@@ -169,7 +169,7 @@ if __name__=="__main__":
                                               shuffle=True,
                                               num_workers=num_workers)
 
-    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = SiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")
