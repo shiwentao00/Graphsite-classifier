@@ -32,17 +32,18 @@ def dataloader_gen_multi_gpu(pocket_dir, train_pos_pairs, train_neg_pairs, val_p
     return train_loader, val_loader, test_loader
 
 
-def pocket_loader_gen(pocket_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
+def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
     """Dataloader used to wrap Pocket Dataset. Used for inference/testing."""
-    pocketset = PocketDataset(pocket_dir=pocket_dir, clusters=clusters, features_to_use=features_to_use)
+    pocketset = PocketDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, clusters=clusters, features_to_use=features_to_use)
     pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
     return pocketloader
 
 
 class PocketDataset(Dataset):
     """Dataset to generate single pocket graphs for inference/testing."""
-    def __init__(self, pocket_dir, clusters, features_to_use):
+    def __init__(self, pocket_dir, pop_dir, clusters, features_to_use):
         self.pocket_dir = pocket_dir
+        self.pop_dir = pop_dir
         self.clusters = clusters 
         self.threshold = 4.5 # distance threshold to form an undirected edge between two atoms
         
@@ -79,8 +80,9 @@ class PocketDataset(Dataset):
         label = self.class_labels[idx]
         pocket_dir = self.pocket_dir + pocket + '/' + pocket + '.mol2'
         profile_dir = self.pocket_dir + pocket + '/' + pocket[0:-2] + '.profile'
+        pop_dir = self.pop_dir + pocket[0:-2] + '.pops'
 
-        x, edge_index, edge_attr = read_pocket(pocket_dir, profile_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
+        x, edge_index, edge_attr = read_pocket(pocket_dir, profile_dir, pop_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
         data =  Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=torch.tensor([label]))
         return data
 
@@ -416,7 +418,8 @@ def read_cluster_file(cluster_file_dir):
         clusters.append(cluster)
         #cluster_sizes.append(len(cluster))
 
-    return clusters[1:] # !!!!!! testing performance without first large cluster.
+    return clusters
+    #return clusters[1:] # !!!!!! testing performance without first large cluster.
 
 
 def select_classes(clusters, num_classes, th):

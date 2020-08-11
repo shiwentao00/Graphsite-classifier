@@ -28,6 +28,11 @@ def get_args():
                         required=False,
                         help='directory of pockets')
 
+    parser.add_argument('-pop_dir',
+                        default='../data/pops-googlenet/',
+                        required=False,
+                        help='directory of popsa files for sasa feature')
+
     parser.add_argument('-trained_model_dir',
                         default='../trained_models/trained_model_7.pt',
                         required=False,
@@ -82,12 +87,12 @@ def compute_acc(dataloader, model, class_centers, device, normalize=True):
     acc = metrics.accuracy_score(labels, predictions)
     
     # compute the accuracy for each cluster
-    #for cluster in cluster_set:
-    #    cluster_idx = np.nonzero(labels == cluster)[0]
-    #    cluster_labels = labels[cluster_idx]
-    #    cluster_predictions = predictions[cluster_idx]
-    #    cluster_acc = metrics.accuracy_score(cluster_labels, cluster_predictions)
-    #    print('cluster {} accuracy: {}.'.format(cluster, cluster_acc))
+    for cluster in cluster_set:
+        cluster_idx = np.nonzero(labels == cluster)[0]
+        cluster_labels = labels[cluster_idx]
+        cluster_predictions = predictions[cluster_idx]
+        cluster_acc = metrics.accuracy_score(cluster_labels, cluster_predictions)
+        print('cluster {} accuracy: {}.'.format(cluster, cluster_acc))
     return acc 
 
 
@@ -114,6 +119,7 @@ if __name__=="__main__":
     args = get_args()
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
+    pop_dir = args.pop_dir
     trained_model_dir = args.trained_model_dir
     print('computing classification accuracies of {}'.format(trained_model_dir))
 
@@ -153,6 +159,7 @@ if __name__=="__main__":
 
     # train loader, used to compute the geometric center of the embeddings of each cluster
     train_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+                                     pop_dir=pop_dir,
                                      clusters=train_clusters, 
                                      features_to_use=features_to_use, 
                                      batch_size=batch_size, 
@@ -176,6 +183,7 @@ if __name__=="__main__":
 
     # validation accuracy
     val_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+                                   pop_dir=pop_dir,
                                    clusters=val_clusters, 
                                    features_to_use=features_to_use, 
                                    batch_size=batch_size, 
@@ -189,6 +197,7 @@ if __name__=="__main__":
 
     # test accuracy
     test_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+                                   pop_dir=pop_dir,
                                    clusters=test_clusters, 
                                    features_to_use=features_to_use, 
                                    batch_size=batch_size, 

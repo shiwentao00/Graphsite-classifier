@@ -194,7 +194,7 @@ if __name__=="__main__":
         val_loss = validate() # list of losses every 50 mini-batches
         val_losses.append(val_loss)
 
-        print('train loss: {}, validation loss: {}.'.format(train_loss, val_loss))
+        print('epoch: {}, train loss: {}, validation loss: {}.'.format(epoch, train_loss, val_loss))
 
         if  val_loss < best_val_loss:
             best_val_loss = val_loss
