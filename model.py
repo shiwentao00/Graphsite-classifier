@@ -2,7 +2,9 @@ import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch.nn import Sequential, Linear, ReLU, LeakyReLU, ELU
-from torch_geometric.nn import GINConv, global_add_pool
+from torch_geometric.nn import GINConv
+from torch_geometric.nn import global_add_pool
+from torch_geometric.nn import GlobalAttention
 
 
 class GINMolecularConv(GINConv):
@@ -40,6 +42,13 @@ class GINMolecularConv(GINConv):
 class EmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(EmbeddingNet, self).__init__()
+        # neural network to compute self-attention for output layer
+        gate_nn = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, 1))
+        # neural netowrk to compute embedding before masking
+        out_nn =  Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        # global attention pooling layer
+        self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
+
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
         self.bn1 = torch.nn.BatchNorm1d(dim)
@@ -76,14 +85,9 @@ class EmbeddingNet(torch.nn.Module):
         x = self.bn3(x)
         x = F.leaky_relu(self.conv4(x, edge_index, edge_attr))
         x = self.bn4(x)
-        #x = F.relu(self.conv5(x, edge_index))
-        #x = self.bn5(x)
-        #x = F.relu(self.conv6(x, edge_index))
-        #x = self.bn6(x)
-        x = global_add_pool(x, batch)
-        #x = F.leaky_relu(self.fc1(x))
-        #x = F.dropout(x, p=0.5, training=self.training)
-        #x = F.leaky_relu(self.fc2(x))
+
+        #x = global_add_pool(x, batch)
+        x = self.global_att(x, batch)
         return x
 
     

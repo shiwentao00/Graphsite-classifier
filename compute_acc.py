@@ -133,7 +133,7 @@ if __name__=="__main__":
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
-    num_classes = 59
+    num_classes = 60
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
