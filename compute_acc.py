@@ -34,7 +34,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_7.pt',
+                        default='../trained_models/trained_model_14.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -133,7 +133,7 @@ if __name__=="__main__":
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
-    num_classes = 60
+    num_classes = 59
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 

@@ -102,7 +102,7 @@ if __name__=="__main__":
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
-    num_classes = 59
+    num_classes = 60
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
