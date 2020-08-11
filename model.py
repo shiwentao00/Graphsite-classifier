@@ -43,9 +43,9 @@ class EmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(EmbeddingNet, self).__init__()
         # neural network to compute self-attention for output layer
-        gate_nn = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, 1), LeakyReLU())
+        gate_nn = Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, 1), LeakyReLU())
         # neural netowrk to compute embedding before masking
-        out_nn =  Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim), LeakyReLU())
+        out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
         # global attention pooling layer
         self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
 
@@ -77,6 +77,7 @@ class EmbeddingNet(torch.nn.Module):
         #self.fc2 = Linear(dim, dim) # generate embedding here
 
     def forward(self, x, edge_index, edge_attr, batch):
+        x_in = x 
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
         x = self.bn1(x)
         x = F.leaky_relu(self.conv2(x, edge_index, edge_attr))
@@ -87,7 +88,7 @@ class EmbeddingNet(torch.nn.Module):
         x = self.bn4(x)
 
         #x = global_add_pool(x, batch)
-        x = self.global_att(x, batch)
+        x = self.global_att(torch.cat((x, x_in), 1), batch)
         return x
 
     
