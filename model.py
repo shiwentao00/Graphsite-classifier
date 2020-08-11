@@ -43,9 +43,9 @@ class EmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(EmbeddingNet, self).__init__()
         # neural network to compute self-attention for output layer
-        gate_nn = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, 1))
+        gate_nn = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, 1), LeakyReLU())
         # neural netowrk to compute embedding before masking
-        out_nn =  Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        out_nn =  Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim), LeakyReLU())
         # global attention pooling layer
         self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
 
