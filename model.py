@@ -13,9 +13,9 @@ class GINMolecularConv(GINConv):
         num_features: number of features of input nodes.
         """
         super(GINMolecularConv, self).__init__(nn=nn, train_eps=train_eps)
-        self.edge_transformer = Sequential(Linear(num_edge_attr, 8), 
+        self.edge_transformer = Sequential(Linear(num_edge_attr, num_features), 
                                            LeakyReLU(), 
-                                           Linear(8, num_features),
+                                           Linear(num_features, num_features),
                                            ELU()) # make it possible to reach -1
 
     def forward(self, x, edge_index, edge_attr, size = None):
@@ -43,11 +43,11 @@ class EmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(EmbeddingNet, self).__init__()
         # neural network to compute self-attention for output layer
-        gate_nn = Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, 1), LeakyReLU())
+        #gate_nn = Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, 1), LeakyReLU())
         # neural netowrk to compute embedding before masking
-        out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
+        #out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
         # global attention pooling layer
-        self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
+        #self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
 
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
@@ -87,8 +87,8 @@ class EmbeddingNet(torch.nn.Module):
         x = F.leaky_relu(self.conv4(x, edge_index, edge_attr))
         x = self.bn4(x)
 
-        #x = global_add_pool(x, batch)
-        x = self.global_att(torch.cat((x, x_in), 1), batch)
+        x = global_add_pool(x, batch)
+        #x = self.global_att(torch.cat((x, x_in), 1), batch)
         return x
 
     
