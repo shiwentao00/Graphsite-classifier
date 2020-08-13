@@ -10,6 +10,7 @@ from dataloader import read_cluster_file, select_classes, divide_clusters, pocke
 from model import MoNet
 import numpy as np
 import sklearn.metrics as metrics
+import json
 
 
 def get_args():
@@ -135,7 +136,7 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.002
+    learning_rate = 0.001
     weight_decay = 0.0005
 
     batch_size = 64
