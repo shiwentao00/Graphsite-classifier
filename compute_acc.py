@@ -34,7 +34,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_14.pt',
+                        default='../trained_models/trained_model_7.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -51,10 +51,20 @@ def compute_geo_centers(train_loader, model, device, normalize=True):
     for cluster in cluster_set:
         cluster_idx = np.nonzero(labels == cluster)[0] # indices of the embeddings that belong to this cluster
         cluster_embedding = embeddings[cluster_idx] # embeddings of this cluster
-        cluster_center = np.mean(cluster_embedding, axis=0) # geometric center of the embeddings
+        #cluster_center = np.mean(cluster_embedding, axis=0) # geometric center of the embeddings
+        cluster_center = compute_medoid(cluster_embedding)
         class_centers.append(cluster_center)
     class_centers = np.vstack(class_centers)
     return class_centers
+
+
+def compute_medoid(embeddings):
+    """Compute the geometric median of the points. It is expected to be 
+    robust against outliers."""
+    dist_mat = cdist(embeddings, embeddings, metric='euclidean') # pair-wise distances
+    similarity_sum = np.sum(dist_mat, axis=0) # summing up 
+    medoid = embeddings[np.argmin(similarity_sum)] # get the one that is closest to its neighbors
+    return medoid
 
 
 def compute_embeddings(dataloader, model, device, normalize=True):
