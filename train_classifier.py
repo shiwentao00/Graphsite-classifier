@@ -191,7 +191,7 @@ if __name__=="__main__":
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0002, amsgrad=False)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
     print('optimizer:')
     print(optimizer)
 
