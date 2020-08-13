@@ -152,6 +152,65 @@ class ContrastiveLoss(torch.nn.Module):
         return 'ContrastiveLoss(margin={}, normalize={}, mean={})'.format(self.margin, self.normalize, self.mean)
 
 
+class MoNet(torch.nn.Module):
+    """Standard classifier to solve the problem.""" 
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr):
+        super(MoNet, self).__init__()
+        self.num_classes = num_classes
+        # neural network to compute self-attention for output layer
+        #gate_nn = Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, 1), LeakyReLU())
+        # neural netowrk to compute embedding before masking
+        #out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
+        # global attention pooling layer
+        #self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
+
+        nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
+        self.bn1 = torch.nn.BatchNorm1d(dim)
+
+        nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
+        self.bn2 = torch.nn.BatchNorm1d(dim)
+
+        nn3 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv3 = GINMolecularConv(nn3, train_eps, dim, num_edge_attr)
+        self.bn3 = torch.nn.BatchNorm1d(dim)
+
+        nn4 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv4 = GINMolecularConv(nn4, train_eps, dim, num_edge_attr)
+        self.bn4 = torch.nn.BatchNorm1d(dim)
+
+        #nn5 = Sequential(Linear(dim, dim), ReLU(), Linear(dim, dim))
+        #self.conv5 = GINConv(nn5)
+        #self.bn5 = torch.nn.BatchNorm1d(dim)
+
+        #nn6 = Sequential(Linear(dim, dim), ReLU(), Linear(dim, dim))
+        #self.conv6 = GINConv(nn6)
+        #self.bn6 = torch.nn.BatchNorm1d(dim)
+
+        self.fc1 = Linear(dim, dim)
+        self.fc2 = Linear(dim, self.num_classes)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        # x_in = x 
+        x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
+        x = self.bn1(x)
+        x = F.leaky_relu(self.conv2(x, edge_index, edge_attr))
+        x = self.bn2(x)
+        x = F.leaky_relu(self.conv3(x, edge_index, edge_attr))
+        x = self.bn3(x)
+        x = F.leaky_relu(self.conv4(x, edge_index, edge_attr))
+        x = self.bn4(x)
+
+        #x = self.global_att(torch.cat((x, x_in), 1), batch)
+        x = global_add_pool(x, batch)
+
+        x = F.leaky_relu(self.fc1(x))
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = self.fc2(x)
+        return F.log_softmax(x, dim=-1)
+
+
 # TO-DO: functions to accumulate/reset ls and ld for analysis.
 
 # TO-DO: logistic similarity for cross-entropy loss

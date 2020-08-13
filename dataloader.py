@@ -36,7 +36,7 @@ def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size
     """Dataloader used to wrap Pocket Dataset. Used for inference/testing."""
     pocketset = PocketDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, clusters=clusters, features_to_use=features_to_use)
     pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-    return pocketloader
+    return pocketloader, len(pocketset)
 
 
 class PocketDataset(Dataset):
