@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen
 from model import MoNet
+import numpy as np
 import sklearn.metrics as metrics
 
 
@@ -106,6 +107,17 @@ def validate():
     return val_loss, val_acc
 
 
+def compute_class_weights(clusters):
+    """Compute the weights of each class/cluster according to number of data.   
+
+    clusters: list of lists of pockets."""
+    cluster_lengths = [len(x) for x in clusters]
+    cluster_weights = np.array([1/x for x in cluster_lengths])
+    cluster_weights = cluster_weights/np.mean(cluster_weights) # normalize the weights with mean 
+    print(cluster_weights)
+    return cluster_weights
+
+
 if __name__=="__main__":
     random.seed(666) # deterministic sampled pockets and pairs from dataset
     print('seed: ', 666)
@@ -126,7 +138,7 @@ if __name__=="__main__":
     learning_rate = 0.003
     weight_decay = 0.001
 
-    batch_size = 8
+    batch_size = 256
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -181,7 +193,10 @@ if __name__=="__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0002, amsgrad=False)
     print('optimizer:')
     print(optimizer)
-    loss_function = nn.NLLLoss()
+
+    class_weights = compute_class_weights(train_clusters)
+    class_weights = torch.FloatTensor(class_weights).to(device)
+    loss_function = nn.NLLLoss(weight=class_weights)
     print('loss function:')
     print(loss_function)
     
