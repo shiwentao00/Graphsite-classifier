@@ -135,10 +135,10 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.003
-    weight_decay = 0.001
+    learning_rate = 0.002
+    weight_decay = 0.0005
 
-    batch_size = 256
+    batch_size = 64
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -205,6 +205,7 @@ if __name__=="__main__":
     train_accs = []
     val_losses = []
     val_accs = []
+    print('begin training...')
     for epoch in range(1, 1+num_epochs):
         train_loss, train_acc = train()
         val_loss, val_acc = validate()
@@ -213,7 +214,7 @@ if __name__=="__main__":
         train_accs.append(train_acc)
         val_losses.append(val_loss)
         val_accs.append(val_acc)
-        print('epoch: {}, train loss: {}, acc: {} val loss: {}, acc'.format(epoch, train_loss, train_acc, val_loss, val_acc))
+        print('epoch: {}, train loss: {}, acc: {}, val loss: {}, acc: {}'.format(epoch, train_loss, train_acc, val_loss, val_acc))
 
         if  val_loss < best_val_loss:
             best_val_loss = val_loss
