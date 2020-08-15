@@ -33,7 +33,6 @@ def get_args():
                         required=False,
                         help='directory of output similarity matrix.')
 
-
     return parser.parse_args()
 
 

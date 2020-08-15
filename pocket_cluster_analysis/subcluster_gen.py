@@ -1,5 +1,27 @@
 import numpy as np
 
+
+def get_args():
+    parser = argparse.ArgumentParser('python')
+
+    parser.add_argument('-main_cluster_file',
+                        default='../../data/googlenet-classes',
+                        required=False,
+                        help='text file to get the cluster labels')
+
+    parser.add_argument('-similarity_mat_dir',
+                        default='../../similarity_matrices/',
+                        required=False,
+                        help='directory of output similarity matrix.')
+
+    parser.add_argument('-subclusters_dir',
+                        default='../../further_divided_clusters/',
+                        required=False,
+                        help='directory of output similarity matrix.')
+
+    return parser.parse_args()
+
+
 def gen_subclusters(cluster, labels):
     """
     Gnerate subclusters as list of lists according to labels.
@@ -14,8 +36,16 @@ def gen_subclusters(cluster, labels):
         subclusters.append(subcluster)
     return subclusters
 
+
 if __name__=="__main__":
-    similarity_mat = np.load('./similarity_matrix_cluster_0_with_nan.npy')
+    args = get_args()
+    main_cluster_file = args.main_cluster_file
+    similarity_mat_dir = args.similarity_mat_dir
+    subclusters_dir = args.subclusters_dir
+
+    clusters_to_divide = [0] # list of clusters to be divided into subclusters
+
+    similarity_mat = np.load(similarity_mat_dir)
     print(similarity_mat)
 
     ap_clustering = AffinityPropagation().fit(similarity_mat)
