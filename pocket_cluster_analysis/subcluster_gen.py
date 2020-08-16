@@ -1,4 +1,7 @@
+import argparse
 import numpy as np
+from compute_similarity import read_cluster_file
+from sklearn.cluster import AffinityPropagation
 
 
 def get_args():
@@ -43,15 +46,21 @@ if __name__=="__main__":
     similarity_mat_dir = args.similarity_mat_dir
     subclusters_dir = args.subclusters_dir
 
+    all_clusters = read_cluster_file(main_cluster_file)
+
     clusters_to_divide = [0] # list of clusters to be divided into subclusters
+    for cluster in clusters_to_divide:
+        print('re-clustering cluster {}...'.format(cluster))
+        similarity_mat_path = similarity_mat_dir + 'similarity_matrix_cluster_' + str(cluster) + '.npy'
+        similarity_mat = np.load(similarity_mat_path)
 
-    similarity_mat = np.load(similarity_mat_dir)
-    print(similarity_mat)
+        ap_clustering = AffinityPropagation(preference=0.0001, max_iter=500, affinity='precomputed', verbose=True, random_state=666).fit(similarity_mat)
+        subcluster_labels = ap_clustering.labels_
+        print(subcluster_labels)
+        print('number of subclusters: ', len(list(set(subcluster_labels))))
 
-    ap_clustering = AffinityPropagation().fit(similarity_mat)
-    subcluster_labels = ap_clustering.labels_
-    print(subcluster_labels)
 
+    '''
     divided_subclusters = gen_subclusters(cluster, subcluster_labels)
 
     del all_clusters[0]
@@ -62,16 +71,5 @@ if __name__=="__main__":
     # save the new clusters
     with open('./new_clusters_by_dividing_cluster_0.json', 'w') as fp:
         json.dump(all_clusters, fp)
-
-
-
-
     '''
-    # pocket set has all the pockets that
-    similarity_mat_dict, pocket_set = read_similarity_file(similarity_file)
 
-
-    similarity_mat = similarity_mat_gen(clusters[0], similarity_mat_dict)
-
-    clusters, similarity_mat = remove_nan(clusters[0], similarity_mat)
-    '''

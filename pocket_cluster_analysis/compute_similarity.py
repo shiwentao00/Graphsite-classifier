@@ -3,11 +3,7 @@ Divide the large clusters into subclusters.
 """
 import argparse
 import numpy as np
-from collections import defaultdict
 from tqdm import tqdm
-from itertools import combinations 
-from sklearn.cluster import AffinityPropagation
-import json
 
 
 def get_args():
