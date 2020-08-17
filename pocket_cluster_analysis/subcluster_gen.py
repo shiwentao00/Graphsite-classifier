@@ -3,6 +3,8 @@ import numpy as np
 from compute_similarity import read_cluster_file
 from sklearn.cluster import AffinityPropagation
 from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import DBSCAN
 from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
 import matplotlib
@@ -79,7 +81,7 @@ def plot_silhouette_scores(silhouette_scores, cluster_labels, num_clusters_to_pl
         # Compute the new y_lower for next plot
         y_lower = y_upper + 10  # 10 for the 0 samples      
 
-        if cnt > num_clusters_to_plot:
+        if cnt >= num_clusters_to_plot-1:
             break
 
     ax.set_title("The silhouette plot for the {} largest clusters.".format(num_clusters_to_plot))
@@ -134,11 +136,15 @@ if __name__=="__main__":
         kmedoids_clustering = KMedoids(n_clusters=k, init='k-medoids++', metric='precomputed').fit(dist_mat)
         subcluster_labels = kmedoids_clustering.labels_
 
+        #db_clustering = DBSCAN(eps=0.4, metric='precomputed').fit(dist_mat)
+        #subcluster_labels = db_clustering.labels_
+        #k = len(list(set(subcluster_labels))) # get number of clusters
+
         # evaluate clustering results
         silhouette_scores = metrics.silhouette_samples(dist_mat, subcluster_labels, metric='precomputed')
         print('number of subclusters: {}, Silhouette score: {}'.format(k, np.mean(silhouette_scores)))
 
-        plot_silhouette_scores(silhouette_scores, subcluster_labels, num_clusters_to_plot=20)
+        plot_silhouette_scores(silhouette_scores, subcluster_labels, num_clusters_to_plot=10)
 
 
         '''
