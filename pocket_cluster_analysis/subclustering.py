@@ -1,10 +1,9 @@
 import argparse
 import numpy as np
 from compute_similarity import read_cluster_file
-from sklearn.cluster import AffinityPropagation
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.cluster import DBSCAN
+#from sklearn.cluster import AffinityPropagation
+#from sklearn.cluster import AgglomerativeClustering
+#from sklearn.cluster import DBSCAN
 from sklearn_extra.cluster import KMedoids
 from sklearn import metrics
 import matplotlib
@@ -38,21 +37,6 @@ def get_args():
                         help='directory of output similarity matrix.')
 
     return parser.parse_args()
-
-
-def gen_subclusters(cluster, labels):
-    """
-    Gnerate subclusters as list of lists according to labels.
-    """
-    subclusters = []
-    label_set = list(set(labels))
-    for label in label_set:
-        label_idx = np.nonzero(labels == label)[0]
-        subcluster = []
-        for idx in label_idx:
-            subcluster.append(cluster[idx])
-        subclusters.append(subcluster)
-    return subclusters
 
 
 def similarity_to_distance(similarity_mat):
@@ -121,8 +105,6 @@ if __name__=="__main__":
     original_cluster = args.original_cluster
     subclusters_dir = args.subclusters_dir
 
-    all_clusters = read_cluster_file(main_cluster_file)
-
     print('re-clustering cluster {}...'.format(original_cluster))
     similarity_mat_path = similarity_mat_dir + 'similarity_matrix_cluster_' + str(original_cluster) + '.npy'
         
@@ -153,28 +135,6 @@ if __name__=="__main__":
 
         plot_silhouette_scores(original_cluster, silhouette_scores, subcluster_labels, num_clusters=k)
 
-    '''
-    subclusters = gen_subclusters(all_clusters[cluster], subcluster_labels)
-    subcluster_lengths = [len(x) for x in subclusters]
-    print('length of the subclusters of cluster {}: '.format(cluster))
-    subcluster_lengths.sort(reverse=True)
-    print(subcluster_lengths)
-    '''
-
-
-
-    '''
-    divided_subclusters = gen_subclusters(cluster, subcluster_labels)
-
-    del all_clusters[0]
-
-    for subcluster in divided_subclusters:
-        all_clusters.insert(0, subcluster) # insert the sub cluster at beginning.
-
-    # save the new clusters
-    with open('./new_clusters_by_dividing_cluster_0.json', 'w') as fp:
-        json.dump(all_clusters, fp)
-    '''
 
     #db_clustering = DBSCAN(eps=0.4, metric='precomputed').fit(dist_mat)
     #subcluster_labels = db_clustering.labels_
