@@ -111,15 +111,15 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)    
 
-    num_classes = 60
+    num_classes = 10
     print('number of classes (from original clusters):', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 2500 # threshold of number of positive train pairs for each class
-    train_neg_th = 60 # threshold of number of negative train pairs for each combination
-    val_pos_th = 800 # threshold of number of positive validation pairs for each class
-    val_neg_th = 13 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 2800 # threshold of number of positive train pairs for each class
+    train_neg_th = 120 # threshold of number of negative train pairs for each combination
+    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
+    val_neg_th = 30 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
