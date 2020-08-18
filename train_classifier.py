@@ -139,7 +139,7 @@ if __name__=="__main__":
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
-    num_classes = 60
+    num_classes = 10
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     
@@ -170,9 +170,9 @@ if __name__=="__main__":
     clusters = select_classes(clusters, num_classes, cluster_th)
 
     # replace some clusters with their subclusters
-    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
-    num_classes = len(clusters)
-    print('number of classes after further clustering: ', num_classes)
+    #clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+    #num_classes = len(clusters)
+    #print('number of classes after further clustering: ', num_classes)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
