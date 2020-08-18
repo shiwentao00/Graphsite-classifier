@@ -123,7 +123,8 @@ if __name__=="__main__":
     out_similarity_mat_dir = args.out_similarity_mat_dir
 
     all_clusters = read_cluster_file(main_cluster_file)
-    for cluster_number in [5,7,8,9,10,11,16,24,25]:
+    #for cluster_number in [5,7,8,9,10,11,16,24,25]:
+    for cluster_number in [26,30,37,40,41,42,48,50,56]:
         print('generating similarity matrix for cluster {}...'.format(cluster_number))
         out_similarity_mat_path = out_similarity_mat_dir + 'similarity_matrix_cluster_' + str(cluster_number) + '.npy'
 

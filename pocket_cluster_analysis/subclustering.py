@@ -94,7 +94,7 @@ def plot_silhouette_scores(original_cluster, silhouette_scores, cluster_labels, 
     ax.set_title("Silhouette plot for the {} clusters.".format(num_clusters))
     ax.set_xlabel("Silhouette coefficient values")
     #ax.set_ylabel("Cluster label")  
-    plt.savefig('./results/cluster_{}_k{}_kmdoids_silhouette.png'.format(original_cluster, num_clusters))
+    plt.savefig('./results/cluster_{}/cluster_{}_k{}_kmdoids_silhouette.png'.format(original_cluster, original_cluster, num_clusters))
 
 
 def sort_labels_by_frequency(labels):
@@ -130,7 +130,7 @@ if __name__=="__main__":
     similarity_mat = np.load(similarity_mat_path)
     dist_mat = similarity_to_distance(similarity_mat)
 
-    for k in [2, 3, 4, 5, 6, 7, 8, 9, 10]: # number of clusters
+    for k in [2, 3, 4, 5, 6, 7, 8]: # number of clusters
         print('clustering for k={}'.format(k))
         best_score = -1 # worst score possible, so guaranteed to be better for first trial
         for seed in tqdm(range(500)): # 200 trials
