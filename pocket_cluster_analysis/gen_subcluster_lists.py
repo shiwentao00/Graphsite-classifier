@@ -17,7 +17,7 @@ def get_args():
                         help='text file to get the cluster_id labels')
 
     parser.add_argument('-output_file',
-                        default='./results/subclusters.yaml',
+                        default='./results/subclusters_0_9.yaml',
                         required=False,
                         help='path to the yaml file containing subcluster information')
 
@@ -54,6 +54,7 @@ if __name__=="__main__":
     all_clusters = read_cluster_file(main_cluster_file)
 
     # best configurations for kmedoids clustering
+    '''
     clusters = [0, 1, 5, 7, 8, 9, 10, 11, 16, 24]
     configs = {0:[4, 96], # [k, seed] for kmedoids
                1:[2, 116],
@@ -65,6 +66,14 @@ if __name__=="__main__":
                11:[4, 399],
                16:[5, 285],
                24:[5, 68]}
+    '''
+    clusters = [0, 1, 5, 7, 8, 9]
+    configs = {0:[4, 96], # [k, seed] for kmedoids
+               1:[2, 116],
+               5:[3, 14],
+               7:[2, 30],
+               8:[4, 70],
+               9:[4, 263]}
 
     # run kmedois at best configuration
     subcluster_dict = {} # all subcluster info, keys are cluster_ids
