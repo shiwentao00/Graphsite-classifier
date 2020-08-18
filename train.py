@@ -29,7 +29,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters_0_9.yaml',
+                        default='./pocket_cluster_analysis/results/subclusters.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
 

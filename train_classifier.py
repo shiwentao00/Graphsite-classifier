@@ -6,11 +6,12 @@ import random
 import os
 import torch
 import torch.nn as nn
-from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen
+from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from model import MoNet
 import numpy as np
 import sklearn.metrics as metrics
 import json
+import yaml
 
 
 def get_args():
@@ -30,6 +31,11 @@ def get_args():
                         default='../data/pops-googlenet/',
                         required=False,
                         help='directory of popsa files for sasa feature')
+
+    parser.add_argument('-subcluster_file',
+                        default='./pocket_cluster_analysis/results/subclusters.yaml',
+                        required=False,
+                        help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
                         default='../trained_models/trained_model_classifier_1.pt/',
@@ -115,7 +121,7 @@ def compute_class_weights(clusters):
     cluster_lengths = [len(x) for x in clusters]
     cluster_weights = np.array([1/x for x in cluster_lengths])
     cluster_weights = cluster_weights/np.mean(cluster_weights) # normalize the weights with mean 
-    print(cluster_weights)
+    #print(cluster_weights)
     return cluster_weights
 
 
@@ -126,6 +132,10 @@ if __name__=="__main__":
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
     pop_dir = args.pop_dir
+    subcluster_file = args.subcluster_file
+    with open(subcluster_file) as file:
+        subcluster_dict = yaml.full_load(file)        
+    
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
@@ -158,6 +168,11 @@ if __name__=="__main__":
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
+
+    # replace some clusters with their subclusters
+    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+    num_classes = len(clusters)
+    print('number of classes after further clustering: ', num_classes)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
