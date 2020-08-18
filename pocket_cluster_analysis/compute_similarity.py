@@ -25,7 +25,7 @@ def get_args():
                         help='which cluster used to compute similarity matrix')
 
     parser.add_argument('-out_similarity_mat_dir',
-                        default='../../similarity_matrices/similarity_matrix_cluster_0.npy',
+                        default='../../similarity_matrices/',
                         required=False,
                         help='directory of output similarity matrix.')
 
@@ -45,7 +45,6 @@ def read_cluster_file(cluster_file_dir):
         data_text.remove('')
 
     clusters = []
-    #cluster_sizes = []
     for x in data_text:
         cluster = x.split()[3:]
         cluster = [x.split(',')[0] for x in cluster]
@@ -120,14 +119,17 @@ if __name__=="__main__":
     args = get_args()
     main_cluster_file = args.main_cluster_file
     similarity_file = args.similarity_file
-    cluster_number = args.cluster_number
+    cluster_number = int(args.cluster_number)
     out_similarity_mat_dir = args.out_similarity_mat_dir
 
     all_clusters = read_cluster_file(main_cluster_file)
-    #cluster_length = [len(x) for x in clusters]
-    
-    similarity_mat = read_similarity(all_clusters[cluster_number], similarity_file)
-    np.save(out_similarity_mat_dir, similarity_mat)
+    for cluster_number in [5,7,8,9,10,11,16,24,25]:
+        print('generating similarity matrix for cluster {}...'.format(cluster_number))
+        out_similarity_mat_path = out_similarity_mat_dir + 'similarity_matrix_cluster_' + str(cluster_number) + '.npy'
+
+        similarity_mat = read_similarity(all_clusters[cluster_number], similarity_file)
+        
+        np.save(out_similarity_mat_path, similarity_mat)
 
 
 

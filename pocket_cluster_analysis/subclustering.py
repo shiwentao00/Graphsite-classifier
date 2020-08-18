@@ -10,6 +10,7 @@ from sklearn import metrics
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from tqdm import tqdm
 
 
 def get_args():
@@ -24,6 +25,12 @@ def get_args():
                         default='../../similarity_matrices/',
                         required=False,
                         help='directory of output similarity matrix.')
+
+    parser.add_argument('-original_cluster',
+                        type=int,
+                        default=0,
+                        required=False,
+                        help='which original cluster to further divide into subclusters.')                        
 
     parser.add_argument('-subclusters_dir',
                         default='../../further_divided_clusters/',
@@ -54,7 +61,7 @@ def similarity_to_distance(similarity_mat):
     #return 1 / similarity_mat
 
 
-def plot_silhouette_scores(silhouette_scores, cluster_labels, num_clusters_to_plot):
+def plot_silhouette_scores(original_cluster, silhouette_scores, cluster_labels, num_clusters):
     # sorted set of cluster numbers according to frequency in descending order
     cluster_set = sort_labels_by_frequency(cluster_labels)
     n_clusters = len(cluster_set)
@@ -81,13 +88,13 @@ def plot_silhouette_scores(silhouette_scores, cluster_labels, num_clusters_to_pl
         # Compute the new y_lower for next plot
         y_lower = y_upper + 10  # 10 for the 0 samples      
 
-        if cnt >= num_clusters_to_plot-1:
+        if cnt >= num_clusters-1:
             break
 
-    ax.set_title("The silhouette plot for the {} largest clusters.".format(num_clusters_to_plot))
-    ax.set_xlabel("The silhouette coefficient values")
+    ax.set_title("Silhouette plot for the {} clusters.".format(num_clusters))
+    ax.set_xlabel("Silhouette coefficient values")
     #ax.set_ylabel("Cluster label")  
-    plt.savefig('./silhouette.png')
+    plt.savefig('./results/cluster_{}_k{}_kmdoids_silhouette.png'.format(original_cluster, num_clusters))
 
 
 def sort_labels_by_frequency(labels):
@@ -111,49 +118,48 @@ if __name__=="__main__":
     args = get_args()
     main_cluster_file = args.main_cluster_file
     similarity_mat_dir = args.similarity_mat_dir
+    original_cluster = args.original_cluster
     subclusters_dir = args.subclusters_dir
 
     all_clusters = read_cluster_file(main_cluster_file)
 
-    clusters_to_divide = [0] # list of clusters to be divided into subclusters
-    for cluster in clusters_to_divide:
-        print('re-clustering cluster {}...'.format(cluster))
-        similarity_mat_path = similarity_mat_dir + 'similarity_matrix_cluster_' + str(cluster) + '.npy'
+    print('re-clustering cluster {}...'.format(original_cluster))
+    similarity_mat_path = similarity_mat_dir + 'similarity_matrix_cluster_' + str(original_cluster) + '.npy'
         
-        # generate similarity matrix and distance matrix
-        similarity_mat = np.load(similarity_mat_path)
-        dist_mat = similarity_to_distance(similarity_mat)
+    # generate similarity matrix and distance matrix
+    similarity_mat = np.load(similarity_mat_path)
+    dist_mat = similarity_to_distance(similarity_mat)
 
-        #ap_clustering = AffinityPropagation(affinity='precomputed', verbose=True, random_state=666).fit(similarity_mat)
-        #subcluster_labels = ap_clustering.labels_
-        #k = len(list(set(subcluster_labels))) # get number of clusters
+    for k in [2, 3, 4, 5, 6, 7, 8, 9, 10]: # number of clusters
+        print('clustering for k={}'.format(k))
+        best_score = -1 # worst score possible, so guaranteed to be better for first trial
+        for seed in tqdm(range(500)): # 200 trials
+            kmedoids_clustering = KMedoids(n_clusters=k, init='k-medoids++', metric='precomputed', random_state=seed).fit(dist_mat)
+            subcluster_labels = kmedoids_clustering.labels_
 
-        #agg_clustering = AgglomerativeClustering(n_clusters=None ,affinity='precomputed', linkage='average', distance_threshold=0.8).fit(dist_mat)
-        #subcluster_labels = agg_clustering.labels_
-        #k = len(list(set(subcluster_labels))) # get number of clusters
+            # evaluate clustering results
+            silhouette_scores = metrics.silhouette_samples(dist_mat, subcluster_labels, metric='precomputed')
+            avg_silhouette_score = np.mean(silhouette_scores)
+            if avg_silhouette_score > best_score:
+                best_score = avg_silhouette_score
+                best_config = {'k':k, 'seed':seed, 'silhouette':avg_silhouette_score}
+                best_clustering = kmedoids_clustering
 
-        k = 20 # number of clusters
-        kmedoids_clustering = KMedoids(n_clusters=k, init='k-medoids++', metric='precomputed').fit(dist_mat)
-        subcluster_labels = kmedoids_clustering.labels_
+        print('best configuration for k={}'.format(k))
+        print(best_config)
 
-        #db_clustering = DBSCAN(eps=0.4, metric='precomputed').fit(dist_mat)
-        #subcluster_labels = db_clustering.labels_
-        #k = len(list(set(subcluster_labels))) # get number of clusters
-
-        # evaluate clustering results
+        subcluster_labels = best_clustering.labels_
         silhouette_scores = metrics.silhouette_samples(dist_mat, subcluster_labels, metric='precomputed')
-        print('number of subclusters: {}, Silhouette score: {}'.format(k, np.mean(silhouette_scores)))
 
-        plot_silhouette_scores(silhouette_scores, subcluster_labels, num_clusters_to_plot=10)
+        plot_silhouette_scores(original_cluster, silhouette_scores, subcluster_labels, num_clusters=k)
 
-
-        '''
-        subclusters = gen_subclusters(all_clusters[cluster], subcluster_labels)
-        subcluster_lengths = [len(x) for x in subclusters]
-        print('length of the subclusters of cluster {}: '.format(cluster))
-        subcluster_lengths.sort(reverse=True)
-        print(subcluster_lengths)
-        '''
+    '''
+    subclusters = gen_subclusters(all_clusters[cluster], subcluster_labels)
+    subcluster_lengths = [len(x) for x in subclusters]
+    print('length of the subclusters of cluster {}: '.format(cluster))
+    subcluster_lengths.sort(reverse=True)
+    print(subcluster_lengths)
+    '''
 
 
 
@@ -169,4 +175,16 @@ if __name__=="__main__":
     with open('./new_clusters_by_dividing_cluster_0.json', 'w') as fp:
         json.dump(all_clusters, fp)
     '''
+
+    #db_clustering = DBSCAN(eps=0.4, metric='precomputed').fit(dist_mat)
+    #subcluster_labels = db_clustering.labels_
+    #k = len(list(set(subcluster_labels))) # get number of clusters
+
+    #ap_clustering = AffinityPropagation(affinity='precomputed', verbose=True, random_state=666).fit(similarity_mat)
+    #subcluster_labels = ap_clustering.labels_
+    #k = len(list(set(subcluster_labels))) # get number of clusters
+
+    #agg_clustering = AgglomerativeClustering(n_clusters=None ,affinity='precomputed', linkage='average', distance_threshold=0.8).fit(dist_mat)
+    #subcluster_labels = agg_clustering.labels_
+    #k = len(list(set(subcluster_labels))) # get number of clusters
 
