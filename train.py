@@ -117,9 +117,9 @@ if __name__=="__main__":
     #print('max number of data of each class:', cluster_th)
     
     train_pos_th = 2800 # threshold of number of positive train pairs for each class
-    train_neg_th = 120 # threshold of number of negative train pairs for each combination
+    train_neg_th = 250 # threshold of number of negative train pairs for each combination
     val_pos_th = 1000 # threshold of number of positive validation pairs for each class
-    val_neg_th = 30 # threshold of number of negative validation pairs for each combination
+    val_neg_th = 70 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
