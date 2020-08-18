@@ -27,6 +27,11 @@ def get_args():
                         required=False,
                         help='directory of popsa files for sasa feature')
 
+    parser.add_argument('-subcluster_file',
+                        default='./pocket_cluster_analysis/results/subclusters.yaml',
+                        required=False,
+                        help='subclusters by chemical reaction of some clusters')
+
     parser.add_argument('-trained_model_dir',
                         default='../trained_models/trained_model_.pt/',
                         required=False,
@@ -99,6 +104,7 @@ if __name__=="__main__":
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
     pop_dir = args.pop_dir
+    subcluster_file = args.subcluster_file
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
     
@@ -143,6 +149,7 @@ if __name__=="__main__":
     print('features to use: ', features_to_use)
 
     train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, 
+                                                                                          subcluster_dict = subcluster_dict,
                                                                                           num_classes=num_classes, 
                                                                                           cluster_th=cluster_th,
                                                                                           train_pos_th=train_pos_th,

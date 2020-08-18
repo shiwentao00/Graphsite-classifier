@@ -33,6 +33,11 @@ def get_args():
                         required=False,
                         help='directory of popsa files for sasa feature')
 
+    parser.add_argument('-subcluster_file',
+                        default='./pocket_cluster_analysis/results/subclusters.yaml',
+                        required=False,
+                        help='subclusters by chemical reaction of some clusters')
+
     parser.add_argument('-trained_model_dir',
                         default='../trained_models/trained_model_7.pt',
                         required=False,
@@ -130,6 +135,7 @@ if __name__=="__main__":
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
     pop_dir = args.pop_dir
+    subcluster_file = args.subcluster_file
     trained_model_dir = args.trained_model_dir
     print('computing classification accuracies of {}'.format(trained_model_dir))
 
@@ -154,6 +160,9 @@ if __name__=="__main__":
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
+
+    # replace some clusters with their subclusters
+    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)

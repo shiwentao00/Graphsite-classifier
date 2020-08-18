@@ -8,6 +8,7 @@ import torch
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader, DataListLoader
 import statistics
+import yaml
 
 
 def dataloader_gen(pocket_dir, pop_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
@@ -365,7 +366,7 @@ class PairData(Data):
             return super(PairData, self).__inc__(key, value)
 
 
-def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th, train_pos_th, train_neg_th, val_pos_th, val_neg_th):
+def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster_th, train_pos_th, train_neg_th, val_pos_th, val_neg_th):
     """
     Divide the dataset and generate pairs of pockets for train, validation, and test.
 
@@ -380,6 +381,9 @@ def divide_and_gen_pairs(cluster_file_dir, num_classes, cluster_th, train_pos_th
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
 
+    # replace some clusters with their subclusters
+    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+    
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
     num_train_pockets = sum([len(x) for x in train_clusters])
@@ -502,36 +506,83 @@ def gen_pairs(clusters, pos_pair_th=1000, neg_pair_th=20):
     return pos_pairs, neg_pairs
 
 
+def cluster_by_chem_react(clusters, subcluster_dict):
+    """
+    Replace the original clusters with their subclusters.
+
+    Arguments:
+
+        clusters: list of lists of pockts.
+
+        subcluster_dict: dictionary contains subclusters. Keys are the original cluster ids. 
+    """
+    num_original_clusters = len(clusters)
+    dict_keys = list(subcluster_dict.keys())
+    
+    # store the unchanged clusters first
+    new_cluster_dict = {}
+    for original_cluster_id in range(num_original_clusters):
+        if original_cluster_id not in dict_keys: # if this cluster is not further divided
+            new_cluster_dict.update({'{}-0'.format(original_cluster_id):clusters[original_cluster_id]})
+
+    # update the subclusters
+    for key in dict_keys:
+        subclusters = subcluster_dict[key]
+        for idx, subcluster in enumerate(subclusters):
+            new_cluster_dict.update({'{}-{}'.format(key, idx):subcluster})
+
+    new_cluster_ids = list(new_cluster_dict.keys())
+    new_cluster_ids.sort(key=lambda x: int(x.split('-')[0]))
+
+    # for a list of lists of pockts according to new_cluster_ids
+    new_clusters = []
+    for cluster_id in new_cluster_ids:
+        new_clusters.append(new_cluster_dict[cluster_id])
+
+    return new_clusters, new_cluster_ids
+    
+
 if __name__=="__main__":
     """
     Main function for testing and debugging only.
     """
     cluster_file_dir = '../data/googlenet-classes'
     pocket_dir = '../data/googlenet-dataset/'
-    num_classes = 150
-    cluster_th = 400
+    num_classes = 60
+    cluster_th = 10000
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy']
     batch_size = 4 # number of pairs in a mini-batch
 
-    train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, num_classes=num_classes, cluster_th=cluster_th)
-    
+    train_pos_th = 3000 # threshold of number of positive train pairs for each class
+    train_neg_th = 100 # threshold of number of negative train pairs for each combination
+    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
+    val_neg_th = 25 # threshold of number of negative validation pairs for each combination
+    print('positive training pair sampling threshold: ', train_pos_th)
+    print('negative training pair sampling threshold: ', train_neg_th)
+    print('positive validation pair sampling threshold: ', val_pos_th)
+    print('negative validation pair sampling threshold: ', val_neg_th)
 
+
+    subcluster_file = './pocket_cluster_analysis/results/subclusters.yaml'
+    with open(subcluster_file) as file:
+        subcluster_dict = yaml.full_load(file)
+
+    train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, 
+                                                                                          subcluster_dict = subcluster_dict,
+                                                                                          num_classes=num_classes, 
+                                                                                          cluster_th=cluster_th,
+                                                                                          train_pos_th=train_pos_th,
+                                                                                          train_neg_th=train_neg_th,
+                                                                                          val_pos_th=val_pos_th,
+                                                                                          val_neg_th=val_neg_th)
+    
     print('number of classes:', num_classes)
     print('max number of data of each class:', cluster_th)
     print('number of train positive pairs:', len(train_pos_pairs))
     print('number of train negative pairs:', len(train_neg_pairs))
     print('number of validation positive pairs:', len(val_pos_pairs))
     print('number of validation negative pairs:', len(val_neg_pairs))
-    print('number of test positive pairs:', len(test_pos_pairs))
-    print('number of test negative pairs:', len(test_neg_pairs))
 
-    train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True)
 
-    batch_data = next(iter(train_loader))
-    print(batch_data)
-    print(batch_data.x_a_batch)
-    print(batch_data.x_b_batch)
-    #data = PairData(x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b)
-    #data_list = [data, data]
-    #
-    #batch_data = next(iter(loader))
+    #train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True)
+
