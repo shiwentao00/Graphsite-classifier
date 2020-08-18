@@ -13,6 +13,7 @@ from dataloader import read_cluster_file, select_classes, divide_clusters, pocke
 from model import SiameseNet, ContrastiveLoss
 from scipy.spatial.distance import cdist
 import sklearn.metrics as metrics
+import yaml
 
 
 def get_args():
@@ -135,7 +136,11 @@ if __name__=="__main__":
     cluster_file_dir = args.cluster_file_dir
     pocket_dir = args.pocket_dir
     pop_dir = args.pop_dir
+
     subcluster_file = args.subcluster_file
+    with open(subcluster_file) as file:
+        subcluster_dict = yaml.full_load(file)    
+    
     trained_model_dir = args.trained_model_dir
     print('computing classification accuracies of {}'.format(trained_model_dir))
 

@@ -463,16 +463,20 @@ def divide_clusters(clusters):
 
     # sizes of the clusters
     cluster_sizes = [len(x) for x in clusters]
+    #print('total pockets:{}'.format(sum(cluster_sizes)))
 
     # train
     train_sizes = [int(0.7 * x) for x in cluster_sizes]
+    #print('train pockets:{}'.format(sum(train_sizes)))
 
     # validation
     val_sizes = [int(0.15 * x) for x in cluster_sizes]
+    #print('val pockets:{}'.format(sum(val_sizes)))
 
     # test
     train_val_sizes = [sum(x) for x in zip(train_sizes, val_sizes)]
     test_sizes = [a - b for a, b in zip(cluster_sizes, train_val_sizes)]
+    #print('test pockets:{}'.format(sum(test_sizes)))
 
     train_clusters = []
     val_clusters = []

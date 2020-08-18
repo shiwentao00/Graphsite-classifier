@@ -7,6 +7,7 @@ from dataloader import divide_and_gen_pairs, dataloader_gen, dataloader_gen_mult
 from model import SiameseNet, ContrastiveLoss
 import sklearn.metrics as metrics
 import json
+import yaml
 
 
 def get_args():
@@ -107,16 +108,18 @@ if __name__=="__main__":
     subcluster_file = args.subcluster_file
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
-    
+    with open(subcluster_file) as file:
+        subcluster_dict = yaml.full_load(file)    
+
     num_classes = 60
-    print('number of classes:', num_classes)
+    print('number of classes (from original clusters):', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 3000 # threshold of number of positive train pairs for each class
-    train_neg_th = 100 # threshold of number of negative train pairs for each combination
-    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
-    val_neg_th = 25 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 2500 # threshold of number of positive train pairs for each class
+    train_neg_th = 60 # threshold of number of negative train pairs for each combination
+    val_pos_th = 800 # threshold of number of positive validation pairs for each class
+    val_neg_th = 13 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
@@ -128,7 +131,7 @@ if __name__=="__main__":
     batch_size = 256
     print('batch size:', batch_size)
     learning_rate = 0.003
-    weight_decay = 0.001
+    weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
     num_workers = os.cpu_count()
@@ -176,7 +179,7 @@ if __name__=="__main__":
                                               shuffle=True,
                                               num_workers=num_workers)
 
-    model = SiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
+    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")
