@@ -5,6 +5,7 @@ from torch.nn import Sequential, Linear, ReLU, LeakyReLU, ELU
 from torch_geometric.nn import GINConv
 from torch_geometric.nn import global_add_pool
 from torch_geometric.nn import GlobalAttention
+from torch_geometric.nn import Set2Set
 
 
 class GINMolecularConv(GINConv):
@@ -163,6 +164,7 @@ class MoNet(torch.nn.Module):
         #out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
         # global attention pooling layer
         #self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
+        self.set2set = Set2Set(in_channels=dim, processing_steps=10, num_layers=2)
 
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
@@ -188,7 +190,7 @@ class MoNet(torch.nn.Module):
         #self.conv6 = GINConv(nn6)
         #self.bn6 = torch.nn.BatchNorm1d(dim)
 
-        self.fc1 = Linear(dim, dim)
+        self.fc1 = Linear(2 * dim, dim)
         self.fc2 = Linear(dim, self.num_classes)
 
     def forward(self, x, edge_index, edge_attr, batch):
@@ -203,7 +205,8 @@ class MoNet(torch.nn.Module):
         x = self.bn4(x)
 
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
-        x = global_add_pool(x, batch)
+        #x = global_add_pool(x, batch)
+        x = self.set2set(x, batch)
 
         x = F.leaky_relu(self.fc1(x))
         x = F.dropout(x, p=0.5, training=self.training)

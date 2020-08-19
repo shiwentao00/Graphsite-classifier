@@ -203,7 +203,7 @@ if __name__=="__main__":
                                              shuffle=False, 
                                              num_workers=num_workers) 
 
-    model = MoNet(num_classes=num_classes, num_features=num_features, dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = MoNet(num_classes=num_classes, num_features=num_features, dim=64, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
