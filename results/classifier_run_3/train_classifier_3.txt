@@ -1,0 +1,132 @@
+seed:  666
+number of classes: 10
+number of epochs to train: 60
+batch size: 64
+number of workers to load data:  36
+device:  cuda
+number of gpus:  2
+number of pockets in training set:  10526
+number of pockets in validation set:  2252
+number of pockets in test set:  2266
+model architecture:
+MoNet(
+  (conv1): GINMolecularConv(nn=Sequential(
+    (0): Linear(in_features=5, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  ))(edge_transformer=Sequential(
+    (0): Linear(in_features=1, out_features=5, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=5, out_features=5, bias=True)
+    (3): ELU(alpha=1.0)
+  ))
+  (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv2): GINMolecularConv(nn=Sequential(
+    (0): Linear(in_features=32, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  ))(edge_transformer=Sequential(
+    (0): Linear(in_features=1, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+    (3): ELU(alpha=1.0)
+  ))
+  (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv3): GINMolecularConv(nn=Sequential(
+    (0): Linear(in_features=32, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  ))(edge_transformer=Sequential(
+    (0): Linear(in_features=1, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+    (3): ELU(alpha=1.0)
+  ))
+  (bn3): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv4): GINMolecularConv(nn=Sequential(
+    (0): Linear(in_features=32, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+  ))(edge_transformer=Sequential(
+    (0): Linear(in_features=1, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=32, bias=True)
+    (3): ELU(alpha=1.0)
+  ))
+  (bn4): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (fc1): Linear(in_features=32, out_features=32, bias=True)
+  (fc2): Linear(in_features=32, out_features=10, bias=True)
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.001
+    weight_decay: 0.0005
+)
+loss function:
+NLLLoss()
+begin training...
+epoch: 1, train loss: 8.466229356107617, acc: 0.2440623218696561, val loss: 2.794545306617371, acc: 0.09813499111900532
+epoch: 2, train loss: 2.3528358563030487, acc: 0.2253467604028121, val loss: 2.2923794123038093, acc: 0.20293072824156305
+epoch: 3, train loss: 2.257225178639381, acc: 0.2560326809804294, val loss: 2.252071949347298, acc: 0.35346358792184723
+epoch: 4, train loss: 2.245512745667156, acc: 0.3574007220216607, val loss: 2.2504639337583714, acc: 0.35479573712255774
+epoch: 5, train loss: 2.2163282239842546, acc: 0.37915637469124075, val loss: 2.211034666369694, acc: 0.3605683836589698
+epoch: 6, train loss: 2.1801893137127824, acc: 0.38010640319209577, val loss: 2.1868437407918764, acc: 0.3632326820603908
+epoch: 7, train loss: 2.1882238426567278, acc: 0.3848565456963709, val loss: 2.225424562423733, acc: 0.358348134991119
+epoch: 8, train loss: 2.1462350223265108, acc: 0.37915637469124075, val loss: 2.132490995722173, acc: 0.38099467140319715
+epoch: 9, train loss: 2.1381614372663664, acc: 0.3805814174425233, val loss: 2.109641312705899, acc: 0.3814387211367673
+epoch: 10, train loss: 2.1248785185537566, acc: 0.38086642599277976, val loss: 2.093094764763678, acc: 0.3814387211367673
+epoch: 11, train loss: 2.107400748749185, acc: 0.38086642599277976, val loss: 2.078987804653378, acc: 0.3796625222024867
+epoch: 12, train loss: 2.088975035643682, acc: 0.3816264487934638, val loss: 2.111098272550593, acc: 0.36989342806394315
+epoch: 13, train loss: 2.076352671074727, acc: 0.38086642599277976, val loss: 2.0677949192257166, acc: 0.3738898756660746
+epoch: 14, train loss: 2.064783814785577, acc: 0.38096142884286527, val loss: 2.0988939922190473, acc: 0.36589698046181174
+epoch: 15, train loss: 2.060617840111131, acc: 0.3999619988599658, val loss: 2.0345829350486744, acc: 0.38099467140319715
+epoch: 16, train loss: 2.055983404594072, acc: 0.3812464373931218, val loss: 2.0269793621388463, acc: 0.3814387211367673
+epoch: 17, train loss: 2.0525804917757533, acc: 0.3814364430932928, val loss: 2.1140660307970607, acc: 0.35879218472468916
+epoch: 18, train loss: 2.0531643496568996, acc: 0.37972639179175377, val loss: 2.0235933596880353, acc: 0.3814387211367673
+epoch: 19, train loss: 2.0502660977122407, acc: 0.38096142884286527, val loss: 2.0215528659244626, acc: 0.3814387211367673
+epoch: 20, train loss: 2.049272862899537, acc: 0.38096142884286527, val loss: 2.021054359354727, acc: 0.3814387211367673
+epoch: 21, train loss: 2.0491579133431856, acc: 0.38096142884286527, val loss: 2.0209575991012274, acc: 0.3814387211367673
+epoch: 22, train loss: 2.0491444386390367, acc: 0.38096142884286527, val loss: 2.023749478121634, acc: 0.3814387211367673
+epoch: 23, train loss: 2.047336468423883, acc: 0.38096142884286527, val loss: 2.0247176565878346, acc: 0.38099467140319715
+epoch: 24, train loss: 2.0492854180409386, acc: 0.3802964088922668, val loss: 2.0289856731150544, acc: 0.3814387211367673
+epoch: 25, train loss: 2.0468515332334514, acc: 0.3812464373931218, val loss: 2.029546041895187, acc: 0.380550621669627
+epoch: 26, train loss: 2.052412733251596, acc: 0.38039141174235225, val loss: 2.0531899941750997, acc: 0.37788632326820604
+epoch: 27, train loss: 2.0520814761629853, acc: 0.3805814174425233, val loss: 2.031435087773135, acc: 0.3814387211367673
+epoch: 28, train loss: 2.0508312146155845, acc: 0.38096142884286527, val loss: 2.031255194391281, acc: 0.380550621669627
+epoch: 29, train loss: 2.0467531348099257, acc: 0.3830514915447463, val loss: 2.0708830703850536, acc: 0.3654529307282416
+epoch: 30, train loss: 2.061147577518432, acc: 0.3798213946418393, val loss: 2.0289484675358285, acc: 0.38099467140319715
+epoch: 31, train loss: 2.0526051946223607, acc: 0.38086642599277976, val loss: 2.032474302271543, acc: 0.38099467140319715
+epoch: 32, train loss: 2.0717878962296985, acc: 0.40566216986509596, val loss: 3.567167636132791, acc: 0.18339253996447602
+epoch: 33, train loss: 2.085313347657552, acc: 0.36804104123123693, val loss: 2.029732420008305, acc: 0.38099467140319715
+epoch: 34, train loss: 2.0476057720166208, acc: 0.3810564316929508, val loss: 2.057191012384201, acc: 0.3765541740674956
+epoch: 35, train loss: 1.909149124371831, acc: 0.4217176515295459, val loss: 4.000875031334045, acc: 0.108348134991119
+epoch: 36, train loss: 2.0846617393975655, acc: 0.3634809044271328, val loss: 2.027390349186547, acc: 0.3814387211367673
+epoch: 37, train loss: 2.051056376070707, acc: 0.38096142884286527, val loss: 2.0256322709112355, acc: 0.3814387211367673
+epoch: 38, train loss: 2.048665087009686, acc: 0.38096142884286527, val loss: 2.0248119466893413, acc: 0.3814387211367673
+epoch: 39, train loss: 2.0470685923074603, acc: 0.38096142884286527, val loss: 2.025395071951153, acc: 0.3814387211367673
+epoch: 40, train loss: 2.0469559773777277, acc: 0.38086642599277976, val loss: 2.0241905948408543, acc: 0.3814387211367673
+epoch: 41, train loss: 2.047154263219701, acc: 0.38096142884286527, val loss: 2.0241891359562985, acc: 0.3814387211367673
+epoch: 42, train loss: 2.046016601788642, acc: 0.38096142884286527, val loss: 2.0244369875262516, acc: 0.3814387211367673
+epoch: 43, train loss: 2.0452882042181213, acc: 0.38096142884286527, val loss: 2.024395139348655, acc: 0.3814387211367673
+epoch: 44, train loss: 2.044909297615862, acc: 0.38096142884286527, val loss: 2.0246972529545135, acc: 0.3814387211367673
+epoch: 45, train loss: 2.0453810222516284, acc: 0.38096142884286527, val loss: 2.0259124055425395, acc: 0.3814387211367673
+epoch: 46, train loss: 2.045084910272261, acc: 0.38096142884286527, val loss: 2.0262215023142405, acc: 0.3814387211367673
+epoch: 47, train loss: 2.047539678834904, acc: 0.42836785103553104, val loss: 6.850689060099383, acc: 0.05772646536412078
+epoch: 48, train loss: 2.085236222123819, acc: 0.3620558616758503, val loss: 2.026873145179681, acc: 0.3814387211367673
+epoch: 49, train loss: 2.051729468820939, acc: 0.37972639179175377, val loss: 2.037369929240821, acc: 0.38099467140319715
+epoch: 50, train loss: 2.0479558934826554, acc: 0.38096142884286527, val loss: 2.0220814068829824, acc: 0.3814387211367673
+epoch: 51, train loss: 2.046441209150905, acc: 0.38096142884286527, val loss: 2.0212837065938944, acc: 0.3814387211367673
+epoch: 52, train loss: 2.0440663336439093, acc: 0.38096142884286527, val loss: 2.020886794711938, acc: 0.3814387211367673
+epoch: 53, train loss: 2.0432836208057203, acc: 0.38096142884286527, val loss: 2.0210058202116783, acc: 0.3814387211367673
+epoch: 54, train loss: 2.0427431535657403, acc: 0.38096142884286527, val loss: 2.021974365834021, acc: 0.3814387211367673
+epoch: 55, train loss: 2.0425910690585947, acc: 0.38096142884286527, val loss: 2.022195519604861, acc: 0.3814387211367673
+epoch: 56, train loss: 2.0515248765062974, acc: 0.3815314459433783, val loss: 2.0245925804226266, acc: 0.3814387211367673
+epoch: 57, train loss: 1.942216949274439, acc: 0.44185825574767246, val loss: 43.6045375624622, acc: 0.1127886323268206
+epoch: 58, train loss: 2.215684941076358, acc: 0.38010640319209577, val loss: 2.032343956759302, acc: 0.3814387211367673
+epoch: 59, train loss: 2.0727781914677115, acc: 0.38096142884286527, val loss: 2.0264910173670225, acc: 0.3814387211367673
+epoch: 60, train loss: 2.0514053184452017, acc: 0.38096142884286527, val loss: 2.0236377737238396, acc: 0.3814387211367673
+best val loss 2.020886794711938 at epoch 52.

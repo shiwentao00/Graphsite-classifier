@@ -33,7 +33,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters.yaml',
+                        default='./pocket_cluster_analysis/results/subclusters_0_9.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
 
@@ -170,9 +170,9 @@ if __name__=="__main__":
     clusters = select_classes(clusters, num_classes, cluster_th)
 
     # replace some clusters with their subclusters
-    #clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
-    #num_classes = len(clusters)
-    #print('number of classes after further clustering: ', num_classes)
+    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+    num_classes = len(clusters)
+    print('number of classes after further clustering: ', num_classes)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
