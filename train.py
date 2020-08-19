@@ -3,7 +3,8 @@ import random
 import os
 import torch
 from torch_geometric.nn import DataParallel
-from dataloader import divide_and_gen_pairs, dataloader_gen, dataloader_gen_multi_gpu
+from dataloader import read_cluster_file, select_classes, divide_clusters, cluster_by_chem_react, gen_pairs
+from dataloader import dataloader_gen
 from model import SiameseNet, ContrastiveLoss
 import sklearn.metrics as metrics
 import json
@@ -116,10 +117,10 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    train_pos_th = 2800 # threshold of number of positive train pairs for each class
-    train_neg_th = 250 # threshold of number of negative train pairs for each combination
-    val_pos_th = 1000 # threshold of number of positive validation pairs for each class
-    val_neg_th = 70 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 9000 # threshold of number of positive train pairs for each class
+    train_neg_th = 2000 # threshold of number of negative train pairs for each combination
+    val_pos_th = 2700 # threshold of number of positive validation pairs for each class
+    val_neg_th = 600 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
@@ -134,6 +135,8 @@ if __name__=="__main__":
     weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
+    subclustering = False # whether to further subcluster data according to subcluster_dict
+
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
@@ -151,14 +154,30 @@ if __name__=="__main__":
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
     print('features to use: ', features_to_use)
 
-    train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs = divide_and_gen_pairs(cluster_file_dir=cluster_file_dir, 
-                                                                                          subcluster_dict = subcluster_dict,
-                                                                                          num_classes=num_classes, 
-                                                                                          cluster_th=cluster_th,
-                                                                                          train_pos_th=train_pos_th,
-                                                                                          train_neg_th=train_neg_th,
-                                                                                          val_pos_th=val_pos_th,
-                                                                                          val_neg_th=val_neg_th)
+    # read the original clustered pockets
+    clusters = read_cluster_file(cluster_file_dir)
+
+    # select clusters according to rank of sizes and sample large clusters
+    clusters = select_classes(clusters, num_classes, cluster_th)
+
+    # replace some clusters with their subclusters
+    if subclustering == True:
+        clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+    
+    # divide the clusters into train, validation and test
+    train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
+    num_train_pockets = sum([len(x) for x in train_clusters])
+    num_val_pockets = sum([len(x) for x in val_clusters])
+    num_test_pockets = sum([len(x) for x in test_clusters])
+    print('number of pockets in training set: ', num_train_pockets)
+    print('number of pockets in validation set: ', num_val_pockets)
+    print('number of pockets in test set: ', num_test_pockets)
+
+    # train pairs
+    train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)
+
+    # validation pairs
+    val_pos_pairs, val_neg_pairs = gen_pairs(clusters=val_clusters, pos_pair_th=val_pos_th, neg_pair_th=val_neg_th)
     
     print('number of train positive pairs:', len(train_pos_pairs))
     print('number of train negative pairs:', len(train_neg_pairs))
