@@ -30,7 +30,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters.yaml',
+                        default='./pocket_cluster_analysis/results/subclusters_0.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
 
@@ -135,7 +135,8 @@ if __name__=="__main__":
     weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
-    subclustering = False # whether to further subcluster data according to subcluster_dict
+    subclustering = True # whether to further subcluster data according to subcluster_dict
+    print('whether to further subcluster data according to chemical reaction: {}', subclustering)
 
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -163,6 +164,8 @@ if __name__=="__main__":
     # replace some clusters with their subclusters
     if subclustering == True:
         clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+        num_classes = len(clusters)
+        print('number of classes after further clustering: ', num_classes)
     
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)

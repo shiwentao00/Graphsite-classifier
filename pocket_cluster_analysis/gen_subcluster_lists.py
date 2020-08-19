@@ -67,6 +67,7 @@ if __name__=="__main__":
                16:[5, 285],
                24:[5, 68]}
     '''
+
     clusters = [0, 1, 5, 7, 8, 9]
     configs = {0:[4, 96], # [k, seed] for kmedoids
                1:[2, 116],
@@ -74,6 +75,11 @@ if __name__=="__main__":
                7:[2, 30],
                8:[4, 70],
                9:[4, 263]}
+
+    '''
+    clusters = [0]
+    configs = {0:[4, 96]}
+    '''
 
     # run kmedois at best configuration
     subcluster_dict = {} # all subcluster info, keys are cluster_ids
