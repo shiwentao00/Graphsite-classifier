@@ -160,12 +160,16 @@ class MoNet(torch.nn.Module):
     def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr):
         super(MoNet, self).__init__()
         self.num_classes = num_classes
+
         # neural network to compute self-attention for output layer
         #gate_nn = Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, 1), LeakyReLU())
+        
         # neural netowrk to compute embedding before masking
         #out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
+        
         # global attention pooling layer
         #self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
+        
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
@@ -210,9 +214,9 @@ class MoNet(torch.nn.Module):
         #x = global_add_pool(x, batch)
         x = self.set2set(x, batch)
         x = F.dropout(x, p=0.5, training=self.training)
-        x = F.leaky_relu(self.fc1(x))
+        x = self.fc1(x)
 
-       # x = self.fc2(x)
+        # x = self.fc2(x)
         return F.log_softmax(x, dim=-1)
 
 
