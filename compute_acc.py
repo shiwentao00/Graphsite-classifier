@@ -9,7 +9,7 @@ import argparse
 import os
 import torch
 import numpy as np
-from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen
+from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from model import SiameseNet, ContrastiveLoss
 from scipy.spatial.distance import cdist
 import sklearn.metrics as metrics
@@ -35,12 +35,12 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters.yaml',
+                        default='./pocket_cluster_analysis/results/subclusters_0_9.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_7.pt',
+                        default='../trained_models/trained_model_19.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -92,7 +92,7 @@ def compute_embeddings(dataloader, model, device, normalize=True):
     return embeddings, labels, cluster_set
 
 
-def compute_acc(dataloader, model, class_centers, device, normalize=True):
+def compute_acc(dataloader, model, class_centers, cluster_ids, device, normalize=True):
     """Compute the classification accuracy."""
     embeddings, labels, cluster_set = compute_embeddings(dataloader, model, device, normalize)
     
@@ -108,7 +108,7 @@ def compute_acc(dataloader, model, class_centers, device, normalize=True):
         cluster_labels = labels[cluster_idx]
         cluster_predictions = predictions[cluster_idx]
         cluster_acc = metrics.accuracy_score(cluster_labels, cluster_predictions)
-        print('cluster {} accuracy: {}.'.format(cluster, cluster_acc))
+        print('cluster {} accuracy: {}.'.format(cluster_ids[cluster], cluster_acc))
     return acc 
 
 
@@ -168,6 +168,8 @@ if __name__=="__main__":
 
     # replace some clusters with their subclusters
     clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+    num_classes = len(clusters)
+    print('number of classes after further clustering: ', num_classes)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
@@ -182,7 +184,7 @@ if __name__=="__main__":
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
 
     # train loader, used to compute the geometric center of the embeddings of each cluster
-    train_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+    train_loader, train_loader_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                      pop_dir=pop_dir,
                                      clusters=train_clusters, 
                                      features_to_use=features_to_use, 
@@ -199,35 +201,35 @@ if __name__=="__main__":
     class_centers = compute_geo_centers(train_loader, model, device, normalize=normalize)
 
     # train accuracy
-    train_acc = compute_acc(train_loader, model, class_centers, device, normalize=normalize)
+    train_acc = compute_acc(train_loader, model, class_centers, cluster_ids, device, normalize=normalize)
     print('training accuracy: ', train_acc)
     top5_train_acc = compute_top5_acc(train_loader, model, class_centers, device, normalize=normalize)
     print('top-5 training accuracy: ', top5_train_acc)
     print('----------------------------------------------------------')
 
     # validation accuracy
-    val_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+    val_loader, val_loader_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                    pop_dir=pop_dir,
                                    clusters=val_clusters, 
                                    features_to_use=features_to_use, 
                                    batch_size=batch_size, 
                                    shuffle=False, 
                                    num_workers=num_workers)    
-    val_acc = compute_acc(val_loader, model, class_centers, device, normalize=normalize)
+    val_acc = compute_acc(val_loader, model, class_centers, cluster_ids, device, normalize=normalize)
     print('validation accuracy: ', val_acc)
     top5_val_acc = compute_top5_acc(val_loader, model, class_centers, device, normalize=normalize)
     print('top-5 validation accuracy: ', top5_val_acc)
     print('----------------------------------------------------------')
 
     # test accuracy
-    test_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+    test_loader, test_loader_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                    pop_dir=pop_dir,
                                    clusters=test_clusters, 
                                    features_to_use=features_to_use, 
                                    batch_size=batch_size, 
                                    shuffle=False, 
                                    num_workers=num_workers)    
-    test_acc = compute_acc(test_loader, model, class_centers, device, normalize=normalize)
+    test_acc = compute_acc(test_loader, model, class_centers, cluster_ids, device, normalize=normalize)
     print('test accuracy: ', test_acc)
     top5_test_acc = compute_top5_acc(test_loader, model, class_centers, device, normalize=normalize)
     print('top-5 test accuracy: ', top5_test_acc)
