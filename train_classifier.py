@@ -33,7 +33,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters_0_9.yaml',
+                        default='./pocket_cluster_analysis/results/subclusters_0.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
 
@@ -57,7 +57,7 @@ def train():
     Global vars: train_loader, train_size, device, optimizer, model
     """
     model.train()
-    if epoch == 100:
+    if epoch == 60:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
@@ -143,11 +143,14 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     
+    subclustering = True # whether to further subcluster data according to subcluster_dict
+    print('whether to further subcluster data according to chemical reaction: {}', subclustering)
+
     # tunable hyper-parameters
-    num_epochs = 300
+    num_epochs = 200
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.002
-    weight_decay = 0.001
+    learning_rate = 0.0015
+    weight_decay = 0.0005
 
     batch_size = 64
     print('batch size:', batch_size)
@@ -170,9 +173,10 @@ if __name__=="__main__":
     clusters = select_classes(clusters, num_classes, cluster_th)
 
     # replace some clusters with their subclusters
-    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
-    num_classes = len(clusters)
-    print('number of classes after further clustering: ', num_classes)
+    if subclustering == True:
+        clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+        num_classes = len(clusters)
+        print('number of classes after further clustering: ', num_classes)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)

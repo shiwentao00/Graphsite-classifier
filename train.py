@@ -117,6 +117,9 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
+    subclustering = True # whether to further subcluster data according to subcluster_dict
+    print('whether to further subcluster data according to chemical reaction: {}', subclustering)
+
     train_pos_th = 9000 # threshold of number of positive train pairs for each class
     train_neg_th = 1500 # threshold of number of negative train pairs for each combination
     val_pos_th = 2700 # threshold of number of positive validation pairs for each class
@@ -135,9 +138,6 @@ if __name__=="__main__":
     weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
-    subclustering = True # whether to further subcluster data according to subcluster_dict
-    print('whether to further subcluster data according to chemical reaction: {}', subclustering)
-
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
