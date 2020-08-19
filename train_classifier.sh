@@ -1,11 +1,11 @@
 #!/bin/bash
-#PBS -q v100
-#PBS -l nodes=1:ppn=36
+#PBS -q hybrid
+#PBS -l nodes=1:ppn=20
 #PBS -l walltime=72:00:00
 #PBS -A hpc_gcn03
 #PBS -j oe
 
-run=7
+run=5
 
 module purge
 source activate graph
