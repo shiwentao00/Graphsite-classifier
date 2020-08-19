@@ -164,7 +164,7 @@ class MoNet(torch.nn.Module):
         #out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
         # global attention pooling layer
         #self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
-        self.set2set = Set2Set(in_channels=dim, processing_steps=10, num_layers=2)
+        self.set2set = Set2Set(in_channels=dim, processing_steps=10, num_layers=1)
 
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
@@ -196,11 +196,11 @@ class MoNet(torch.nn.Module):
     def forward(self, x, edge_index, edge_attr, batch):
         # x_in = x 
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
-        x = self.bn1(x)
+        #x = self.bn1(x)
         x = F.leaky_relu(self.conv2(x, edge_index, edge_attr))
-        x = self.bn2(x)
+        #x = self.bn2(x)
         x = F.leaky_relu(self.conv3(x, edge_index, edge_attr))
-        x = self.bn3(x)
+        #x = self.bn3(x)
         #x = F.leaky_relu(self.conv4(x, edge_index, edge_attr))
         #x = self.bn4(x)
 

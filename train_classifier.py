@@ -57,7 +57,7 @@ def train():
     Global vars: train_loader, train_size, device, optimizer, model
     """
     model.train()
-    if epoch == 600:
+    if epoch == 100:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
@@ -144,9 +144,9 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     
     # tunable hyper-parameters
-    num_epochs = 1200
+    num_epochs = 300
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.003
+    learning_rate = 0.002
     weight_decay = 0.001
 
     batch_size = 64
