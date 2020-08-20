@@ -171,7 +171,7 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     
-    subclustering = False # whether to further subcluster data according to subcluster_dict
+    subclustering = True # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     # tunable hyper-parameters

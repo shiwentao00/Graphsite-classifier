@@ -203,6 +203,9 @@ class MoNet(torch.nn.Module):
         # x_in = x 
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
         x = self.bn1(x)
+
+        #x_skip = x
+
         x = F.leaky_relu(self.conv2(x, edge_index, edge_attr))
         x = self.bn2(x)
         x = F.leaky_relu(self.conv3(x, edge_index, edge_attr))
@@ -210,6 +213,8 @@ class MoNet(torch.nn.Module):
         x = F.leaky_relu(self.conv4(x, edge_index, edge_attr))
         x = self.bn4(x)
 
+        #x = x + x_skip
+        
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
         #x = global_add_pool(x, batch)
         x = self.set2set(x, batch)

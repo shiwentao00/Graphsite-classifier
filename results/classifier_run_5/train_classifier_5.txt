@@ -1,0 +1,25 @@
+seed:  666
+number of classes: 10
+whether to further subcluster data according to chemical reaction: {} False
+number of epochs to train: 200
+batch size: 64
+number of workers to load data:  20
+device:  cuda
+number of gpus:  1
+number of pockets in training set:  10526
+number of pockets in validation set:  2252
+number of pockets in test set:  2266
+Traceback (most recent call last):
+  File "train_classifier.py", line 210, in <module>
+    model = MoNet(num_classes=num_classes, num_features=num_features, dim=32, train_eps=True, num_edge_attr=1).to(device)
+  File "/opt/python/anaconda-2020.2/lib/python3.7/site-packages/torch/nn/modules/module.py", line 443, in to
+    return self._apply(convert)
+  File "/opt/python/anaconda-2020.2/lib/python3.7/site-packages/torch/nn/modules/module.py", line 203, in _apply
+    module._apply(fn)
+  File "/opt/python/anaconda-2020.2/lib/python3.7/site-packages/torch/nn/modules/module.py", line 203, in _apply
+    module._apply(fn)
+  File "/opt/python/anaconda-2020.2/lib/python3.7/site-packages/torch/nn/modules/rnn.py", line 151, in _apply
+    self.flatten_parameters()
+  File "/opt/python/anaconda-2020.2/lib/python3.7/site-packages/torch/nn/modules/rnn.py", line 141, in flatten_parameters
+    self.batch_first, bool(self.bidirectional))
+RuntimeError: CUDA error: no kernel image is available for execution on the device
