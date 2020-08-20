@@ -114,6 +114,34 @@ def validate():
     return val_loss, val_acc
 
 
+def test():
+    """
+    Returns loss and accuracy on validation set.
+    Global vars: val_loader, val_size, device, model
+    """
+    model.eval()
+
+    loss_total = 0
+    epoch_pred = [] # all the predictions for the epoch
+    epoch_label = [] # all the labels for the epoch
+    for data in val_loader:
+        data = data.to(device)
+        output = model(data.x, data.edge_index, data.edge_attr, data.batch)
+        loss = loss_function(output, data.y)
+        loss_total += loss.item() * data.num_graphs
+        pred = output.max(dim=1)[1]
+        
+        pred_cpu = list(pred.cpu().detach().numpy()) # used to compute evaluation metrics
+        label = list(data.y.cpu().detach().numpy()) # used to compute evaluation metrics
+
+        epoch_pred.extend(pred_cpu)
+        epoch_label.extend(label)
+
+    test_acc = metrics.accuracy_score(epoch_label, epoch_pred)# accuracy of entire epoch    
+    test_loss = loss_total / test_size # averaged training loss
+    return test_loss, test_acc
+
+
 def compute_class_weights(clusters):
     """Compute the weights of each class/cluster according to number of data.   
 
@@ -207,6 +235,14 @@ if __name__=="__main__":
                                              shuffle=False, 
                                              num_workers=num_workers) 
 
+    test_loader, test_size = pocket_loader_gen(pocket_dir=pocket_dir, 
+                                             pop_dir=pop_dir,
+                                             clusters=test_clusters, 
+                                             features_to_use=features_to_use, 
+                                             batch_size=batch_size, 
+                                             shuffle=False, 
+                                             num_workers=num_workers) 
+
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
@@ -225,16 +261,21 @@ if __name__=="__main__":
     train_accs = []
     val_losses = []
     val_accs = []
+    test_losses = []
+    test_accs = []
     print('begin training...')
     for epoch in range(1, 1+num_epochs):
         train_loss, train_acc = train()
         val_loss, val_acc = validate()
+        test_loss, test_acc = test()
 
         train_losses.append(train_loss)
         train_accs.append(train_acc)
         val_losses.append(val_loss)
         val_accs.append(val_acc)
-        print('epoch: {}, train loss: {}, acc: {}, val loss: {}, acc: {}'.format(epoch, train_loss, train_acc, val_loss, val_acc))
+        test_losses.append(test_loss)
+        test_accs.append(test_acc)
+        print('epoch: {}, train loss: {}, acc: {}, val loss: {}, acc: {}, test loss: {}, acc: {}'.format(epoch, train_loss, train_acc, val_loss, val_acc, test_loss, test_acc))
 
         if  val_loss < best_val_loss:
             best_val_loss = val_loss
