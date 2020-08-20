@@ -149,10 +149,10 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 200
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.0015
-    weight_decay = 0.0005
+    learning_rate = 0.001
+    weight_decay = 0.0003
 
-    batch_size = 64
+    batch_size = 32
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
