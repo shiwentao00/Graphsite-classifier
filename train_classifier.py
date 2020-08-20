@@ -144,7 +144,7 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     
     subclustering = False # whether to further subcluster data according to subcluster_dict
-    print('whether to further subcluster data according to chemical reaction: {}', subclustering)
+    print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     # tunable hyper-parameters
     num_epochs = 200

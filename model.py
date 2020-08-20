@@ -184,9 +184,9 @@ class MoNet(torch.nn.Module):
         self.conv3 = GINMolecularConv(nn3, train_eps, dim, num_edge_attr)
         self.bn3 = torch.nn.BatchNorm1d(dim)
 
-        #nn4 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        #self.conv4 = GINMolecularConv(nn4, train_eps, dim, num_edge_attr)
-        #self.bn4 = torch.nn.BatchNorm1d(dim)
+        nn4 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv4 = GINMolecularConv(nn4, train_eps, dim, num_edge_attr)
+        self.bn4 = torch.nn.BatchNorm1d(dim)
 
         #nn5 = Sequential(Linear(dim, dim), ReLU(), Linear(dim, dim))
         #self.conv5 = GINConv(nn5)
