@@ -41,7 +41,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_21.pt',
+                        default='../trained_models/trained_model_23.pt',
                         required=False,
                         help='directory to store the trained model.')       
 
@@ -139,7 +139,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids):
 
     fig = plt.figure(figsize=(12, 12))
     colors = ["windows blue", "amber", "greyish", "faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
-    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
+    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
     ax = sns.scatterplot(x=embedding_list[:,0], 
@@ -148,7 +148,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids):
                          markers='.', 
                          palette= cust_palette
                          )
-    plt.savefig('./embedding_visualization/run_22.png')
+    plt.savefig('./embedding_visualization/run_23.png')
 
 
 if __name__=="__main__":
@@ -173,7 +173,7 @@ if __name__=="__main__":
     embedding_path = embedding_dir + embedding_name
     label_path = embedding_dir + label_name
 
-    subclustering = False # whether to further subcluster data according to subcluster_dict
+    subclustering = True # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     if embed == True:
