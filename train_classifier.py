@@ -124,7 +124,7 @@ def test():
     loss_total = 0
     epoch_pred = [] # all the predictions for the epoch
     epoch_label = [] # all the labels for the epoch
-    for data in val_loader:
+    for data in test_loader:
         data = data.to(device)
         output = model(data.x, data.edge_index, data.edge_attr, data.batch)
         loss = loss_function(output, data.y)
