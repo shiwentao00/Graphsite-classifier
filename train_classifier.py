@@ -57,7 +57,7 @@ def train():
     Global vars: train_loader, train_size, device, optimizer, model
     """
     model.train()
-    if epoch == 25:
+    if epoch == 20:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
@@ -177,10 +177,10 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 100
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.002
+    learning_rate = 0.003
     weight_decay = 0.0005
 
-    batch_size = 64
+    batch_size = 128
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
