@@ -35,12 +35,12 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters_0_9.yaml',
+                        default='./pocket_cluster_analysis/results/subclusters_0.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_19.pt',
+                        default='../trained_models/trained_model_21.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -158,6 +158,10 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
+    subclustering = False # whether to further subcluster data according to subcluster_dict
+    print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
+
+    # normalize embeddings or not
     normalize = True
 
     # read the original clustered pockets
@@ -167,9 +171,12 @@ if __name__=="__main__":
     clusters = select_classes(clusters, num_classes, cluster_th)
 
     # replace some clusters with their subclusters
-    clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
-    num_classes = len(clusters)
-    print('number of classes after further clustering: ', num_classes)
+    if subclustering == True:
+        clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
+        num_classes = len(clusters)
+        print('number of classes after further clustering: ', num_classes)
+    else:
+        cluster_ids = list(range(num_classes)) # use original cluster ids
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)

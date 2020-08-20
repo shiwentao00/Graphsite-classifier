@@ -118,7 +118,7 @@ if __name__=="__main__":
     #print('max number of data of each class:', cluster_th)
     
     subclustering = True # whether to further subcluster data according to subcluster_dict
-    print('whether to further subcluster data according to chemical reaction: {}', subclustering)
+    print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
     train_pos_th = 9000 # threshold of number of positive train pairs for each class
     train_neg_th = 1500 # threshold of number of negative train pairs for each combination
