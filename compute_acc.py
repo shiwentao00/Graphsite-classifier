@@ -40,7 +40,7 @@ def get_args():
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_21.pt',
+                        default='../trained_models/trained_model_23.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -158,7 +158,7 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
-    subclustering = False # whether to further subcluster data according to subcluster_dict
+    subclustering = True # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     # normalize embeddings or not

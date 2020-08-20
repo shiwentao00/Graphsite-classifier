@@ -1,0 +1,58 @@
+computing classification accuracies of ../trained_models/trained_model_22.pt
+device:  cuda
+batch size: 4
+number of workers to load data:  4
+number of classes: 10
+whether to further subcluster data according to chemical reaction: True
+number of classes after further clustering:  13
+number of pockets in training set:  10525
+number of pockets in validation set:  2250
+number of pockets in test set:  2269
+cluster 0-0 accuracy: 0.8030513176144244.
+cluster 0-1 accuracy: 0.2781413612565445.
+cluster 0-2 accuracy: 0.6802646085997794.
+cluster 0-3 accuracy: 0.3903868698710434.
+cluster 1-0 accuracy: 0.384460141271443.
+cluster 2-0 accuracy: 0.7851851851851852.
+cluster 3-0 accuracy: 0.5637319316688568.
+cluster 4-0 accuracy: 0.8887381275440976.
+cluster 5-0 accuracy: 0.4067796610169492.
+cluster 6-0 accuracy: 0.9217134416543574.
+cluster 7-0 accuracy: 0.8343848580441641.
+cluster 8-0 accuracy: 0.6088379705400983.
+cluster 9-0 accuracy: 0.5025553662691652.
+training accuracy:  0.5855581947743468
+top-5 training accuracy:  0.9630403800475059
+----------------------------------------------------------
+cluster 0-0 accuracy: 0.7207792207792207.
+cluster 0-1 accuracy: 0.2599388379204893.
+cluster 0-2 accuracy: 0.7319587628865979.
+cluster 0-3 accuracy: 0.3131868131868132.
+cluster 1-0 accuracy: 0.38207547169811323.
+cluster 2-0 accuracy: 0.6763005780346821.
+cluster 3-0 accuracy: 0.4723926380368098.
+cluster 4-0 accuracy: 0.7974683544303798.
+cluster 5-0 accuracy: 0.31125827814569534.
+cluster 6-0 accuracy: 0.8413793103448276.
+cluster 7-0 accuracy: 0.6814814814814815.
+cluster 8-0 accuracy: 0.48854961832061067.
+cluster 9-0 accuracy: 0.328.
+validation accuracy:  0.5164444444444445
+top-5 validation accuracy:  0.912
+----------------------------------------------------------
+cluster 0-0 accuracy: 0.7677419354838709.
+cluster 0-1 accuracy: 0.23404255319148937.
+cluster 0-2 accuracy: 0.6.
+cluster 0-3 accuracy: 0.33695652173913043.
+cluster 1-0 accuracy: 0.352112676056338.
+cluster 2-0 accuracy: 0.6342857142857142.
+cluster 3-0 accuracy: 0.49390243902439024.
+cluster 4-0 accuracy: 0.7232704402515723.
+cluster 5-0 accuracy: 0.26143790849673204.
+cluster 6-0 accuracy: 0.8561643835616438.
+cluster 7-0 accuracy: 0.7883211678832117.
+cluster 8-0 accuracy: 0.4772727272727273.
+cluster 9-0 accuracy: 0.3543307086614173.
+test accuracy:  0.501542529748788
+top-5 test accuracy:  0.8968708682238872
+----------------------------------------------------------
