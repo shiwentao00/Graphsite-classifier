@@ -213,7 +213,7 @@ class MoNet(torch.nn.Module):
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
         #x = global_add_pool(x, batch)
         x = self.set2set(x, batch)
-        x = F.dropout(x, p=0.5, training=self.training)
+        #x = F.dropout(x, p=0.5, training=self.training)
         x = self.fc1(x)
 
         # x = self.fc2(x)

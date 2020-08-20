@@ -57,7 +57,7 @@ def train():
     Global vars: train_loader, train_size, device, optimizer, model
     """
     model.train()
-    if epoch == 60:
+    if epoch == 25:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
@@ -147,12 +147,12 @@ if __name__=="__main__":
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 200
+    num_epochs = 100
     print('number of epochs to train:', num_epochs)
-    learning_rate = 0.001
-    weight_decay = 0.0003
+    learning_rate = 0.002
+    weight_decay = 0.0005
 
-    batch_size = 32
+    batch_size = 64
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
