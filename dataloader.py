@@ -60,11 +60,10 @@ class PocketDataset(Dataset):
                                     'MET':1.894,'PHE':1.952,'PRO':0.212,'SER':0.883,
                                     'THR':0.730,'TRP':3.084,'TYR':1.672,'VAL':0.884}
 
-        total_features = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
+        total_features = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
         assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of total_features
         self.features_to_use = features_to_use
 
-        
         self.class_labels = []
         self.pockets = []
         for label, cluster in enumerate(self.clusters):
@@ -111,7 +110,7 @@ class PairDataset(Dataset):
                                     'MET':1.894,'PHE':1.952,'PRO':0.212,'SER':0.883,
                                     'THR':0.730,'TRP':3.084,'TYR':1.672,'VAL':0.884}
 
-        total_features = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
+        total_features = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
         assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of total_features
         self.features_to_use = features_to_use
 
@@ -154,8 +153,11 @@ def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probab
     atoms['residue'] = atoms['subst_name'].apply(lambda x: x[0:3])
     atoms['hydrophobicity'] = atoms['residue'].apply(lambda x: hydrophobicity[x])
     atoms['binding_probability'] = atoms['residue'].apply(lambda x: binding_probability[x])
-    center_distances = compute_dist_to_center(atoms[['x','y','z']].to_numpy())
-    atoms['distance_to_center'] = center_distances
+
+    if 'distance_to_center' in features_to_use:
+        center_distances = compute_dist_to_center(atoms[['x','y','z']].to_numpy())
+        atoms['distance_to_center'] = center_distances
+    
     siteresidue_list = atoms['subst_name'].tolist()
     #qsasa_data = extract_sasa_data(siteresidue_list, pop_path)
     #atoms['sasa'] = qsasa_data
@@ -244,6 +246,12 @@ def form_graph(atoms, bonds, features_to_use, threshold):
     edge_attr = compute_edge_attr(result, bonds)
     edge_attr = torch.tensor(edge_attr, dtype=torch.float)
     edge_index = torch.tensor(result, dtype=torch.long)
+
+    # normalize large features
+    atoms['x'] = atoms['x']/300
+    atoms['y'] = atoms['y']/300
+    atoms['z'] = atoms['z']/300
+
     node_features = torch.tensor(atoms[features_to_use].to_numpy(), dtype=torch.float32)
     return node_features, edge_index, edge_attr
 
@@ -552,10 +560,11 @@ if __name__=="__main__":
     """
     cluster_file_dir = '../data/googlenet-classes'
     pocket_dir = '../data/googlenet-dataset/'
-    num_classes = 60
+    pop_dir = '../data/pops-googlenet/'    
+    num_classes = 10
     cluster_th = 10000
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy']
-    batch_size = 4 # number of pairs in a mini-batch
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy']
+    batch_size = 1 # number of pairs in a mini-batch
 
     train_pos_th = 3000 # threshold of number of positive train pairs for each class
     train_neg_th = 100 # threshold of number of negative train pairs for each combination
@@ -587,6 +596,16 @@ if __name__=="__main__":
     print('number of validation positive pairs:', len(val_pos_pairs))
     print('number of validation negative pairs:', len(val_neg_pairs))
 
+    train_loader, val_loader = dataloader_gen(pocket_dir, 
+                                              pop_dir,
+                                              train_pos_pairs, 
+                                              train_neg_pairs, 
+                                              val_pos_pairs, 
+                                              val_neg_pairs, 
+                                              features_to_use, 
+                                              batch_size, 
+                                              shuffle=False,
+                                              num_workers=1)
 
-    #train_loader, val_loader, test_loader = dataloader_gen(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True)
-
+    for data in train_loader:
+        break

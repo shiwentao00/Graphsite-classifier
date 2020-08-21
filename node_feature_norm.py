@@ -24,10 +24,11 @@ if __name__ == "__main__":
 
     clusters = read_cluster_file(cluster_file_dir)
     clusters = select_classes(clusters, num_classes, cluster_th)
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
     
     # all pockets are here
-    data_loader = pocket_loader_gen(pocket_dir=pocket_dir, 
+    data_loader, data_loader_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                      pop_dir=pop_dir,
                                      clusters=clusters, 
                                      features_to_use=features_to_use, 
@@ -43,14 +44,17 @@ if __name__ == "__main__":
         #if cnt == 3:
         #    break
     nodes = np.vstack(nodes)
-    print('nodes: ')
-    print(nodes)
+    print('nodes matrix shape: ')
+    print(nodes.shape)
     # plot distributions of features
     num_features = nodes.shape[1]
     for ft in range(num_features):
         ft_vec = nodes[:,ft]
-        fig_dir = './feature_distributions/' + str(ft) + '.png'
-        sns.distplot(ft_vec, bins=20)
+        print(features_to_use[ft])
+        print(ft_vec)
+        plt.figure()
+        fig_dir = './feature_distributions/' + str(features_to_use[ft]) + '.png'
+        sns.distplot(ft_vec, bins=60)
         plt.savefig(fig_dir)
 
 
