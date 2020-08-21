@@ -5,6 +5,7 @@ import torch
 from torch_geometric.nn import DataParallel
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, cluster_by_chem_react, gen_pairs
 from dataloader import dataloader_gen
+from dataloader import merge_clusters
 from model import SiameseNet, ContrastiveLoss
 import sklearn.metrics as metrics
 import json
@@ -68,6 +69,7 @@ def train():
     train_loss = total_loss / train_size
     return train_loss
 
+
 def validate():
     """
     Returns loss and accuracy on validation set.
@@ -117,13 +119,16 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
+    merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    print('how to merge clusters: ', merge_info)
+
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
-    train_pos_th = 9000 # threshold of number of positive train pairs for each class
-    train_neg_th = 2000 # threshold of number of negative train pairs for each combination
-    val_pos_th = 2700 # threshold of number of positive validation pairs for each class
-    val_neg_th = 600 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 11500 # threshold of number of positive train pairs for each class
+    train_neg_th = 3300 # threshold of number of negative train pairs for each combination
+    val_pos_th = 3400 # threshold of number of positive validation pairs for each class
+    val_neg_th = 970 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
@@ -155,8 +160,8 @@ if __name__=="__main__":
 
     # missing popsa files for sasa feature at this moment
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
-    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
-    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
+    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
     print('features to use: ', features_to_use)
 
     # read the original clustered pockets
@@ -164,6 +169,11 @@ if __name__=="__main__":
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
+
+    # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
+    clusters = merge_clusters(clusters, merge_info)
+    num_classes = len(clusters)
+    print('number of classes after merging: ', num_classes)    
 
     # replace some clusters with their subclusters
     if subclustering == True:

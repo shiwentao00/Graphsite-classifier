@@ -2,10 +2,10 @@
 #PBS -q v100
 #PBS -l nodes=1:ppn=36
 #PBS -l walltime=72:00:00
-#PBS -A hpc_gcn03
+#PBS -A hpc_michal01
 #PBS -j oe
 
-run=25
+run=26
 
 module purge
 source activate graph

@@ -565,6 +565,32 @@ def cluster_by_chem_react(clusters, subcluster_dict):
     return new_clusters, new_cluster_ids
     
 
+def merge_clusters(clusters, merge_info):
+    """Merge some clusters according to merge_info.
+    
+    Arguments:   
+    clusters - list of lists of pockets to represent the pocket clusters.   
+
+    merge_info - new combination of clusters. e.g., [[0,3], [1,2], 4].
+    
+    Return:   
+    new_clusters -  list of lists of pockets to represent the pocket clusters after merging.
+    """
+    new_clusters = []
+    for item in merge_info:
+        if type(item) == int:
+            new_clusters.append(clusters[item])
+        elif type(item) == list:
+            temp = []
+            for idx in item:
+                temp.extend(clusters[idx])
+            new_clusters.append(temp)
+        else:
+            raise TypeError("'merge_info' muse be a list with elements that are either int or list of int.")
+
+    return new_clusters
+
+
 if __name__=="__main__":
     """
     Main function for testing and debugging only.
