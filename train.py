@@ -3,7 +3,7 @@ import random
 import os
 import torch
 from torch_geometric.nn import DataParallel
-from dataloader import read_cluster_file, select_classes, divide_clusters, cluster_by_chem_react, gen_pairs
+from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, cluster_by_chem_react, gen_pairs
 from dataloader import dataloader_gen
 from model import SiameseNet, ContrastiveLoss
 import sklearn.metrics as metrics
@@ -160,7 +160,7 @@ if __name__=="__main__":
     print('features to use: ', features_to_use)
 
     # read the original clustered pockets
-    clusters = read_cluster_file(cluster_file_dir)
+    clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
