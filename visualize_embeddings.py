@@ -41,7 +41,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_23.pt',
+                        default='../trained_models/trained_model_24.pt',
                         required=False,
                         help='directory to store the trained model.')       
 
@@ -96,8 +96,9 @@ def gen_embedding(cluster_file_dir, pocket_dir, pop_dir, trained_model_dir, subc
     print('number of pockets in test set: ', num_test_pockets)
 
     # missing popsa files for sasa feature at this moment
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
-    
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
+        
     # load trained model
     model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     model.load_state_dict(torch.load(trained_model_dir))
@@ -138,8 +139,8 @@ def visualize_embeddings(embeddings, labels, cluster_ids):
     cluster_id_list = [cluster_ids[x] for x in label_list]
 
     fig = plt.figure(figsize=(12, 12))
-    colors = ["windows blue", "amber", "greyish", "faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
-    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
+    #colors = ["windows blue", "amber", "greyish", "faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
+    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
     ax = sns.scatterplot(x=embedding_list[:,0], 
@@ -148,7 +149,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids):
                          markers='.', 
                          palette= cust_palette
                          )
-    plt.savefig('./embedding_visualization/run_23.png')
+    plt.savefig('./run_24.png')
 
 
 if __name__=="__main__":
@@ -173,7 +174,7 @@ if __name__=="__main__":
     embedding_path = embedding_dir + embedding_name
     label_path = embedding_dir + label_name
 
-    subclustering = True # whether to further subcluster data according to subcluster_dict
+    subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     if embed == True:

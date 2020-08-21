@@ -40,7 +40,7 @@ def get_args():
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_23.pt',
+                        default='../trained_models/trained_model_24.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -158,7 +158,7 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
-    subclustering = True # whether to further subcluster data according to subcluster_dict
+    subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
     # normalize embeddings or not
@@ -188,8 +188,9 @@ if __name__=="__main__":
     print('number of pockets in test set: ', num_test_pockets)
 
     # missing popsa files for sasa feature at this moment
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
-
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
+    
     # train loader, used to compute the geometric center of the embeddings of each cluster
     train_loader, train_loader_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                      pop_dir=pop_dir,
