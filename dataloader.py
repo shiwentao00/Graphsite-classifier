@@ -159,10 +159,14 @@ def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probab
         atoms['distance_to_center'] = center_distances
     
     siteresidue_list = atoms['subst_name'].tolist()
-    #qsasa_data = extract_sasa_data(siteresidue_list, pop_path)
-    #atoms['sasa'] = qsasa_data
-    seq_entropy_data = extract_seq_entropy_data(siteresidue_list, profile_path) # sequence entropy data with subst_name as keys
-    atoms['sequence_entropy'] = atoms['subst_name'].apply(lambda x: seq_entropy_data[x])
+    
+    if 'sasa' in features_to_use:
+        qsasa_data = extract_sasa_data(siteresidue_list, pop_path)
+        atoms['sasa'] = qsasa_data
+    
+    if 'sequence_entropy' in features_to_use:
+        seq_entropy_data = extract_seq_entropy_data(siteresidue_list, profile_path) # sequence entropy data with subst_name as keys
+        atoms['sequence_entropy'] = atoms['subst_name'].apply(lambda x: seq_entropy_data[x])
     
     if atoms.isnull().values.any():
         print('invalid input data (containing nan):')
@@ -384,7 +388,7 @@ def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster
         th: threshold of maximum number of pockets in one class.
     """
     # read the original clustered pockets
-    clusters = read_cluster_file(cluster_file_dir)
+    clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
@@ -411,8 +415,7 @@ def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster
 
 
 def read_cluster_file(cluster_file_dir):
-    """
-    Read the clustered pockets as a list of lists.
+    """Read the clustered pockets as a list of lists.
     """
     f = open(cluster_file_dir, 'r')
     data_text = f.read()
@@ -432,6 +435,14 @@ def read_cluster_file(cluster_file_dir):
 
     return clusters
     #return clusters[1:] # !!!!!! testing performance without first large cluster.
+
+
+def read_cluster_file_from_yaml(cluster_file_dir):
+    """Read the clustered pockets as a list of lists.
+    """
+    with open(cluster_file_dir) as file:
+        clusters = yaml.full_load(file)    
+    return clusters
 
 
 def select_classes(clusters, num_classes, th):

@@ -9,7 +9,7 @@ import argparse
 import os
 import torch
 import numpy as np
-from dataloader import read_cluster_file, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
+from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from model import SiameseNet, ContrastiveLoss
 from scipy.spatial.distance import cdist
 import sklearn.metrics as metrics
@@ -20,7 +20,7 @@ def get_args():
     parser = argparse.ArgumentParser('python')
 
     parser.add_argument('-cluster_file_dir',
-                        default='../data/googlenet-classes',
+                        default='../data/clusters_after_remove_files_with_no_popsa.yaml',
                         required=False,
                         help='text file to get the cluster labels')
 
@@ -165,7 +165,7 @@ if __name__=="__main__":
     normalize = True
 
     # read the original clustered pockets
-    clusters = read_cluster_file(cluster_file_dir)
+    clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)

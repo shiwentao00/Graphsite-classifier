@@ -15,7 +15,7 @@ def get_args():
     parser = argparse.ArgumentParser('python')
 
     parser.add_argument('-cluster_file_dir',
-                        default='../data/googlenet-classes',
+                        default='../data/clusters_after_remove_files_with_no_popsa.yaml',
                         required=False,
                         help='text file to get the cluster labels')
 
@@ -156,7 +156,7 @@ if __name__=="__main__":
     # missing popsa files for sasa feature at this moment
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
-    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
     print('features to use: ', features_to_use)
 
     # read the original clustered pockets

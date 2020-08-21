@@ -4,14 +4,14 @@ Compute the mean and std of each feature of the entire dataset.
 import random
 import os
 import numpy as np
-from dataloader import read_cluster_file, select_classes, pocket_loader_gen
+from dataloader import read_cluster_file_from_yaml, select_classes, pocket_loader_gen
 import seaborn as sns
 import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
     random.seed(666) # deterministic sampled pockets and pairs from dataset
-    cluster_file_dir = '../data/googlenet-classes'
+    cluster_file_dir = '../data/clusters_after_remove_files_with_no_popsa.yaml'
     pocket_dir = '../data/googlenet-dataset/'
     pop_dir = '../data/pops-googlenet/'
 
@@ -22,9 +22,9 @@ if __name__ == "__main__":
     num_classes = 60
     cluster_th = 10000 # threshold of number of pockets in a class
 
-    clusters = read_cluster_file(cluster_file_dir)
+    clusters = read_cluster_file_from_yaml(cluster_file_dir)
     clusters = select_classes(clusters, num_classes, cluster_th)
-    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
     
     # all pockets are here
