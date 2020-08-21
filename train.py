@@ -117,13 +117,13 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    subclustering = True # whether to further subcluster data according to subcluster_dict
+    subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
     train_pos_th = 9000 # threshold of number of positive train pairs for each class
-    train_neg_th = 1500 # threshold of number of negative train pairs for each combination
+    train_neg_th = 2000 # threshold of number of negative train pairs for each combination
     val_pos_th = 2700 # threshold of number of positive validation pairs for each class
-    val_neg_th = 450 # threshold of number of negative validation pairs for each combination
+    val_neg_th = 600 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
@@ -138,7 +138,7 @@ if __name__=="__main__":
     weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
-    contrastive_margin = 1.7
+    contrastive_margin = 2.0
     print('margin of contrastive loss: {}'.format(contrastive_margin))
 
     num_workers = os.cpu_count()
@@ -155,7 +155,8 @@ if __name__=="__main__":
 
     # missing popsa files for sasa feature at this moment
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
     print('features to use: ', features_to_use)
 
     # read the original clustered pockets
