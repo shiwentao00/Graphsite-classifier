@@ -10,6 +10,7 @@ import os
 import torch
 import numpy as np
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
+from dataloader import merge_clusters
 from model import SiameseNet, ContrastiveLoss
 from scipy.spatial.distance import cdist
 import sklearn.metrics as metrics
@@ -40,7 +41,7 @@ def get_args():
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_24.pt',
+                        default='../trained_models/trained_model_27.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -158,6 +159,10 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
+    #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    print('how to merge clusters: ', merge_info)
+
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
@@ -170,13 +175,18 @@ if __name__=="__main__":
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
 
+    # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
+    clusters = merge_clusters(clusters, merge_info)
+    num_classes = len(clusters)
+    print('number of classes after merging: ', num_classes)    
+
     # replace some clusters with their subclusters
     if subclustering == True:
         clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
         num_classes = len(clusters)
         print('number of classes after further clustering: ', num_classes)
     else:
-        cluster_ids = list(range(num_classes)) # use original cluster ids
+        cluster_ids = [str(x) for x in merge_info] # use original cluster ids
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
@@ -189,7 +199,7 @@ if __name__=="__main__":
 
     # missing popsa files for sasa feature at this moment
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
-    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy']
     
     # train loader, used to compute the geometric center of the embeddings of each cluster
     train_loader, train_loader_size = pocket_loader_gen(pocket_dir=pocket_dir, 
