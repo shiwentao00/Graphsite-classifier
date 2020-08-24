@@ -16,7 +16,7 @@ from sklearn.manifold import TSNE
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
-
+import umap
 
 def get_args():
     parser = argparse.ArgumentParser('python')
@@ -109,7 +109,10 @@ if __name__=="__main__":
     which_split = 'val'
     print('which split: ', which_split)
 
-    image_path = './{}_27.png'.format(which_split)
+    # t-sne or umap
+    which_algorithm = 'umap'
+
+    image_path = './{}_27_{}.png'.format(which_split, which_algorithm)
     print('image saved to: ', image_path)
 
     name = trained_model_dir.split('/')[-1]
@@ -216,6 +219,12 @@ if __name__=="__main__":
         labels = np.load(label_path)
         labels = labels.astype(int)
 
-        print('computing TSNE...')
-        tsne_embedding = TSNE(n_components=2).fit_transform(embeddings)
-        visualize_embeddings(tsne_embedding, labels, cluster_ids, image_path)
+        if which_algorithm == 'tsne':
+            print('computing TSNE...')
+            vis_embedding = TSNE(n_components=2).fit_transform(embeddings)
+        elif which_algorithm == 'umap':
+            print('computing UMAP...')
+            umap_inst = umap.UMAP()
+            vis_embedding = umap_inst.fit_transform(embeddings)
+
+        visualize_embeddings(vis_embedding, labels, cluster_ids, image_path)
