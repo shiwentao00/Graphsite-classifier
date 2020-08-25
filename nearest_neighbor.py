@@ -50,3 +50,11 @@ if __name__=="__main__":
     train_acc = metrics.accuracy_score(train_label, train_prediction)
     val_acc = metrics.accuracy_score(val_label, val_prediction)
     print('train accuracy: {}, validation accuracy: {}'.format(train_acc, val_acc))
+
+    train_report = metrics.classification_report(train_label, train_prediction)
+    val_report = metrics.classification_report(val_label, val_prediction)
+
+    print('train report:')
+    print(train_report)
+    print('validation report:')
+    print(val_report)
