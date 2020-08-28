@@ -144,7 +144,7 @@ if __name__=="__main__":
     normalize = True # whether to normalize the embeddings
     
     # margins for the relaxed contrastive loss
-    similar_margin = 0.0
+    similar_margin = 0.15
     dissimilar_margin = 1.8
     print('similar margin of contrastive loss: {}'.format(similar_margin))
     print('dissimilar margin of contrastive loss: {}'.format(dissimilar_margin))
