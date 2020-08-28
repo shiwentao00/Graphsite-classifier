@@ -22,39 +22,52 @@ def get_args():
 
     return parser.parse_args()
 
+
 if __name__=="__main__":
     args = get_args()
-    embedding_dir = args.embedding_dir
+    embedding_root = args.embedding_dir
     run = args.run
-    embedding_dir = embedding_dir + 'run_' + str(run) + '/'
-    train_embedding_path = embedding_dir + 'train' + str(run) + '_embedding.npy'
-    train_label_path = embedding_dir + 'train' + str(run) + '_label.npy'
-    val_embedding_path = embedding_dir + 'val' + str(run) + '_embedding.npy'
-    val_label_path = embedding_dir + 'val' + str(run) + '_label.npy'
+    embedding_dir = embedding_root + 'run_{}/'.format(run)
+
+    train_embedding_path = embedding_dir + 'train' + '_embedding.npy'
+    train_label_path = embedding_dir + 'train' + '_label.npy'
+    val_embedding_path = embedding_dir + 'val' + '_embedding.npy'
+    val_label_path = embedding_dir + 'val' + '_label.npy'
+    test_embedding_path = embedding_dir + 'test' + '_embedding.npy'
+    test_label_path = embedding_dir + 'test' + '_label.npy'
 
     print('training embeddings:', train_embedding_path) 
     print('training label:', train_label_path) 
     print('val embeddings:', val_embedding_path) 
     print('val label:', val_label_path) 
+    print('test embeddings:', test_embedding_path) 
+    print('test label:', test_label_path) 
 
     train_embedding = np.load(train_embedding_path)
     train_label = np.load(train_label_path)
     val_embedding = np.load(val_embedding_path)
     val_label = np.load(val_label_path)
+    test_embedding = np.load(test_embedding_path)
+    test_label = np.load(test_label_path)
 
     knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
     knn.fit(train_embedding, train_label)
 
     train_prediction = knn.predict(train_embedding)
     val_prediction = knn.predict(val_embedding)
+    test_prediction = knn.predict(test_embedding)
     train_acc = metrics.accuracy_score(train_label, train_prediction)
     val_acc = metrics.accuracy_score(val_label, val_prediction)
-    print('train accuracy: {}, validation accuracy: {}'.format(train_acc, val_acc))
+    test_acc = metrics.accuracy_score(test_label, test_prediction)
+    print('train accuracy: {}, validation accuracy: {}, test accuracy: {}'.format(train_acc, val_acc, test_acc))
 
     train_report = metrics.classification_report(train_label, train_prediction)
     val_report = metrics.classification_report(val_label, val_prediction)
+    test_report = metrics.classification_report(test_label, test_prediction)
 
     print('train report:')
     print(train_report)
     print('validation report:')
     print(val_report)
+    print('test report: ')
+    print(test_report)
