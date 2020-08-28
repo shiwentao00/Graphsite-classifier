@@ -119,16 +119,16 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
-    train_pos_th = 11500 # threshold of number of positive train pairs for each class
-    train_neg_th = 3300 # threshold of number of negative train pairs for each combination
-    val_pos_th = 3400 # threshold of number of positive validation pairs for each class
-    val_neg_th = 970 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 13500 # threshold of number of positive train pairs for each class
+    train_neg_th = 4500 # threshold of number of negative train pairs for each combination
+    val_pos_th = 3900 # threshold of number of positive validation pairs for each class
+    val_neg_th = 1300 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
@@ -252,5 +252,3 @@ if __name__=="__main__":
     results = {'train_losses': train_losses, 'val_losses': val_losses}
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
-
-# TO-DO: multi-GPU support
