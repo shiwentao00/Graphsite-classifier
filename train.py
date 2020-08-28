@@ -143,8 +143,11 @@ if __name__=="__main__":
     weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
-    contrastive_margin = 2.0
-    print('margin of contrastive loss: {}'.format(contrastive_margin))
+    # margins for the relaxed contrastive loss
+    similar_margin = 0.0
+    dissimilar_margin = 1.8
+    print('similar margin of contrastive loss: {}'.format(similar_margin))
+    print('dissimilar margin of contrastive loss: {}'.format(dissimilar_margin))
 
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -226,7 +229,7 @@ if __name__=="__main__":
     print('optimizer:')
     print(optimizer)
 
-    loss_function = ContrastiveLoss(margin=contrastive_margin, normalize=normalize, mean=True).to(device) # differentiable, no parameters to train. 
+    loss_function = ContrastiveLoss(similar_margin=similar_margin, dissimilar_margin=dissimilar_margin, normalize=normalize, mean=True).to(device) # differentiable, no parameters to train. 
     print('loss function:')
     print(loss_function)
 

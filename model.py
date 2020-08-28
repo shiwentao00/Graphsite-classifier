@@ -124,11 +124,15 @@ class ContrastiveLoss(torch.nn.Module):
     """
     ContrastiveLoss introduced in the paper "Dimensionality Reduction by Learning an Invariant Mapping".
     We add L2 normalizations to constrain the input embeddings to be on a hypersphere of radius 1. 
-    The purpose of adding the normalization is for easy choice of the margin hyper-parameter.
+    The purpose of adding the normalization is for easy choice of the margins hyper-parameter.
+
+    The loss can be relaxed by setting the margins. The intuition is that similar pockets do not need 
+    to have identical embeddings. 
     """
-    def __init__(self, margin=2.0, normalize=True, mean=True):
+    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True):
         super(ContrastiveLoss, self).__init__()
-        self.margin = margin # the margin in the paper
+        self.similar_margin = similar_margin
+        self.dissimilar_margin = dissimilar_margin # the margin in original paper for dissimilar pairs
         self.normalize = normalize # whether to normalize input embeddings
         self.mean = mean # mean over batch or sum over batch
 
@@ -139,10 +143,16 @@ class ContrastiveLoss(torch.nn.Module):
         if self.normalize == True:
             embedding_a = F.normalize(embedding_a)
             embedding_b = F.normalize(embedding_b)
-        euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
-        ls = label * torch.pow(euclidean_dist, 2) # loss for similar pairs
 
-        ld = (1 - label) * torch.pow(torch.clamp(self.margin - euclidean_dist, min=0), 2) # loss for dissimilar pairs 
+        # distance between the pairs
+        euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
+
+        # loss for similar pairs
+        #ls = label * torch.pow(euclidean_dist, 2)
+        ls = label * torch.pow(torch.clamp(euclidean_dist - self.similar_margin, min=0), 2)
+        
+        # loss for dissimilar pairs 
+        ld = (1 - label) * torch.pow(torch.clamp(self.dissimilar_margin - euclidean_dist, min=0), 2) 
 
         loss = ls + ld 
 
@@ -152,7 +162,7 @@ class ContrastiveLoss(torch.nn.Module):
             return loss.sum()
 
     def __repr__(self):
-        return 'ContrastiveLoss(margin={}, normalize={}, mean={})'.format(self.margin, self.normalize, self.mean)
+        return 'ContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
 
 
 class MoNet(torch.nn.Module):
