@@ -53,6 +53,6 @@ if __name__=="__main__":
     train_loss = data['train_losses']
     val_loss = data['val_losses']
     time = len(train_loss)
-    plot_loss(train_loss=train_loss, val_loss=val_loss, loss_dir='./results/loss_{}.png'.format(run), time=time)
+    plot_loss(train_loss=train_loss, val_loss=val_loss, loss_dir='./results/run_{}/loss_{}.png'.format(run, run), time=time)
 
     

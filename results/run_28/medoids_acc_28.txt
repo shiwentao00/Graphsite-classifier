@@ -17,7 +17,7 @@ label path:  ../embeddings/run_28/train_label.npy
    macro avg       0.79      0.82      0.80     10527
 weighted avg       0.80      0.78      0.79     10527
 
-top-3 train acc: 
+top-3 train acc: 0.9747316424432412
 ----------------------------------------------------------
 computing evaluation metrics for val
 embedding path:  ../embeddings/run_28/val_embedding.npy
@@ -37,7 +37,7 @@ label path:  ../embeddings/run_28/val_label.npy
    macro avg       0.79      0.83      0.81      2254
 weighted avg       0.81      0.79      0.80      2254
 
-top-3 val acc: 
+top-3 val acc: 0.9778172138420586
 ----------------------------------------------------------
 computing evaluation metrics for test
 embedding path:  ../embeddings/run_28/test_embedding.npy
@@ -57,5 +57,5 @@ label path:  ../embeddings/run_28/test_label.npy
    macro avg       0.79      0.82      0.80      2263
 weighted avg       0.81      0.79      0.79      2263
 
-top-3 test acc: 
+top-3 test acc: 0.9743703049049933
 ----------------------------------------------------------

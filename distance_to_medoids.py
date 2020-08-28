@@ -4,10 +4,7 @@ Classify pockets based on the distances to medoids.
 import random
 import argparse
 import os
-import torch
 import numpy as np
-from dataloader import merge_clusters
-from model import SiameseNet, ContrastiveLoss
 from scipy.spatial.distance import cdist
 import sklearn.metrics as metrics
 import yaml
