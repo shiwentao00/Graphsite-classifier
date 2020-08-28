@@ -42,7 +42,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_27.pt',
+                        default='../trained_models/trained_model_28.pt',
                         required=False,
                         help='directory to store the trained model.')       
 
@@ -78,7 +78,8 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path):
     fig = plt.figure(figsize=(12, 12))
     #colors = ["windows blue", "amber", "greyish", "faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
     #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
-    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink"]
+    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink"]
+    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green"]
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
     ax = sns.scatterplot(x=embedding_list[:,0], 
@@ -112,7 +113,7 @@ if __name__=="__main__":
     # t-sne or umap
     which_algorithm = 'umap'
 
-    image_path = './{}_27_{}.png'.format(which_split, which_algorithm)
+    image_path = './{}_28_{}.png'.format(which_split, which_algorithm)
     print('image saved to: ', image_path)
 
     name = trained_model_dir.split('/')[-1]
@@ -126,7 +127,8 @@ if __name__=="__main__":
     print('label path: ', label_path)
 
     #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict

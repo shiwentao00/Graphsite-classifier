@@ -46,7 +46,7 @@ if __name__=="__main__":
     args = get_args()
     run = args.run
 
-    loss_dir = './results/run_27/train_results_{}.json'.format(run)
+    loss_dir = './results/run_{}/train_results_{}.json'.format(run, run)
     with open(loss_dir, "r") as read_file:
         data = json.load(read_file)
 

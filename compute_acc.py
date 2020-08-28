@@ -41,7 +41,7 @@ def get_args():
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_27.pt',
+                        default='../trained_models/trained_model_28.pt',
                         required=False,
                         help='directory to store the trained model.')                        
 
@@ -160,7 +160,8 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
 
     #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
+    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict

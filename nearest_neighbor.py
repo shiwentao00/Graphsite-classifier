@@ -16,7 +16,7 @@ def get_args():
                         help='text file to get the cluster labels') 
 
     parser.add_argument('-run',
-                        default=27,
+                        default=28,
                         required=False,
                         help="which run's embedding to use")                        
 

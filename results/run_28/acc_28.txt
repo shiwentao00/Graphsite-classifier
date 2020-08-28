@@ -1,0 +1,41 @@
+computing classification accuracies of ../trained_models/trained_model_28.pt
+device:  cuda
+batch size: 4
+number of workers to load data:  4
+number of classes: 10
+how to merge clusters:  [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+whether to further subcluster data according to chemical reaction: False
+number of classes after merging:  7
+number of pockets in training set:  10527
+number of pockets in validation set:  2254
+number of pockets in test set:  2263
+cluster [0, 9] accuracy: 0.816837067652817.
+cluster [1, 5] accuracy: 0.616833431430253.
+cluster 2 accuracy: 0.9691358024691358.
+cluster [3, 8] accuracy: 0.6584122359796067.
+cluster 4 accuracy: 0.9484396200814111.
+cluster 6 accuracy: 0.9926144756277696.
+cluster 7 accuracy: 0.9684542586750788.
+training accuracy:  0.8052626579272347
+top-5 training accuracy:  0.995630284031538
+----------------------------------------------------------
+cluster [0, 9] accuracy: 0.782741116751269.
+cluster [1, 5] accuracy: 0.5659340659340659.
+cluster 2 accuracy: 0.8034682080924855.
+cluster [3, 8] accuracy: 0.5714285714285714.
+cluster 4 accuracy: 0.740506329113924.
+cluster 6 accuracy: 0.903448275862069.
+cluster 7 accuracy: 0.8.
+validation accuracy:  0.7275953859804791
+top-5 validation accuracy:  0.9840283939662822
+----------------------------------------------------------
+cluster [0, 9] accuracy: 0.8032454361054767.
+cluster [1, 5] accuracy: 0.5671232876712329.
+cluster 2 accuracy: 0.8.
+cluster [3, 8] accuracy: 0.6711864406779661.
+cluster 4 accuracy: 0.8238993710691824.
+cluster 6 accuracy: 0.863013698630137.
+cluster 7 accuracy: 0.8102189781021898.
+test accuracy:  0.7534246575342466
+top-5 test accuracy:  0.9867432611577552
+----------------------------------------------------------

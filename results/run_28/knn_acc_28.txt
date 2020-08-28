@@ -1,0 +1,35 @@
+training embeddings: ../embeddings/run_28/train28_embedding.npy
+training label: ../embeddings/run_28/train28_label.npy
+val embeddings: ../embeddings/run_28/val28_embedding.npy
+val label: ../embeddings/run_28/val28_label.npy
+train accuracy: 0.8455400398974067, validation accuracy: 0.8327417923691216
+train report:
+              precision    recall  f1-score   support
+
+           0       0.86      0.94      0.90      4597
+           1       0.71      0.63      0.67      1699
+           2       0.94      0.91      0.93       810
+           3       0.79      0.66      0.72      1373
+           4       0.94      0.89      0.92       737
+           5       0.91      0.97      0.94       677
+           6       0.83      0.87      0.85       634
+
+    accuracy                           0.85     10527
+   macro avg       0.86      0.84      0.85     10527
+weighted avg       0.84      0.85      0.84     10527
+
+validation report:
+              precision    recall  f1-score   support
+
+           0       0.85      0.93      0.89       985
+           1       0.68      0.58      0.63       364
+           2       0.94      0.93      0.93       173
+           3       0.72      0.64      0.68       294
+           4       0.95      0.91      0.93       158
+           5       0.93      0.97      0.95       145
+           6       0.89      0.88      0.88       135
+
+    accuracy                           0.83      2254
+   macro avg       0.85      0.83      0.84      2254
+weighted avg       0.83      0.83      0.83      2254
+
