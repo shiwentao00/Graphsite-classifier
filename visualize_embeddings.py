@@ -42,7 +42,7 @@ def get_args():
                         help='directory of popsa files for sasa feature')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_28.pt',
+                        default='../trained_models/trained_model_29.pt',
                         required=False,
                         help='directory to store the trained model.')       
 
@@ -100,20 +100,20 @@ if __name__=="__main__":
     trained_model_dir = args.trained_model_dir
     print('using trained model: {}'.format(trained_model_dir))
 
-    embed = False
+    embed = True
 
     subcluster_file = args.subcluster_file
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)  
 
     # which split of dataset to embed. train/val/test
-    which_split = 'val'
+    which_split = 'train'
     print('which split: ', which_split)
 
     # t-sne or umap
     which_algorithm = 'umap'
 
-    image_path = './{}_28_{}.png'.format(which_split, which_algorithm)
+    image_path = './{}_29_{}.png'.format(which_split, which_algorithm)
     print('image saved to: ', image_path)
 
     name = trained_model_dir.split('/')[-1]
