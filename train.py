@@ -7,6 +7,7 @@ from dataloader import read_cluster_file_from_yaml, select_classes, divide_clust
 from dataloader import dataloader_gen
 from dataloader import merge_clusters
 from model import SiameseNet, ContrastiveLoss
+from model import ResidualSiameseNet
 import sklearn.metrics as metrics
 import json
 import yaml
@@ -226,7 +227,8 @@ if __name__=="__main__":
                                               shuffle=True,
                                               num_workers=num_workers)
 
-    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    #model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")

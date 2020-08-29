@@ -120,6 +120,84 @@ class SiameseNet(torch.nn.Module):
         return embedding
         
 
+class ResidualBlock(torch.nn.Module):
+    """
+    A residual block which has two graph neural network layers. The output and input are summed 
+    so that the module can learn identity function.
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+        super(ResidualBlock, self).__init__()
+        
+        nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
+
+        nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
+        
+        self.bn = torch.nn.BatchNorm1d(dim)
+    
+    def forward(self, x, edge_index, edge_attr, batch):
+        x_skip = x # store the input value
+        x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
+        x = self.conv2(x, edge_index, edge_attr)
+        x = x + x_skip # add before activation
+        x = F.leaky_relu(x)
+        x = self.bn(x)
+        return x
+
+
+class ResidualEmbeddingNet(torch.nn.Module):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+        super(EmbeddingNet, self).__init__()
+
+        self.rb_1 = ResidualBlock(num_features, dim, train_eps, num_edge_attr) # residual block
+        self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
+        self.rb_3 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
+        self.rb_4 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
+        self.rb_5 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
+        self.rb_6 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
+
+        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        x = self.rb_1(x)
+        x = self.rb_2(x)
+        x = self.rb_3(x)
+        x = self.rb_4(x)
+        x = self.rb_5(x)
+        x = self.rb_6(x)
+
+        #x = global_add_pool(x, batch)
+        #x = self.global_att(torch.cat((x, x_in), 1), batch)
+        x = self.set2set(x, batch)
+        return x
+
+
+class ResidualSiameseNet(torch.nn.Module):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+        super(SiameseNet, self).__init__()
+        self.embedding_net = ResidualEmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+
+    def forward(self, pairdata):
+        embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
+        embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
+        return embedding_a, embedding_b
+
+    def get_embedding(self, data, normalize):
+        """
+        Used to get the embedding of a pocket after training.
+        data: standard PyG graph data.
+        """
+        embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+        
+        # normalize the embedding if the embeddings are normalized during training
+        # see ContrastiveLoss.__init__()
+        if normalize == True:
+            embedding = F.normalize(embedding)
+        
+        return embedding
+
+
 class ContrastiveLoss(torch.nn.Module):
     """
     ContrastiveLoss introduced in the paper "Dimensionality Reduction by Learning an Invariant Mapping".
