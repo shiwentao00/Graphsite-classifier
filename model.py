@@ -148,7 +148,7 @@ class ResidualBlock(torch.nn.Module):
 
 class ResidualEmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(EmbeddingNet, self).__init__()
+        super(ResidualEmbeddingNet, self).__init__()
 
         self.rb_1 = ResidualBlock(num_features, dim, train_eps, num_edge_attr) # residual block
         self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
@@ -175,7 +175,7 @@ class ResidualEmbeddingNet(torch.nn.Module):
 
 class ResidualSiameseNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(SiameseNet, self).__init__()
+        super(ResidualSiameseNet, self).__init__()
         self.embedding_net = ResidualEmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, pairdata):
