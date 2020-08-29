@@ -57,6 +57,11 @@ def train():
     """
     model.train()
 
+    # learning rate decay
+    if epoch == lr_decay_epoch:
+        for param_group in optimizer.param_groups:
+            param_group['lr'] = 0.5 * param_group['lr']
+
     total_loss = 0
     for data in train_loader:
         data = data.to(device)
@@ -137,6 +142,9 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
+    lr_decay_epoch = 45
+    print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
+    
     batch_size = 256
     print('batch size:', batch_size)
     learning_rate = 0.003
@@ -144,8 +152,8 @@ if __name__=="__main__":
     normalize = True # whether to normalize the embeddings
     
     # margins for the relaxed contrastive loss
-    similar_margin = 0.15
-    dissimilar_margin = 1.8
+    similar_margin = 0.1
+    dissimilar_margin = 2.0
     print('similar margin of contrastive loss: {}'.format(similar_margin))
     print('dissimilar margin of contrastive loss: {}'.format(dissimilar_margin))
 
