@@ -136,7 +136,7 @@ class ResidualBlock(torch.nn.Module):
         
         self.bn = torch.nn.BatchNorm1d(dim)
     
-    def forward(self, x, edge_index, edge_attr, batch):
+    def forward(self, x, edge_index, edge_attr):
         x_skip = x # store the input value
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
         x = self.conv2(x, edge_index, edge_attr)
@@ -160,12 +160,12 @@ class ResidualEmbeddingNet(torch.nn.Module):
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
-        x = self.rb_1(x)
-        x = self.rb_2(x)
-        x = self.rb_3(x)
-        x = self.rb_4(x)
-        x = self.rb_5(x)
-        x = self.rb_6(x)
+        x = self.rb_1(x, edge_index, edge_attr)
+        x = self.rb_2(x, edge_index, edge_attr)
+        x = self.rb_3(x, edge_index, edge_attr)
+        x = self.rb_4(x, edge_index, edge_attr)
+        x = self.rb_5(x, edge_index, edge_attr)
+        x = self.rb_6(x, edge_index, edge_attr)
 
         #x = global_add_pool(x, batch)
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
