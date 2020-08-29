@@ -150,22 +150,32 @@ class ResidualEmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualEmbeddingNet, self).__init__()
 
-        self.rb_1 = ResidualBlock(num_features, dim, train_eps, num_edge_attr) # residual block
-        self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
-        self.rb_3 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
-        self.rb_4 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
-        self.rb_5 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
-        self.rb_6 = ResidualBlock(dim, dim, train_eps, num_edge_attr) # residual block
+        # first graph convolution layer, increasing dimention
+        nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
+        self.bn1 = torch.nn.BatchNorm1d(dim)
 
+        # residual blocks
+        self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+        self.rb_3 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+        self.rb_4 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+        self.rb_5 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+        self.rb_6 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+        self.rb_7 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+
+        # read out function
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
-        x = self.rb_1(x, edge_index, edge_attr)
+        x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
+        x = self.bn1(x)
+
         x = self.rb_2(x, edge_index, edge_attr)
         x = self.rb_3(x, edge_index, edge_attr)
         x = self.rb_4(x, edge_index, edge_attr)
         x = self.rb_5(x, edge_index, edge_attr)
         x = self.rb_6(x, edge_index, edge_attr)
+        x = self.rb_7(x, edge_index, edge_attr)
 
         #x = global_add_pool(x, batch)
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
