@@ -133,16 +133,13 @@ class ResidualBlock(torch.nn.Module):
 
         nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
         self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
-        
-        self.bn = torch.nn.BatchNorm1d(dim)
     
     def forward(self, x, edge_index, edge_attr):
         x_skip = x # store the input value
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
         x = self.conv2(x, edge_index, edge_attr)
         x = x + x_skip # add before activation
-        x = F.leaky_relu(x)
-        x = self.bn(x)
+        x = F.relu(x)
         return x
 
 
@@ -153,7 +150,6 @@ class ResidualEmbeddingNet(torch.nn.Module):
         # first graph convolution layer, increasing dimention
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
-        self.bn1 = torch.nn.BatchNorm1d(dim)
 
         # residual blocks
         self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
@@ -168,7 +164,6 @@ class ResidualEmbeddingNet(torch.nn.Module):
 
     def forward(self, x, edge_index, edge_attr, batch):
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
-        x = self.bn1(x)
 
         x = self.rb_2(x, edge_index, edge_attr)
         x = self.rb_3(x, edge_index, edge_attr)
