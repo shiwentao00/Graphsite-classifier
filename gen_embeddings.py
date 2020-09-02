@@ -9,6 +9,7 @@ import numpy as np
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from dataloader import merge_clusters
 from model import SiameseNet
+from model import ResidualSiameseNet
 import yaml
 
 
@@ -140,7 +141,7 @@ if __name__=="__main__":
     features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy']
     
     # load trained model
-    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     model.load_state_dict(torch.load(trained_model_dir))
     model.eval()
 

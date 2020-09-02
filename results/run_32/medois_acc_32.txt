@@ -1,0 +1,61 @@
+how to merge clusters:  [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+computing evaluation metrics for train
+embedding path:  ../embeddings/run_32/train_embedding.npy
+label path:  ../embeddings/run_32/train_label.npy
+{} report:  train
+              precision    recall  f1-score   support
+
+           0       0.89      0.75      0.82      4597
+           1       0.51      0.53      0.52      1699
+           2       0.83      0.88      0.86       810
+           3       0.50      0.55      0.52      1373
+           4       0.82      0.89      0.85       737
+           5       0.87      0.95      0.91       677
+           6       0.60      0.89      0.72       634
+
+    accuracy                           0.73     10527
+   macro avg       0.72      0.78      0.74     10527
+weighted avg       0.75      0.73      0.74     10527
+
+top-3 train acc: 0.9639023463474874
+----------------------------------------------------------
+computing evaluation metrics for val
+embedding path:  ../embeddings/run_32/val_embedding.npy
+label path:  ../embeddings/run_32/val_label.npy
+{} report:  val
+              precision    recall  f1-score   support
+
+           0       0.89      0.73      0.80       985
+           1       0.52      0.59      0.55       364
+           2       0.79      0.88      0.84       173
+           3       0.52      0.55      0.54       294
+           4       0.78      0.87      0.82       158
+           5       0.84      0.92      0.88       145
+           6       0.59      0.82      0.69       135
+
+    accuracy                           0.72      2254
+   macro avg       0.70      0.77      0.73      2254
+weighted avg       0.74      0.72      0.73      2254
+
+top-3 val acc: 0.9543034605146407
+----------------------------------------------------------
+computing evaluation metrics for test
+embedding path:  ../embeddings/run_32/test_embedding.npy
+label path:  ../embeddings/run_32/test_label.npy
+{} report:  test
+              precision    recall  f1-score   support
+
+           0       0.88      0.73      0.80       986
+           1       0.52      0.55      0.53       365
+           2       0.88      0.89      0.88       175
+           3       0.48      0.55      0.51       295
+           4       0.79      0.87      0.83       159
+           5       0.87      0.95      0.91       146
+           6       0.62      0.91      0.74       137
+
+    accuracy                           0.73      2263
+   macro avg       0.72      0.78      0.74      2263
+weighted avg       0.75      0.73      0.73      2263
+
+top-3 test acc: 0.9637649138311976
+----------------------------------------------------------
