@@ -143,17 +143,17 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 45
+    lr_decay_epoch = 30
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
     print('batch size:', batch_size)
-    learning_rate = 0.003
-    weight_decay = 0.0005
+    learning_rate = 0.006
+    weight_decay = 0.001
     normalize = True # whether to normalize the embeddings
     
     # margins for the relaxed contrastive loss
-    similar_margin = 0.1
+    similar_margin = 0.0
     dissimilar_margin = 2.0
     print('similar margin of contrastive loss: {}'.format(similar_margin))
     print('dissimilar margin of contrastive loss: {}'.format(dissimilar_margin))

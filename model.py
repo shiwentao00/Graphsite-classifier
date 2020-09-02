@@ -128,18 +128,26 @@ class ResidualBlock(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualBlock, self).__init__()
         
+        self.bn1 = torch.nn.BatchNorm1d(dim)
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
 
+        self.bn2 = torch.nn.BatchNorm1d(dim)
         nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
         self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
     
     def forward(self, x, edge_index, edge_attr):
         x_skip = x # store the input value
-        x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
+        
+        x = self.bn1(x)
+        x = F.leaky_relu(x)
+        x = self.conv1(x, edge_index, edge_attr)
+        
+        x = self.bn2(x)
+        x = F.leaky_relu(x)
         x = self.conv2(x, edge_index, edge_attr)
+        
         x = x + x_skip # add before activation
-        x = F.relu(x)
         return x
 
 
@@ -158,12 +166,17 @@ class ResidualEmbeddingNet(torch.nn.Module):
         self.rb_5 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
         self.rb_6 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
         self.rb_7 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+        self.rb_8 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
+
+
+        # batch norm for last conv layer
+        self.bn_7 = torch.nn.BatchNorm1d(dim)
 
         # read out function
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
-        x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
+        x = self.conv1(x, edge_index, edge_attr)
 
         x = self.rb_2(x, edge_index, edge_attr)
         x = self.rb_3(x, edge_index, edge_attr)
@@ -171,6 +184,10 @@ class ResidualEmbeddingNet(torch.nn.Module):
         x = self.rb_5(x, edge_index, edge_attr)
         x = self.rb_6(x, edge_index, edge_attr)
         x = self.rb_7(x, edge_index, edge_attr)
+        x = self.rb_8(x, edge_index, edge_attr)
+        
+        x = F.leaky_relu(x)
+        x = self.bn_7(x) # batch norm after activation
 
         #x = global_add_pool(x, batch)
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
