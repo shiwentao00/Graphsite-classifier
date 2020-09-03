@@ -7,7 +7,9 @@ import random
 import yaml
 import torch
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
-from model import SelectiveSiameseNet
+from dataloader import merge_clusters
+from model import SelectiveSiameseNet, SelectiveContrastiveLoss
+
 
 
 def get_args():
@@ -66,7 +68,7 @@ def train():
         optimizer.zero_grad()
         embedding = model(data)
         print(embedding.shape)
-        #loss = loss_function(embedding_a, embedding_b, data.y)
+        loss = loss_function(embedding, data.y)
         #loss.backward()
         # last incomplete batch is dropped, so just use batch_size
         #total_loss += loss.item() * batch_size
@@ -94,6 +96,9 @@ if __name__=="__main__":
     print('number of classes:', num_classes)
     cluster_th = 10000  # threshold of number of pockets in a class
 
+    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+    print('how to merge clusters: ', merge_info)
+
     subclustering = False  # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format(
         subclustering))
@@ -107,11 +112,17 @@ if __name__=="__main__":
     learning_rate = 0.003
     weight_decay = 0.0005
 
-    batch_size = 4
+    batch_size = 8
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
+
+    # margins for the relaxed contrastive loss
+    similar_margin = 0.0
+    dissimilar_margin = 2.0
+    print('similar margin of contrastive loss: {}'.format(similar_margin))
+    print('dissimilar margin of contrastive loss: {}'.format(dissimilar_margin))
 
     device = torch.device('cuda' if torch.cuda.is_available()
                           else 'cpu')  # detect cpu or gpu
@@ -122,6 +133,18 @@ if __name__=="__main__":
 
     # select clusters according to rank of sizes and sample large clusters
     clusters = select_classes(clusters, num_classes, cluster_th)
+
+    # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
+    clusters = merge_clusters(clusters, merge_info)
+    num_classes = len(clusters)
+    print('number of classes after merging: ', num_classes)
+
+    # replace some clusters with their subclusters
+    if subclustering == True:
+        clusters, cluster_ids = cluster_by_chem_react(
+            clusters, subcluster_dict)
+        num_classes = len(clusters)
+        print('number of classes after further clustering: ', num_classes)
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
@@ -142,7 +165,7 @@ if __name__=="__main__":
                                                  clusters=train_clusters,
                                                  features_to_use=features_to_use,
                                                  batch_size=batch_size,
-                                                 shuffle=False,
+                                                 shuffle=True,
                                                  num_workers=num_workers)
 
     val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir,
@@ -170,6 +193,12 @@ if __name__=="__main__":
         model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
     print('optimizer:')
     print(optimizer)
+
+    # differentiable, no parameters to train.
+    loss_function = SelectiveContrastiveLoss(
+        similar_margin=similar_margin, dissimilar_margin=dissimilar_margin, normalize=True, mean=True).to(device)
+    print('loss function:')
+    print(loss_function)
 
     for epoch in range(1, num_epochs+1):
         train()

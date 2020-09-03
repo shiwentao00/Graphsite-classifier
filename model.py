@@ -6,6 +6,8 @@ from torch_geometric.nn import GINConv
 from torch_geometric.nn import global_add_pool
 from torch_geometric.nn import GlobalAttention
 from torch_geometric.nn import Set2Set
+import itertools
+import numpy as np
 
 
 class GINMolecularConv(GINConv):
@@ -301,6 +303,51 @@ class ContrastiveLoss(torch.nn.Module):
 
     def __repr__(self):
         return 'ContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
+
+
+class SelectiveContrastiveLoss(torch.nn.Module):
+    """
+    The contrastive loss that selects hard pairs to optimize.
+    """
+
+    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True):
+        super(SelectiveContrastiveLoss, self).__init__()
+        self.similar_margin = similar_margin
+        self.dissimilar_margin = dissimilar_margin
+        self.normalize = normalize  # whether to normalize input embeddings
+        self.mean = mean  # mean over batch or sum over batch
+
+    def forward(self, embedding, label):
+        #pos_pairs = self.__select_pos_pair(embedding, label)
+        #neg_pairs = self.__select_neg_pair(embedding, label)
+        
+        label = label.cpu().detach().numpy()
+        pairs = np.array(list(itertools.combinations(range(len(label)), 2))) # all possible pairs of index
+        print(pairs)
+        print(label)
+        print(label[pairs[:, 0]])
+        print(label[pairs[:, 1]])
+        pos_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] == label[pairs[:, 1]])[0], :]
+        neg_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] != label[pairs[:, 1]])[0], :]
+        print(pos_pair_idx)
+        print(neg_pair_idx)
+
+
+        return None
+
+
+    def __select_pos_pair(self, embedding, label):
+        """Select all the similar pairs in the mini-batch"""
+        return None
+
+    def __select_neg_pair(self, embedding, label):
+        """Select the most dissimilar pairs in the mini-batch"""
+        #print(label)
+        return None
+
+    def __repr__(self):
+        return 'SelectiveContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
+
 
 
 class MoNet(torch.nn.Module):
