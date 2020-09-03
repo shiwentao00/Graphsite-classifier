@@ -120,6 +120,44 @@ class SiameseNet(torch.nn.Module):
         return embedding
         
 
+class SelectiveSiameseNet(torch.nn.Module):
+    """
+    SiameseNet model that used with the SelectiveContrastiveLoss. It is a module wrapping a
+    EmbeddingNet with a 'get_embedding' class method.
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+        super(SelectiveSiameseNet, self).__init__()
+        self.embedding_net = EmbeddingNet(
+            num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+
+    def forward(self, data):
+        embedding = self.embedding_net(
+            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+        
+        # normalize the embedding to force them to sit on a hyper-sphere. 
+        embedding = F.normalize(embedding)
+
+        return embedding
+
+    def get_embedding(self, data, normalize=True):
+        """
+        Same function as the forward function. Used to get the embedding of a pocket after training.
+
+        Argument:
+        data - standard PyG graph data.
+        normalize - must be set to true. 
+        """
+        embedding = self.embedding_net(
+            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+
+        # normalize the embedding if the embeddings are normalized during training
+        # see ContrastiveLoss.__init__()
+        if normalize == True:
+            embedding = F.normalize(embedding)
+
+        return embedding
+
+
 class ResidualBlock(torch.nn.Module):
     """
     A residual block which has two graph neural network layers. The output and input are summed 
