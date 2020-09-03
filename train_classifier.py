@@ -216,7 +216,7 @@ if __name__=="__main__":
     print('number of pockets in test set: ', num_test_pockets)
 
     # missing popsa files for sasa feature at this moment
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
+    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
     num_features = len(features_to_use)
 
     train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir, 

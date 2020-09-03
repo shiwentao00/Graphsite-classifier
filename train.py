@@ -143,13 +143,13 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 30
+    lr_decay_epoch = 40
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
     print('batch size:', batch_size)
-    learning_rate = 0.006
-    weight_decay = 0.001
+    learning_rate = 0.003
+    weight_decay = 0.0005
     normalize = True # whether to normalize the embeddings
     
     # margins for the relaxed contrastive loss
@@ -171,9 +171,12 @@ if __name__=="__main__":
     print('number of gpus: ', num_gpu)
 
     # missing popsa files for sasa feature at this moment
-    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy'] 
-    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy'] 
-    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sasa', 'sequence_entropy'] 
+    #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
+    #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
+    features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+                       'binding_probability', 'sequence_entropy']
+
     print('features to use: ', features_to_use)
 
     # read the original clustered pockets
@@ -227,8 +230,8 @@ if __name__=="__main__":
                                               shuffle=True,
                                               num_workers=num_workers)
 
-    #model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    #model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")

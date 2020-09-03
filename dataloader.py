@@ -60,7 +60,9 @@ class PocketDataset(Dataset):
                                     'MET':1.894,'PHE':1.952,'PRO':0.212,'SER':0.883,
                                     'THR':0.730,'TRP':3.084,'TYR':1.672,'VAL':0.884}
 
-        total_features = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
+        total_features = ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge',
+                          'hydrophobicity', 'binding_probability', 'sequence_entropy']
+                          
         assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of total_features
         self.features_to_use = features_to_use
 
@@ -110,7 +112,7 @@ class PairDataset(Dataset):
                                     'MET':1.894,'PHE':1.952,'PRO':0.212,'SER':0.883,
                                     'THR':0.730,'TRP':3.084,'TYR':1.672,'VAL':0.884}
 
-        total_features = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sasa', 'sequence_entropy']
+        total_features = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sasa', 'sequence_entropy']
         assert(set(features_to_use).issubset(set(total_features))) # features to use should be subset of total_features
         self.features_to_use = features_to_use
 
@@ -154,9 +156,13 @@ def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probab
     atoms['hydrophobicity'] = atoms['residue'].apply(lambda x: hydrophobicity[x])
     atoms['binding_probability'] = atoms['residue'].apply(lambda x: binding_probability[x])
 
-    if 'distance_to_center' in features_to_use:
-        center_distances = compute_dist_to_center(atoms[['x','y','z']].to_numpy())
-        atoms['distance_to_center'] = center_distances
+    r, theta, phi = compute_spherical_coord(atoms[['x', 'y', 'z']].to_numpy())
+    if 'r' in features_to_use:
+        atoms['r'] = r
+    if 'theta' in features_to_use:
+        atoms['theta'] = theta
+    if 'phi' in features_to_use:
+        atoms['phi'] = phi 
     
     siteresidue_list = atoms['subst_name'].tolist()
     
@@ -260,15 +266,44 @@ def form_graph(atoms, bonds, features_to_use, threshold):
     return node_features, edge_index, edge_attr
 
 
-def compute_dist_to_center(data):
+def compute_spherical_coord(data):
     """
-    Given the input data matrix (n by d), return the distances of each points to the
-    geometric center.
+    Shift the geometric center of the pocket to origin, then compute its spherical coordinates.             
     """
     center = np.mean(data, axis=0)
     shifted_data = data - center # center the data around origin
-    distances = np.sqrt(shifted_data[:,0]**2 + shifted_data[:,1]**2 + shifted_data[:,2]**2) # distances to origin
-    return distances
+    
+    r, theta, phi = cartesian_to_spherical(shifted_data)
+    return r, theta, phi
+
+
+def cartesian_to_spherical(data):
+    """Convert cartesian coordinates to spherical coordinates.
+    
+    Arguments:   
+    data - numpy array with shape (n, 3) which is the 
+    cartesian coordinates (x, y, z) of n points.
+
+    Returns:   
+    numpy array with shape (n, 3) which is the spherical 
+    coordinates (r, theta, phi) of n points.
+    """
+    x = data[:, 0]
+    y = data[:, 1]
+    z = data[:, 2]
+
+    # distances to origin
+    r = np.sqrt(x**2 + y**2 + z**2)
+
+    # angle between x-y plane and z
+    theta = np.arccos(z/r)/np.pi * 180
+
+    # angle on x-y plane
+    phi = np.arctan2(y, x)/np.pi * 180
+
+    #spherical_coord = np.vstack([r, theta, phi])
+    #spherical_coord = np.transpose(spherical_coord)
+    return r, theta, phi
 
 
 def extract_sasa_data(siteresidue_list, pop):
@@ -600,7 +635,7 @@ if __name__=="__main__":
     pop_dir = '../data/pops-googlenet/'    
     num_classes = 10
     cluster_th = 10000
-    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'distance_to_center', 'sequence_entropy']
+    features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy']
     batch_size = 1 # number of pairs in a mini-batch
 
     train_pos_th = 3000 # threshold of number of positive train pairs for each class
