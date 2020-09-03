@@ -1,0 +1,282 @@
+seed:  666
+number of classes (from original clusters): 10
+how to merge clusters:  [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+whether to further subcluster data according to chemical reaction: False
+positive training pair sampling threshold:  13500
+negative training pair sampling threshold:  4500
+positive validation pair sampling threshold:  3900
+negative validation pair sampling threshold:  1300
+number of epochs to train: 60
+learning rate decay to half at epoch 30.
+batch size: 256
+similar margin of contrastive loss: 0.0
+dissimilar margin of contrastive loss: 2.0
+number of workers to load data:  36
+device:  cuda
+number of gpus:  2
+features to use:  ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy']
+number of classes after merging:  7
+number of pockets in training set:  10527
+number of pockets in validation set:  2254
+number of pockets in test set:  2263
+number of train positive pairs: 94500
+number of train negative pairs: 94500
+number of validation positive pairs: 27300
+number of validation negative pairs: 27300
+model architecture:
+ResidualSiameseNet(
+  (embedding_net): ResidualEmbeddingNet(
+    (conv1): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=8, out_features=32, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=32, out_features=32, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=8, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (rb_2): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_3): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_4): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_5): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_6): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_7): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_8): ResidualBlock(
+      (bn1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+      (bn2): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv2): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=32, out_features=32, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=32, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (bn_7): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (set2set): Set2Set(32, 64)
+  )
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.006
+    weight_decay: 0.001
+)
+loss function:
+ContrastiveLoss(similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True)
+epoch: 1, train loss: 0.8370855162282469, validation loss: 0.7958732255649217.
+epoch: 2, train loss: 0.7091327041545242, validation loss: 0.7394717147324111.
+epoch: 3, train loss: 0.6654620173217127, validation loss: 0.719863993885753.
+epoch: 4, train loss: 0.6439583724894852, validation loss: 0.6912795014433808.
+epoch: 5, train loss: 0.6291733984972434, validation loss: 0.690685051159981.
+epoch: 6, train loss: 0.6182550337049696, validation loss: 0.7299952750852257.
+epoch: 7, train loss: 0.6095947431130384, validation loss: 0.7240141721173521.
+epoch: 8, train loss: 0.6021359252122345, validation loss: 0.6763848642202525.
+epoch: 9, train loss: 0.5988054826120851, validation loss: 0.7104793249556434.
+epoch: 10, train loss: 0.597118818575743, validation loss: 0.6747154965243497.
+epoch: 11, train loss: 0.5900881089710054, validation loss: 0.6806441701812185.
+epoch: 12, train loss: 0.5804749306572808, validation loss: 0.6680523804605225.
+epoch: 13, train loss: 0.5778285434864185, validation loss: 0.6689850166516427.
+epoch: 14, train loss: 0.5745668919073842, validation loss: 0.7136553368201622.
+epoch: 15, train loss: 0.5726763971318644, validation loss: 0.6875667018680782.
+epoch: 16, train loss: 0.5680312834240141, validation loss: 0.6813996808956831.
+epoch: 17, train loss: 0.5661566889929392, validation loss: 0.702420174455468.
+epoch: 18, train loss: 0.5621547522570091, validation loss: 0.6639759712079506.
+epoch: 19, train loss: 0.5601192987028253, validation loss: 0.6966097871549837.
+epoch: 20, train loss: 0.5629445857698955, validation loss: 0.65463195954487.
+epoch: 21, train loss: 0.559912262770234, validation loss: 0.6947004207848629.
+epoch: 22, train loss: 0.55861991757186, validation loss: 0.6605532923548213.
+epoch: 23, train loss: 0.5560557669584083, validation loss: 0.7463827045147235.
+epoch: 24, train loss: 0.55410716441321, validation loss: 0.6954069655980819.
+epoch: 25, train loss: 0.5510215086760344, validation loss: 0.6695057725731707.
+epoch: 26, train loss: 0.5527610887396273, validation loss: 0.675800047933837.
+epoch: 27, train loss: 0.552906340018782, validation loss: 0.6594804508083469.
+epoch: 28, train loss: 0.5508220037228216, validation loss: 0.6728893257672097.
+epoch: 29, train loss: 0.5505538980393183, validation loss: 0.6456972221402458.
+epoch: 30, train loss: 0.5035442560589503, validation loss: 0.6463182506631145.
+epoch: 31, train loss: 0.5026948323325505, validation loss: 0.6402176565652365.
+epoch: 32, train loss: 0.49775170361554183, validation loss: 0.7105994622087304.
+epoch: 33, train loss: 0.4927836619382182, validation loss: 0.6351421800550524.
+epoch: 34, train loss: 0.4918138116099847, validation loss: 0.6822003864106678.
+epoch: 35, train loss: 0.4881946168122468, validation loss: 0.6427305245312143.
+epoch: 36, train loss: 0.4878287299827293, validation loss: 0.6539090190789638.
+epoch: 37, train loss: 0.4799614242876648, validation loss: 0.6523169604849902.
+epoch: 38, train loss: 0.48175440773131356, validation loss: 0.7043536212068774.
+epoch: 39, train loss: 0.4779974074187102, validation loss: 0.6723253463912796.
+epoch: 40, train loss: 0.48008760191902283, validation loss: 0.6558888409513257.
+epoch: 41, train loss: 0.47724712420266774, validation loss: 0.6306173465714786.
+epoch: 42, train loss: 0.4725368169956106, validation loss: 0.651173339676071.
+epoch: 43, train loss: 0.4711778079643451, validation loss: 0.6444015804751889.
+epoch: 44, train loss: 0.4671823842285802, validation loss: 0.6851047119028839.
+epoch: 45, train loss: 0.4681774264542514, validation loss: 0.6606096403240721.
+epoch: 46, train loss: 0.46636561818602223, validation loss: 0.6631590458237645.
+epoch: 47, train loss: 0.4664896586180995, validation loss: 0.6378187000707829.
+epoch: 48, train loss: 0.4652974927791212, validation loss: 0.6336972507015689.
+epoch: 49, train loss: 0.46523515182575853, validation loss: 0.6481061120784326.
+epoch: 50, train loss: 0.46200543225000773, validation loss: 0.6408193793663611.
+epoch: 51, train loss: 0.46430057533708197, validation loss: 0.6501431442093063.
+epoch: 52, train loss: 0.46205484735398067, validation loss: 0.6350334776714172.
+epoch: 53, train loss: 0.4602043948703342, validation loss: 0.698741694300166.
+epoch: 54, train loss: 0.46695810864968273, validation loss: 0.6636945692348829.
+epoch: 55, train loss: 0.4731490917306728, validation loss: 0.6370531622918097.
+epoch: 56, train loss: 0.4541832040453714, validation loss: 0.6585045151483445.
+epoch: 57, train loss: 0.4598788434386884, validation loss: 0.6571597200610262.
+epoch: 58, train loss: 0.45578300197540766, validation loss: 0.6676177263085222.
+epoch: 59, train loss: 0.4559921477383407, validation loss: 0.6526453701480405.
+epoch: 60, train loss: 0.4530967242528522, validation loss: 0.748955083434835.
+best validation loss 0.6306173465714786 at epoch 41.
