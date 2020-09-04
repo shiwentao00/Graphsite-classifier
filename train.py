@@ -174,9 +174,10 @@ if __name__=="__main__":
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sasa', 'sequence_entropy'] 
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
     #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
-    features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    #                   'binding_probability', 'sequence_entropy']
+    features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
                        'binding_probability', 'sequence_entropy']
-
     print('features to use: ', features_to_use)
 
     # read the original clustered pockets
