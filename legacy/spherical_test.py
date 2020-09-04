@@ -20,10 +20,10 @@ def cartesian_to_spherical(data):
     r = np.sqrt(x**2 + y**2 + z**2) 
 
     # angle between x-y plane and z
-    theta = np.arccos(z/r)/np.pi * 180
+    theta = np.arccos(z/r)/np.pi
 
     # angle on x-y plane
-    phi = np.arctan2(y, x)/np.pi * 180
+    phi = np.arctan2(y, x)/np.pi
 
     spherical_coord = np.vstack([r, theta, phi])
     spherical_coord = np.transpose(spherical_coord)
