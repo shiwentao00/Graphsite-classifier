@@ -112,7 +112,7 @@ if __name__=="__main__":
     learning_rate = 0.003
     weight_decay = 0.0005
 
-    batch_size = 8
+    batch_size = 16
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))

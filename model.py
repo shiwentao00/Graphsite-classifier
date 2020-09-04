@@ -320,28 +320,44 @@ class SelectiveContrastiveLoss(torch.nn.Module):
     def forward(self, embedding, label):
         #pos_pairs = self.__select_pos_pair(embedding, label)
         #neg_pairs = self.__select_neg_pair(embedding, label)
-        
         label = label.cpu().detach().numpy()
         pairs = np.array(list(itertools.combinations(range(len(label)), 2))) # all possible pairs of index
-        print(pairs)
-        print(label)
-        print(label[pairs[:, 0]])
-        print(label[pairs[:, 1]])
+        #print(pairs)
+        #print(label)
+        #print(label[pairs[:, 0]])
+        #print(label[pairs[:, 1]])
         pos_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] == label[pairs[:, 1]])[0], :]
         neg_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] != label[pairs[:, 1]])[0], :]
         print(pos_pair_idx)
         print(neg_pair_idx)
 
+        similar_loss = self.compute_similar_loss(embedding, label, pos_pair_idx)
+        return similar_loss
 
+
+    def compute_similar_loss(self, embedding, label, pos_pair_idx, num_pairs):
+        """Get all the positive pairs and compute the loss"""
+        # select embedding
+        print(embedding.shape)
+        print(label)
+
+        label_a = label[pos_pair_idx[:, 0]]
+        embedding_a = embedding[pos_pair_idx[:, 0]]
+
+
+        label_b = label[pos_pair_idx[:, 1]]
+        embedding_b = embedding[pos_pair_idx[:, 1]]
+        
+        print(label_a)
+        print(label_b)
+
+        print(embedding_a.shape)
+        print(embedding_b.shape)
+        
         return None
 
-
-    def __select_pos_pair(self, embedding, label):
-        """Select all the similar pairs in the mini-batch"""
-        return None
-
-    def __select_neg_pair(self, embedding, label):
-        """Select the most dissimilar pairs in the mini-batch"""
+    def compute_dissimilar_loss(self, embedding, label, neg_pair_idx, num_pairs):
+        """Select the most dissimilar pairs in the mini-batch and compute the loss"""
         #print(label)
         return None
 
