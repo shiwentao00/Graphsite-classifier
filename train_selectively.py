@@ -67,7 +67,6 @@ def train():
         data = data.to(device)
         optimizer.zero_grad()
         embedding = model(data)
-        print(embedding.shape)
         loss = loss_function(embedding, data.y)
         #loss.backward()
         # last incomplete batch is dropped, so just use batch_size
@@ -112,7 +111,7 @@ if __name__=="__main__":
     learning_rate = 0.003
     weight_decay = 0.0005
 
-    batch_size = 16
+    batch_size = 64
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))

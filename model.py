@@ -310,12 +310,18 @@ class SelectiveContrastiveLoss(torch.nn.Module):
     The contrastive loss that selects hard pairs to optimize.
     """
 
-    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True):
+    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True, num_pos_pair=256, num_neg_pair=256):
         super(SelectiveContrastiveLoss, self).__init__()
         self.similar_margin = similar_margin
         self.dissimilar_margin = dissimilar_margin
         self.normalize = normalize  # whether to normalize input embeddings
         self.mean = mean  # mean over batch or sum over batch
+
+        # the max number of postive pairs to send to loss
+        self.num_pos_pair = num_pos_pair
+
+        # the max number of negative pairs to send to loss
+        self.num_neg_pair = num_neg_pair
 
     def forward(self, embedding, label):
         #pos_pairs = self.__select_pos_pair(embedding, label)
@@ -328,42 +334,79 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         #print(label[pairs[:, 1]])
         pos_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] == label[pairs[:, 1]])[0], :]
         neg_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] != label[pairs[:, 1]])[0], :]
-        print(pos_pair_idx)
-        print(neg_pair_idx)
 
-        similar_loss = self.compute_similar_loss(embedding, label, pos_pair_idx)
-        return similar_loss
+        # compute loss for similar (positive) and dissimilar (negative) pairs separately
+        similar_loss = self.__compute_similar_loss(embedding, label, pos_pair_idx, self.num_pos_pair)
+        dissimilar_loss = self.__compute_dissimilar_loss(embedding, label, neg_pair_idx, self.num_neg_pair)
+        
+        # the program is guaranteed to generate positive pairs, or error will be raised
+        if dissimilar_loss is None:
+            loss = similar_loss
+        else:
+            loss = torch.cat([similar_loss, dissimilar_loss])
+
+        # mean or sum
+        if self.mean == True:
+            return loss.mean()
+        else:
+            return loss.sum()
 
 
-    def compute_similar_loss(self, embedding, label, pos_pair_idx, num_pairs):
+    def __compute_similar_loss(self, embedding, label, pos_pair_idx, num_pairs):
         """Get all the positive pairs and compute the loss"""
-        # select embedding
-        print(embedding.shape)
-        print(label)
+        # compute the number of pairs sent to the loss
+        total_num_pairs = pos_pair_idx.shape[0]
+        num_pairs = min(num_pairs, total_num_pairs)
+        print('total number of positive pairs: ', total_num_pairs)
+        print('actual number of positive pairs sent to loss: ', num_pairs)
 
-        label_a = label[pos_pair_idx[:, 0]]
+        # no loss if there is no positive pairs
+        if total_num_pairs == 0:
+            raise ValueError('No similar pairs, increase the batch size.')
+
+        # select embedding of positive pairs
         embedding_a = embedding[pos_pair_idx[:, 0]]
-
-
-        label_b = label[pos_pair_idx[:, 1]]
         embedding_b = embedding[pos_pair_idx[:, 1]]
+        #label_a = label[pos_pair_idx[:, 0]]
+        #label_b = label[pos_pair_idx[:, 1]]
         
-        print(label_a)
-        print(label_b)
+        # compute the loss
+        euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
+        loss = torch.pow(torch.clamp(euclidean_dist - self.similar_margin, min=0), 2)
+        loss, _ = torch.sort(loss, descending=True)
+        loss = loss[0: num_pairs]  # select top num_pairs loss
 
-        print(embedding_a.shape)
-        print(embedding_b.shape)
-        
-        return None
+        return loss
 
-    def compute_dissimilar_loss(self, embedding, label, neg_pair_idx, num_pairs):
+    def __compute_dissimilar_loss(self, embedding, label, neg_pair_idx, num_pairs):
         """Select the most dissimilar pairs in the mini-batch and compute the loss"""
-        #print(label)
-        return None
+        # compute the number of pairs sent to the loss
+        total_num_pairs = neg_pair_idx.shape[0]
+        num_pairs = min(num_pairs, total_num_pairs)
+        print('total number of negative pairs: ', total_num_pairs)
+        print('actual number of negative pairs sent to loss: ', num_pairs)
+
+        # no loss if there is no negative pairs
+        if total_num_pairs == 0:
+            return None
+
+        # select embedding of negative pairs
+        embedding_a = embedding[neg_pair_idx[:, 0]]
+        embedding_b = embedding[neg_pair_idx[:, 1]]
+        #label_a = label[neg_pair_idx[:, 0]]
+        #label_b = label[neg_pair_idx[:, 1]]
+        
+        # compute the loss
+        euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
+        loss = torch.pow(torch.clamp(self.dissimilar_margin - euclidean_dist, min=0), 2)
+        loss, _ = torch.sort(loss, descending=True)
+        loss = loss[0: num_pairs]  # select top num_pairs loss
+
+        return loss
 
     def __repr__(self):
-        return 'SelectiveContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
-
+        return 'SelectiveContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(
+            self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
 
 
 class MoNet(torch.nn.Module):
