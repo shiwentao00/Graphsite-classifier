@@ -63,18 +63,21 @@ def train():
             param_group['lr'] = 0.5 * param_group['lr']
 
     total_loss = 0
+    num_loss_elements = 0 # total number of pairs used for training in this epoch
     for data in train_loader:
         data = data.to(device)
         optimizer.zero_grad()
         embedding = model(data)
-        loss = loss_function(embedding, data.y)
-        loss.backward()
+        loss_mean, loss_sum, loss_shape = loss_function(embedding, data.y)
+        loss_mean.backward()
+        optimizer.step()
 
         # the loss is averaged over samples in a mini-batch
         # last incomplete batch is dropped, so just use batch_size
-        total_loss += loss.item() * batch_size
-        optimizer.step()
-    train_loss = total_loss / train_size
+        total_loss += loss_sum.item()
+        num_loss_elements += loss_shape[0]
+    train_loss = total_loss / num_loss_elements
+
     return train_loss
 
 
@@ -87,15 +90,17 @@ def validate():
     model.eval()
 
     total_loss = 0
+    num_loss_elements = 0 # total number of pairs used for training in this epoch
     for data in val_loader:
         data = data.to(device)    
         embedding = model(data)
-        loss = loss_function(embedding, data.y)
+        loss_mean, loss_sum, loss_shape = loss_function(embedding, data.y)
 
         # last incomplete batch is dropped, so just use batch_size
-        total_loss += loss.item() * batch_size 
+        total_loss += loss_sum.item()
+        num_loss_elements += loss_shape[0]
+    val_loss = total_loss / num_loss_elements
 
-    val_loss = total_loss / val_size
     return val_loss
 
 
@@ -127,7 +132,7 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 1000
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 600
+    lr_decay_epoch = 400
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
 
     learning_rate = 0.003
@@ -135,6 +140,10 @@ if __name__=="__main__":
 
     batch_size = 96
     print('batch size:', batch_size)
+    num_hard_pos_pairs = 128
+    num_hard_neg_pairs = 128
+    print('number of hardest positive pairs for each mini-batch: ', num_hard_pos_pairs)
+    print('number of hardest negative pairs for each mini-batch: ', num_hard_neg_pairs)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
@@ -210,7 +219,7 @@ if __name__=="__main__":
 
     # differentiable, no parameters to train.
     loss_function = SelectiveContrastiveLoss(
-        similar_margin=similar_margin, dissimilar_margin=dissimilar_margin, normalize=True, mean=True).to(device)
+        similar_margin=similar_margin, dissimilar_margin=dissimilar_margin, num_pos_pair=num_hard_pos_pairs, num_neg_pair=num_hard_neg_pairs).to(device)
     print('loss function:')
     print(loss_function)
 

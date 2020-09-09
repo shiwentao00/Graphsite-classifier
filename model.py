@@ -313,12 +313,10 @@ class SelectiveContrastiveLoss(torch.nn.Module):
     The contrastive loss that selects hard pairs to optimize.
     """
 
-    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True, num_pos_pair=128, num_neg_pair=128):
+    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, num_pos_pair=128, num_neg_pair=128):
         super(SelectiveContrastiveLoss, self).__init__()
         self.similar_margin = similar_margin
         self.dissimilar_margin = dissimilar_margin
-        self.normalize = normalize  # whether to normalize input embeddings
-        self.mean = mean  # mean over batch or sum over batch
 
         # the max number of postive pairs to send to loss
         self.num_pos_pair = num_pos_pair
@@ -349,11 +347,13 @@ class SelectiveContrastiveLoss(torch.nn.Module):
             loss = torch.cat([similar_loss, dissimilar_loss])
 
         # mean or sum
-        if self.mean == True:
-            return loss.mean()
-        else:
-            return loss.sum()
+        # if self.mean == True:
+        #     return loss.mean()
+        # else:
+        #     return loss.sum()
 
+        # mean for back propagation, sum for logging
+        return loss.mean(), loss.sum(), loss.shape
 
     def __compute_similar_loss(self, embedding, label, pos_pair_idx, num_pairs):
         """Get all the positive pairs and compute the loss"""
@@ -408,8 +408,8 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         return loss
 
     def __repr__(self):
-        return 'SelectiveContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(
-            self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
+        return 'SelectiveContrastiveLoss(similar_margin={}, dissimilar_margin={}, num_pos_pair={}, num_neg_pair={})'.format(
+            self.similar_margin, self.dissimilar_margin, self.num_pos_pair, self.num_neg_pair)
 
 
 class MoNet(torch.nn.Module):
