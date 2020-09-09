@@ -9,7 +9,7 @@ import torch
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from dataloader import merge_clusters
 from model import SelectiveSiameseNet, SelectiveContrastiveLoss
-
+import json
 
 
 def get_args():
@@ -36,12 +36,12 @@ def get_args():
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_classifier_1.pt/',
+                        default='../trained_models/pair_selecting_model_1.pt',
                         required=False,
                         help='directory to store the trained model.')
 
     parser.add_argument('-loss_dir',
-                        default='./results/classifier_train_results_1.json/',
+                        default='./results/pair_selecting_model_1.json/',
                         required=False,
                         help='directory to store the training losses.')
 
@@ -50,7 +50,7 @@ def get_args():
 
 def train():
     """
-    Train the model for 1 epoch, then return the averaged loss of the data 
+    Train the model for 1 epoch, then return the mean loss of the data 
     in this epoch.
     Global vars: train_loader, train_size, device, optimizer, model
     batch_interval: number of mini-batch intervals to log loss
@@ -68,13 +68,35 @@ def train():
         optimizer.zero_grad()
         embedding = model(data)
         loss = loss_function(embedding, data.y)
-        #loss.backward()
+        loss.backward()
+
+        # the loss is averaged over samples in a mini-batch
         # last incomplete batch is dropped, so just use batch_size
-        #total_loss += loss.item() * batch_size
-        #optimizer.step()
-    #train_loss = total_loss / train_size
-        break
-    #return train_loss
+        total_loss += loss.item() * batch_size
+        optimizer.step()
+    train_loss = total_loss / train_size
+    return train_loss
+
+
+def validate():
+    """
+    Validate the model for 1 epoch, then return the mean loss of the data
+    in this epoch. The methodology used is same as training: the hardest
+    pairs are selected for validation.
+    """
+    model.eval()
+
+    total_loss = 0
+    for data in val_loader:
+        data = data.to(device)    
+        embedding = model(data)
+        loss = loss_function(embedding, data.y)
+
+        # last incomplete batch is dropped, so just use batch_size
+        total_loss += loss.item() * batch_size 
+
+    val_loss = total_loss / val_size
+    return val_loss
 
 
 if __name__=="__main__":
@@ -103,15 +125,15 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 100
+    num_epochs = 1000
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 40
+    lr_decay_epoch = 600
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
 
     learning_rate = 0.003
     weight_decay = 0.0005
 
-    batch_size = 64
+    batch_size = 96
     print('batch size:', batch_size)
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
@@ -172,16 +194,9 @@ if __name__=="__main__":
                                              clusters=val_clusters,
                                              features_to_use=features_to_use,
                                              batch_size=batch_size,
-                                             shuffle=False,
+                                             shuffle=True,
                                              num_workers=num_workers)
 
-    test_loader, test_size = pocket_loader_gen(pocket_dir=pocket_dir,
-                                               pop_dir=pop_dir,
-                                               clusters=test_clusters,
-                                               features_to_use=features_to_use,
-                                               batch_size=batch_size,
-                                               shuffle=False,
-                                               num_workers=num_workers)
 
     model = SelectiveSiameseNet(num_features=num_features,
         dim=32, train_eps=True, num_edge_attr=1).to(device)
@@ -199,7 +214,28 @@ if __name__=="__main__":
     print('loss function:')
     print(loss_function)
 
+
+    train_losses = []
+    val_losses = []
+    best_val_loss = 9999999
     for epoch in range(1, num_epochs+1):
-        train()
-        break
+        train_loss = train()
+        train_losses.append(train_loss)
+
+        val_loss = validate()
+        val_losses.append(val_loss)
+        
+        print('epoch: {}, train loss: {}, validation loss: {}.'.format(epoch, train_loss, val_loss))
+
+        if  val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_val_epoch = epoch
+            torch.save(model.state_dict(), trained_model_dir)
+
+    print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
+    
+    # write loss history to disk
+    results = {'train_losses': train_losses, 'val_losses': val_losses}
+    with open(loss_dir, 'w') as fp:
+        json.dump(results, fp)
 

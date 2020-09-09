@@ -122,44 +122,6 @@ class SiameseNet(torch.nn.Module):
         return embedding
         
 
-class SelectiveSiameseNet(torch.nn.Module):
-    """
-    SiameseNet model that used with the SelectiveContrastiveLoss. It is a module wrapping a
-    EmbeddingNet with a 'get_embedding' class method.
-    """
-    def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(SelectiveSiameseNet, self).__init__()
-        self.embedding_net = EmbeddingNet(
-            num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
-
-    def forward(self, data):
-        embedding = self.embedding_net(
-            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-        
-        # normalize the embedding to force them to sit on a hyper-sphere. 
-        embedding = F.normalize(embedding)
-
-        return embedding
-
-    def get_embedding(self, data, normalize=True):
-        """
-        Same function as the forward function. Used to get the embedding of a pocket after training.
-
-        Argument:
-        data - standard PyG graph data.
-        normalize - must be set to true. 
-        """
-        embedding = self.embedding_net(
-            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-
-        # normalize the embedding if the embeddings are normalized during training
-        # see ContrastiveLoss.__init__()
-        if normalize == True:
-            embedding = F.normalize(embedding)
-
-        return embedding
-
-
 class ResidualBlock(torch.nn.Module):
     """
     A residual block which has two graph neural network layers. The output and input are summed 
@@ -305,12 +267,53 @@ class ContrastiveLoss(torch.nn.Module):
         return 'ContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
 
 
+class SelectiveSiameseNet(torch.nn.Module):
+    """
+    SiameseNet model that used with the SelectiveContrastiveLoss. It is a module
+    wrapping a EmbeddingNet with a 'get_embedding' class method.   
+
+    For this model, only the hardest pairs in a mini-batch are selected dynamically 
+    for training and validation.
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+        super(SelectiveSiameseNet, self).__init__()
+        self.embedding_net = EmbeddingNet(
+            num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+
+    def forward(self, data):
+        embedding = self.embedding_net(
+            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+        
+        # normalize the embedding to force them to sit on a hyper-sphere. 
+        embedding = F.normalize(embedding)
+
+        return embedding
+
+    def get_embedding(self, data, normalize=True):
+        """
+        Same function as the forward function. Used to get the embedding of a pocket after training.
+
+        Argument:
+        data - standard PyG graph data.
+        normalize - must be set to true. 
+        """
+        embedding = self.embedding_net(
+            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+
+        # normalize the embedding if the embeddings are normalized during training
+        # see ContrastiveLoss.__init__()
+        if normalize == True:
+            embedding = F.normalize(embedding)
+
+        return embedding
+
+
 class SelectiveContrastiveLoss(torch.nn.Module):
     """
     The contrastive loss that selects hard pairs to optimize.
     """
 
-    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True, num_pos_pair=256, num_neg_pair=256):
+    def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True, num_pos_pair=128, num_neg_pair=128):
         super(SelectiveContrastiveLoss, self).__init__()
         self.similar_margin = similar_margin
         self.dissimilar_margin = dissimilar_margin
@@ -357,8 +360,8 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # compute the number of pairs sent to the loss
         total_num_pairs = pos_pair_idx.shape[0]
         num_pairs = min(num_pairs, total_num_pairs)
-        print('total number of positive pairs: ', total_num_pairs)
-        print('actual number of positive pairs sent to loss: ', num_pairs)
+        #print('total number of positive pairs: ', total_num_pairs)
+        #print('actual number of positive pairs sent to loss: ', num_pairs)
 
         # no loss if there is no positive pairs
         if total_num_pairs == 0:
@@ -383,8 +386,8 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # compute the number of pairs sent to the loss
         total_num_pairs = neg_pair_idx.shape[0]
         num_pairs = min(num_pairs, total_num_pairs)
-        print('total number of negative pairs: ', total_num_pairs)
-        print('actual number of negative pairs sent to loss: ', num_pairs)
+        #print('total number of negative pairs: ', total_num_pairs)
+        #print('actual number of negative pairs sent to loss: ', num_pairs)
 
         # no loss if there is no negative pairs
         if total_num_pairs == 0:
@@ -480,19 +483,4 @@ class MoNet(torch.nn.Module):
 
 
 # TO-DO: functions to accumulate/reset ls and ld for analysis.
-
-# TO-DO: logistic similarity for cross-entropy loss
-
-# TO-DO: similarity by dot product of node features
-
-
-if __name__=="__main__":
-    """
-    Main function for testing and debugging only
-    """
-    a = torch.tensor([[0,0,1],[1,2,3]], dtype=torch.float32)
-    b = torch.tensor([[0,0,-1],[1,2,3]], dtype=torch.float32)
-    y = torch.tensor([0], dtype=torch.long)
-    loss=ContrastiveLoss()
-    print(loss(a,b,y))
 

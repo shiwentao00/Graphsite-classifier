@@ -36,7 +36,7 @@ def dataloader_gen_multi_gpu(pocket_dir, train_pos_pairs, train_neg_pairs, val_p
 def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
     """Dataloader used to wrap Pocket Dataset. Used for inference/testing."""
     pocketset = PocketDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, clusters=clusters, features_to_use=features_to_use)
-    pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+    pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, drop_last=True)
     return pocketloader, len(pocketset)
 
 

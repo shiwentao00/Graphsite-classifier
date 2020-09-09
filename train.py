@@ -88,7 +88,9 @@ def validate():
         data = data.to(device)
         embedding_a, embedding_b = model(data)
         loss = loss_function(embedding_a, embedding_b, data.y)
-        total_loss += loss.item() * batch_size # last incomplete batch is dropped, so just use batch_size
+
+        # last incomplete batch is dropped, so just use batch_size
+        total_loss += loss.item() * batch_size 
 
     val_loss = total_loss / val_size
     return val_loss
@@ -254,7 +256,7 @@ if __name__=="__main__":
         train_loss = train()
         train_losses.append(train_loss)
         
-        val_loss = validate() # list of losses every 50 mini-batches
+        val_loss = validate()
         val_losses.append(val_loss)
 
         print('epoch: {}, train loss: {}, validation loss: {}.'.format(epoch, train_loss, val_loss))
@@ -266,6 +268,7 @@ if __name__=="__main__":
 
     print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
 
+    # write loss history to disk
     results = {'train_losses': train_losses, 'val_losses': val_losses}
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
