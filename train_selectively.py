@@ -134,11 +134,11 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 3000
+    num_epochs = 2000
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 2000
+    lr_decay_epoch = 1000
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
-    select_hard_pair_epoch = 400
+    select_hard_pair_epoch = 200
     print('begin to select hard pairs at epoch {}'.format(select_hard_pair_epoch))
 
     learning_rate = 0.003
