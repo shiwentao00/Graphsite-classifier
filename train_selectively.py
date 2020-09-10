@@ -62,6 +62,10 @@ def train():
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
+    # begin to select hard pairs for training
+    if epoch == select_hard_pair_epoch:
+        loss_function.set_select_hard_pairs(True)
+
     total_loss = 0
     num_loss_elements = 0 # total number of pairs used for training in this epoch
     for data in train_loader:
@@ -130,10 +134,12 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 3000
+    num_epochs = 3200
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 2000
+    lr_decay_epoch = 2400
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
+    select_hard_pair_epoch = 1200
+    print('begin to select hard pairs at epoch {}'.format(select_hard_pair_epoch))
 
     learning_rate = 0.003
     weight_decay = 0.0005

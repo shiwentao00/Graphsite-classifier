@@ -324,6 +324,11 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # the max number of negative pairs to send to loss
         self.num_neg_pair = num_neg_pair
 
+        # the switch to control how the pairs are selected
+        # if True, select hardest pairs to optimize
+        # if False, select random pairs to optimize
+        self.select_hard_pairs = False
+
     def forward(self, embedding, label):
         #pos_pairs = self.__select_pos_pair(embedding, label)
         #neg_pairs = self.__select_neg_pair(embedding, label)
@@ -346,12 +351,6 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         else:
             loss = torch.cat([similar_loss, dissimilar_loss])
 
-        # mean or sum
-        # if self.mean == True:
-        #     return loss.mean()
-        # else:
-        #     return loss.sum()
-
         # mean for back propagation, sum for logging
         return loss.mean(), loss.sum(), loss.shape
 
@@ -370,13 +369,12 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # select embedding of positive pairs
         embedding_a = embedding[pos_pair_idx[:, 0]]
         embedding_b = embedding[pos_pair_idx[:, 1]]
-        #label_a = label[pos_pair_idx[:, 0]]
-        #label_b = label[pos_pair_idx[:, 1]]
         
         # compute the loss
         euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
         loss = torch.pow(torch.clamp(euclidean_dist - self.similar_margin, min=0), 2)
-        loss, _ = torch.sort(loss, descending=True)
+        if self.select_hard_pairs == True:
+            loss, _ = torch.sort(loss, descending=True)
         loss = loss[0: num_pairs]  # select top num_pairs loss
 
         return loss
@@ -396,16 +394,20 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # select embedding of negative pairs
         embedding_a = embedding[neg_pair_idx[:, 0]]
         embedding_b = embedding[neg_pair_idx[:, 1]]
-        #label_a = label[neg_pair_idx[:, 0]]
-        #label_b = label[neg_pair_idx[:, 1]]
         
         # compute the loss
         euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
         loss = torch.pow(torch.clamp(self.dissimilar_margin - euclidean_dist, min=0), 2)
-        loss, _ = torch.sort(loss, descending=True)
+        if self.select_hard_pairs == True:
+            loss, _ = torch.sort(loss, descending=True)
         loss = loss[0: num_pairs]  # select top num_pairs loss
 
         return loss
+
+    def set_select_hard_pairs(self, select_hard_pairs):
+        """used to alternate the pair selection during training"""
+        assert(select_hard_pairs in [True, False])
+        self.select_hard_pairs = select_hard_pairs
 
     def __repr__(self):
         return 'SelectiveContrastiveLoss(similar_margin={}, dissimilar_margin={}, num_pos_pair={}, num_neg_pair={})'.format(
