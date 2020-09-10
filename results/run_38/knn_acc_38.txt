@@ -1,0 +1,52 @@
+training embeddings: ../embeddings/run_38/train_embedding.npy
+training label: ../embeddings/run_38/train_label.npy
+val embeddings: ../embeddings/run_38/val_embedding.npy
+val label: ../embeddings/run_38/val_label.npy
+test embeddings: ../embeddings/run_38/test_embedding.npy
+test label: ../embeddings/run_38/test_label.npy
+train accuracy: 0.822786012922843, validation accuracy: 0.7402309058614565, test accuracy: 0.7473451327433628
+train report:
+              precision    recall  f1-score   support
+
+           0       0.84      0.97      0.90      4597
+           1       0.71      0.74      0.72      1699
+           2       0.84      0.78      0.81       810
+           3       0.82      0.65      0.73      1373
+           4       0.91      0.71      0.79       737
+           5       0.88      0.77      0.82       677
+           6       0.84      0.59      0.69       631
+
+    accuracy                           0.82     10524
+   macro avg       0.83      0.74      0.78     10524
+weighted avg       0.82      0.82      0.82     10524
+
+validation report:
+              precision    recall  f1-score   support
+
+           0       0.80      0.96      0.87       985
+           1       0.57      0.59      0.58       364
+           2       0.77      0.71      0.74       173
+           3       0.66      0.48      0.55       294
+           4       0.83      0.65      0.73       158
+           5       0.76      0.70      0.73       145
+           6       0.62      0.34      0.44       133
+
+    accuracy                           0.74      2252
+   macro avg       0.71      0.63      0.66      2252
+weighted avg       0.73      0.74      0.73      2252
+
+test report: 
+              precision    recall  f1-score   support
+
+           0       0.81      0.95      0.87       986
+           1       0.58      0.61      0.60       365
+           2       0.73      0.69      0.71       175
+           3       0.69      0.45      0.55       295
+           4       0.85      0.72      0.78       159
+           5       0.76      0.72      0.74       146
+           6       0.67      0.41      0.51       134
+
+    accuracy                           0.75      2260
+   macro avg       0.73      0.65      0.68      2260
+weighted avg       0.74      0.75      0.74      2260
+

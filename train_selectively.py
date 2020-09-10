@@ -219,7 +219,8 @@ if __name__=="__main__":
 
     # differentiable, no parameters to train.
     loss_function = SelectiveContrastiveLoss(
-        similar_margin=similar_margin, dissimilar_margin=dissimilar_margin, num_pos_pair=num_hard_pos_pairs, num_neg_pair=num_hard_neg_pairs).to(device)
+        similar_margin=similar_margin, dissimilar_margin=dissimilar_margin, 
+        num_pos_pair=num_hard_pos_pairs, num_neg_pair=num_hard_neg_pairs).to(device)
     print('loss function:')
     print(loss_function)
 

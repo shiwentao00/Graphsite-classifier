@@ -10,6 +10,7 @@ from dataloader import read_cluster_file_from_yaml, select_classes, divide_clust
 from dataloader import merge_clusters
 from model import SiameseNet
 from model import ResidualSiameseNet
+from model import SelectiveSiameseNet
 import yaml
 
 
@@ -139,14 +140,15 @@ if __name__=="__main__":
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
     #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
     #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy']
-    #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
-                       #'binding_probability', 'sequence_entropy']
-    features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
                        'binding_probability', 'sequence_entropy']
+    #features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    #                   'binding_probability', 'sequence_entropy']
 
     # load trained model
     #model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
-    model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    #model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = SelectiveSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
 
     model.load_state_dict(torch.load(trained_model_dir))
     model.eval()
