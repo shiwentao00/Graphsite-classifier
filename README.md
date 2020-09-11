@@ -11,6 +11,7 @@ The dataset has 51677 pockets clustered into 1301 clusters.
 Manually identified clusters:   
 
 | cluster number | description |
+| --- | --- |
 | 0, 9 | ATP and its related ligand like ADP, ANP, UMP, thymidine monophosphate |
 | 1, 5 | glycol and ether groups who are also structurally closely related |
 | 2 | heme |
