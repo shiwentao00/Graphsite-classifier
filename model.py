@@ -134,9 +134,9 @@ class ResidualBlock(torch.nn.Module):
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
         self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
 
-        self.bn2 = torch.nn.BatchNorm1d(dim)
-        nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
+        #self.bn2 = torch.nn.BatchNorm1d(dim)
+        #nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
+        #self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
     
     def forward(self, x, edge_index, edge_attr):
         x_skip = x # store the input value
@@ -145,9 +145,9 @@ class ResidualBlock(torch.nn.Module):
         x = F.leaky_relu(x)
         x = self.conv1(x, edge_index, edge_attr)
         
-        x = self.bn2(x)
-        x = F.leaky_relu(x)
-        x = self.conv2(x, edge_index, edge_attr)
+        #x = self.bn2(x)
+        #x = F.leaky_relu(x)
+        #x = self.conv2(x, edge_index, edge_attr)
         
         x = x + x_skip # add before activation
         return x
@@ -172,7 +172,7 @@ class ResidualEmbeddingNet(torch.nn.Module):
 
 
         # batch norm for last conv layer
-        self.bn_7 = torch.nn.BatchNorm1d(dim)
+        self.bn_8 = torch.nn.BatchNorm1d(dim)
 
         # read out function
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
@@ -189,7 +189,7 @@ class ResidualEmbeddingNet(torch.nn.Module):
         x = self.rb_8(x, edge_index, edge_attr)
         
         x = F.leaky_relu(x)
-        x = self.bn_7(x) # batch norm after activation
+        x = self.bn_8(x) # batch norm after activation
 
         #x = global_add_pool(x, batch)
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
