@@ -1,0 +1,147 @@
+seed:  666
+number of classes (from original clusters): 14
+how to merge clusters:  [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
+whether to further subcluster data according to chemical reaction: False
+positive training pair sampling threshold:  13000
+negative training pair sampling threshold:  3500
+positive validation pair sampling threshold:  3400
+negative validation pair sampling threshold:  900
+number of epochs to train: 60
+learning rate decay to half at epoch 35.
+batch size: 256
+similar margin of contrastive loss: 0.0
+dissimilar margin of contrastive loss: 2.0
+number of workers to load data:  36
+device:  cuda
+number of gpus:  2
+features to use:  ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']
+number of classes after merging:  11
+number of pockets in training set:  12472
+number of pockets in validation set:  2670
+number of pockets in test set:  2684
+number of train positive pairs: 143000
+number of train negative pairs: 192500
+number of validation positive pairs: 37400
+number of validation negative pairs: 49500
+model architecture:
+SiameseNet(
+  (embedding_net): EmbeddingNet(
+    (set2set): Set2Set(48, 96)
+    (conv1): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=8, out_features=48, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=48, out_features=48, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=8, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=48, out_features=48, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=48, out_features=48, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=48, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn2): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv3): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=48, out_features=48, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=48, out_features=48, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=48, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn3): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv4): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=48, out_features=48, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=48, out_features=48, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=48, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn4): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.003
+    weight_decay: 0.0005
+)
+loss function:
+ContrastiveLoss(similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True)
+epoch: 1, train loss: 0.7848119849760735, validation loss: 0.7957704840375859.
+epoch: 2, train loss: 0.7038630243292864, validation loss: 0.7490995832471771.
+epoch: 3, train loss: 0.6605668028875541, validation loss: 0.6681761985928061.
+epoch: 4, train loss: 0.6219385145844006, validation loss: 0.7274261269168831.
+epoch: 5, train loss: 0.5963051357127159, validation loss: 0.6886698270914058.
+epoch: 6, train loss: 0.5710372163229657, validation loss: 0.7694004454793809.
+epoch: 7, train loss: 0.5534837404072018, validation loss: 0.6495376207639214.
+epoch: 8, train loss: 0.5401443722493247, validation loss: 0.6604985912046444.
+epoch: 9, train loss: 0.5247040475313781, validation loss: 0.6741803291066195.
+epoch: 10, train loss: 0.5138112521221314, validation loss: 0.6630935693527942.
+epoch: 11, train loss: 0.5017603704279119, validation loss: 0.6529049489467958.
+epoch: 12, train loss: 0.4910868847956423, validation loss: 0.6343406736946764.
+epoch: 13, train loss: 0.4847693653135115, validation loss: 0.6376589119475511.
+epoch: 14, train loss: 0.4765810895712294, validation loss: 0.6568986205703508.
+epoch: 15, train loss: 0.4717244594704732, validation loss: 0.6971678151085682.
+epoch: 16, train loss: 0.46502160680915844, validation loss: 0.6679490795069651.
+epoch: 17, train loss: 0.464750196294884, validation loss: 0.6566220979503987.
+epoch: 18, train loss: 0.4572989421452211, validation loss: 0.6479079236205071.
+epoch: 19, train loss: 0.45290884522212066, validation loss: 0.6598871634497604.
+epoch: 20, train loss: 0.4548058244958187, validation loss: 0.6451802571321933.
+epoch: 21, train loss: 0.4475359509350113, validation loss: 0.6455340893990151.
+epoch: 22, train loss: 0.4491441401383561, validation loss: 0.6333446563264169.
+epoch: 23, train loss: 0.4434585239507047, validation loss: 0.671382992374609.
+epoch: 24, train loss: 0.4406871611684694, validation loss: 0.6632915490680514.
+epoch: 25, train loss: 0.4368918671700354, validation loss: 0.6626822701861312.
+epoch: 26, train loss: 0.4355421483683693, validation loss: 0.653359618280233.
+epoch: 27, train loss: 0.4400857281066622, validation loss: 0.6412391676644873.
+epoch: 28, train loss: 0.4342190334359864, validation loss: 0.6702579848593481.
+epoch: 29, train loss: 0.4323775315945621, validation loss: 0.709871420734085.
+epoch: 30, train loss: 0.4303297469114937, validation loss: 0.6375436938673223.
+epoch: 31, train loss: 0.4285192240730661, validation loss: 0.6514339572568483.
+epoch: 32, train loss: 0.4266042423390418, validation loss: 0.6351456046680587.
+epoch: 33, train loss: 0.425446096019489, validation loss: 0.6312662784413995.
+epoch: 34, train loss: 0.42327265634550953, validation loss: 0.6203438642741073.
+epoch: 35, train loss: 0.36777690386025985, validation loss: 0.6470957871273554.
+epoch: 36, train loss: 0.35853336374024164, validation loss: 0.6297097906501165.
+epoch: 37, train loss: 0.35829256513115193, validation loss: 0.6269586776891429.
+epoch: 38, train loss: 0.35370230407260034, validation loss: 0.6364166203576759.
+epoch: 39, train loss: 0.35415852400300757, validation loss: 0.6467020087028126.
+epoch: 40, train loss: 0.3516958511056914, validation loss: 0.6949635481752103.
+epoch: 41, train loss: 0.35368567260651224, validation loss: 0.6407567592045792.
+epoch: 42, train loss: 0.3493243246405384, validation loss: 0.6385681230481393.
+epoch: 43, train loss: 0.34940234613773896, validation loss: 0.6615729283024444.
+epoch: 44, train loss: 0.3484241532213464, validation loss: 0.6490868884263297.
+epoch: 45, train loss: 0.3467803430457762, validation loss: 0.6606994632418054.
+epoch: 46, train loss: 0.34527733021947915, validation loss: 0.6491777210652623.
+epoch: 47, train loss: 0.3457071676694867, validation loss: 0.6448287979670306.
+epoch: 48, train loss: 0.34424247292576887, validation loss: 0.6738398819935473.
+epoch: 49, train loss: 0.3481473723523841, validation loss: 0.6576079756865155.
+epoch: 50, train loss: 0.3389699394464848, validation loss: 0.6267435126090626.
+epoch: 51, train loss: 0.3425514282135601, validation loss: 0.6415205219123937.
+epoch: 52, train loss: 0.3439191149784094, validation loss: 0.6615033529652551.
+epoch: 53, train loss: 0.33888718663313705, validation loss: 0.6447583348457503.
+epoch: 54, train loss: 0.33845182783237693, validation loss: 0.6587659564089583.
+epoch: 55, train loss: 0.3397387852334763, validation loss: 0.6601024057895323.
+epoch: 56, train loss: 0.3339575900946218, validation loss: 0.6602873328310985.
+epoch: 57, train loss: 0.34869595406272197, validation loss: 0.6387947263377446.
+epoch: 58, train loss: 0.33470734141729275, validation loss: 0.6498927315908417.
+epoch: 59, train loss: 0.3360540771939182, validation loss: 0.6455459235644587.
+epoch: 60, train loss: 0.3544441795405972, validation loss: 0.6435244369945812.
+best validation loss 0.6203438642741073 at epoch 34.

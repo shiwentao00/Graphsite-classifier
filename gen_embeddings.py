@@ -86,7 +86,8 @@ if __name__=="__main__":
 
     #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
-    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+    #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
@@ -102,7 +103,7 @@ if __name__=="__main__":
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
-    num_classes = 10
+    num_classes = 14
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
@@ -140,15 +141,15 @@ if __name__=="__main__":
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
     #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy'] 
     #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy']
-    features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
                        'binding_probability', 'sequence_entropy']
     #features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
     #                   'binding_probability', 'sequence_entropy']
 
     # load trained model
-    #model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
-    #model = SiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
-    model = SelectiveSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
+    #model = SelectiveSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
 
     model.load_state_dict(torch.load(trained_model_dir))
     model.eval()

@@ -1,0 +1,73 @@
+how to merge clusters:  [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+computing evaluation metrics for train
+embedding path:  ../embeddings/run_43/train_embedding.npy
+label path:  ../embeddings/run_43/train_label.npy
+{} report:  train
+              precision    recall  f1-score   support
+
+           0       0.96      0.65      0.77      4597
+           1       0.51      0.39      0.44      1699
+           2       0.86      0.88      0.87       810
+           3       0.53      0.53      0.53      1373
+           4       0.73      0.89      0.80       737
+           5       0.87      0.92      0.90       677
+           6       0.72      0.89      0.80       634
+           7       0.66      0.80      0.72       503
+           8       0.20      0.50      0.29       500
+           9       0.55      0.89      0.68       476
+          10       0.44      0.84      0.57       466
+
+    accuracy                           0.67     12472
+   macro avg       0.64      0.74      0.67     12472
+weighted avg       0.74      0.67      0.68     12472
+
+top-3 train acc: 0.8915971776779987
+----------------------------------------------------------
+computing evaluation metrics for val
+embedding path:  ../embeddings/run_43/val_embedding.npy
+label path:  ../embeddings/run_43/val_label.npy
+{} report:  val
+              precision    recall  f1-score   support
+
+           0       0.96      0.65      0.77       985
+           1       0.53      0.42      0.47       364
+           2       0.84      0.87      0.86       173
+           3       0.52      0.51      0.51       294
+           4       0.74      0.94      0.83       158
+           5       0.86      0.90      0.88       145
+           6       0.75      0.89      0.82       135
+           7       0.68      0.86      0.76       107
+           8       0.21      0.45      0.28       107
+           9       0.53      0.94      0.68       102
+          10       0.45      0.86      0.59        98
+
+    accuracy                           0.68      2668
+   macro avg       0.64      0.75      0.68      2668
+weighted avg       0.74      0.68      0.69      2668
+
+top-3 val acc: 0.8973013493253373
+----------------------------------------------------------
+computing evaluation metrics for test
+embedding path:  ../embeddings/run_43/test_embedding.npy
+label path:  ../embeddings/run_43/test_label.npy
+{} report:  test
+              precision    recall  f1-score   support
+
+           0       0.96      0.64      0.77       986
+           1       0.54      0.42      0.48       365
+           2       0.86      0.87      0.87       175
+           3       0.58      0.55      0.57       295
+           4       0.73      0.87      0.79       159
+           5       0.87      0.93      0.90       146
+           6       0.68      0.91      0.78       137
+           7       0.72      0.87      0.79       109
+           8       0.20      0.44      0.27       108
+           9       0.50      0.87      0.63       103
+          10       0.41      0.82      0.55       101
+
+    accuracy                           0.68      2684
+   macro avg       0.64      0.75      0.67      2684
+weighted avg       0.74      0.68      0.69      2684
+
+top-3 test acc: 0.8904619970193741
+----------------------------------------------------------

@@ -91,9 +91,6 @@ if __name__=="__main__":
     embedding_root = args.embedding_dir
     run = args.run
     embedding_dir = embedding_root + 'run_{}/'.format(run)
-    
-    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
-    print('how to merge clusters: ', merge_info)
 
     for which_split in ['train', 'val', 'test']:
         print('computing evaluation metrics for {}'.format(which_split))
