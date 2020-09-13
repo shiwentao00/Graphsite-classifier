@@ -127,16 +127,16 @@ if __name__=="__main__":
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
-    train_pos_th = 13000 # threshold of number of positive train pairs for each class
-    train_neg_th = 3500 # threshold of number of negative train pairs for each combination
+    train_pos_th = 15000 # threshold of number of positive train pairs for each class
+    train_neg_th = 4400 # threshold of number of negative train pairs for each combination
     val_pos_th = 3400 # threshold of number of positive validation pairs for each class
-    val_neg_th = 900 # threshold of number of negative validation pairs for each combination
+    val_neg_th = 1000 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
@@ -145,7 +145,7 @@ if __name__=="__main__":
     # tunable hyper-parameters
     num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 35
+    lr_decay_epoch = 30
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
@@ -234,7 +234,7 @@ if __name__=="__main__":
                                               num_workers=num_workers)
 
     #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = ResidualSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")
