@@ -108,7 +108,7 @@ def validate_by_knn_acc():
     train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
 
     # embeddings of validation pockets
-    val_embedding, val_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
+    val_embedding, val_label, _ = compute_embeddings(val_loader, model, device, normalize=True)
 
     # knn model
     knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
