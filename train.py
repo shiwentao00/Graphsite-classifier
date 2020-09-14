@@ -306,7 +306,7 @@ if __name__=="__main__":
         train_accs.append(train_acc)
         val_accs.append(val_acc)
 
-        print('epoch: {}, train loss: {}, train acc: {}， validation acc: {}.'.format(epoch, train_loss, train_acc, val_acc))
+        print('epoch: {}, train loss: {}, train acc: {}, validation acc: {}.'.format(epoch, train_loss, train_acc, val_acc))
         
         #if epoch > lr_decay_epoch: # store results for epochs after decay learning rate
         if  val_acc >= best_val_acc:
