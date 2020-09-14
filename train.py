@@ -314,7 +314,7 @@ if __name__=="__main__":
             best_val_epoch = epoch
             torch.save(model.state_dict(), trained_model_dir)
 
-    print('best validation loss {} at epoch {}.'.format(best_val_acc, best_val_epoch))
+    print('best validation acc {} at epoch {}.'.format(best_val_acc, best_val_epoch))
 
     # write loss history to disk
     results = {'train_losses': train_losses, 'train_accs': train_accs, 'val_accs': val_accs}
