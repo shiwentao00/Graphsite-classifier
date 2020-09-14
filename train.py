@@ -6,8 +6,11 @@ from torch_geometric.nn import DataParallel
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, cluster_by_chem_react, gen_pairs
 from dataloader import dataloader_gen
 from dataloader import merge_clusters
+from dataloader import pocket_loader_gen
+from gen_embeddings import compute_embeddings
 from model import SiameseNet, ContrastiveLoss
 from model import ResidualSiameseNet
+from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 import json
 import yaml
@@ -53,7 +56,7 @@ def train():
     """
     Train the model for 1 epoch, then return the averaged loss of the data 
     in this epoch.
-    Global vars: train_loader, train_size, device, optimizer, model
+    Global vars: train_pair_loader, train_pair_size, device, optimizer, model
     batch_interval: number of mini-batch intervals to log loss
     """
     model.train()
@@ -64,7 +67,7 @@ def train():
             param_group['lr'] = 0.5 * param_group['lr']
 
     total_loss = 0
-    for data in train_loader:
+    for data in train_pair_loader:
         data = data.to(device)
         optimizer.zero_grad()
         embedding_a, embedding_b = model(data)
@@ -72,7 +75,7 @@ def train():
         loss.backward()
         total_loss += loss.item() * batch_size # last incomplete batch is dropped, so just use batch_size
         optimizer.step()
-    train_loss = total_loss / train_size
+    train_loss = total_loss / train_pair_size
     return train_loss
 
 
@@ -94,6 +97,28 @@ def validate():
 
     val_loss = total_loss / val_size
     return val_loss
+
+
+def validate_by_knn_acc():
+    """
+    Validate the training performance by k-nearest neighbor 
+    accuracy on the validation set.
+    """
+    # embeddings of train pockets
+    train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
+
+    # embeddings of validation pockets
+    val_embedding, val_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
+
+    # knn model
+    knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
+    knn.fit(train_embedding, train_label)
+    train_prediction = knn.predict(train_embedding)
+    val_prediction = knn.predict(val_embedding)
+    train_acc = metrics.accuracy_score(train_label, train_prediction)
+    val_acc = metrics.accuracy_score(val_label, val_prediction)
+
+    return train_acc, val_acc
 
 
 def compute_metrics(label, out):
@@ -122,9 +147,12 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)    
 
+    # number of clusters selected from the clusters
     num_classes = 14
     print('number of classes (from original clusters):', num_classes)
-    cluster_th = 10000 # threshold of number of pockets in a class
+
+    # threshold of number of pockets in a class
+    cluster_th = 10000 # large engouth to select all the data
     #print('max number of data of each class:', cluster_th)
     
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
@@ -134,14 +162,14 @@ if __name__=="__main__":
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
-    train_pos_th = 15000 # threshold of number of positive train pairs for each class
-    train_neg_th = 4500 # threshold of number of negative train pairs for each combination
-    val_pos_th = 3600 # threshold of number of positive validation pairs for each class
-    val_neg_th = 1100 # threshold of number of negative validation pairs for each combination
+    train_pos_th = 16000 # threshold of number of positive train pairs for each class
+    train_neg_th = 4600 # threshold of number of negative train pairs for each combination
+    #val_pos_th = 3600 # threshold of number of positive validation pairs for each class
+    #val_neg_th = 1100 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
-    print('positive validation pair sampling threshold: ', val_pos_th)
-    print('negative validation pair sampling threshold: ', val_neg_th)
+    #print('positive validation pair sampling threshold: ', val_pos_th)
+    #print('negative validation pair sampling threshold: ', val_neg_th)
 
     # tunable hyper-parameters
     num_epochs = 55
@@ -213,26 +241,42 @@ if __name__=="__main__":
     train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)
 
     # validation pairs
-    val_pos_pairs, val_neg_pairs = gen_pairs(clusters=val_clusters, pos_pair_th=val_pos_th, neg_pair_th=val_neg_th)
+    #val_pos_pairs, val_neg_pairs = gen_pairs(clusters=val_clusters, pos_pair_th=val_pos_th, neg_pair_th=val_neg_th)
     
     print('number of train positive pairs:', len(train_pos_pairs))
     print('number of train negative pairs:', len(train_neg_pairs))
-    train_size = len(train_pos_pairs) +  len(train_neg_pairs)
+    train_pair_size = len(train_pos_pairs) +  len(train_neg_pairs)
 
-    print('number of validation positive pairs:', len(val_pos_pairs))
-    print('number of validation negative pairs:', len(val_neg_pairs))
-    val_size = len(val_pos_pairs) + len(val_neg_pairs)
+    #print('number of validation positive pairs:', len(val_pos_pairs))
+    #print('number of validation negative pairs:', len(val_neg_pairs))
+    #val_size = len(val_pos_pairs) + len(val_neg_pairs)
     
-    train_loader, val_loader = dataloader_gen(pocket_dir, 
-                                              pop_dir,
-                                              train_pos_pairs, 
-                                              train_neg_pairs, 
-                                              val_pos_pairs, 
-                                              val_neg_pairs, 
-                                              features_to_use, 
-                                              batch_size, 
-                                              shuffle=True,
-                                              num_workers=num_workers)
+    train_pair_loader = dataloader_gen(pocket_dir, 
+                                  pop_dir,
+                                  train_pos_pairs, 
+                                  train_neg_pairs, 
+                                  features_to_use, 
+                                  batch_size, 
+                                  shuffle=True,
+                                  num_workers=num_workers)
+
+    # dataloaders for validation 
+    train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
+                                             pop_dir=pop_dir,
+                                             clusters=train_clusters,
+                                             features_to_use=features_to_use,
+                                             batch_size=batch_size,
+                                             shuffle=True,
+                                             num_workers=num_workers)
+
+    val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir,
+                                             pop_dir=pop_dir,
+                                             clusters=val_clusters,
+                                             features_to_use=features_to_use,
+                                             batch_size=batch_size,
+                                             shuffle=True,
+                                             num_workers=num_workers)
+    # end of dataloaders for validation
 
     #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
     model = ResidualSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
@@ -251,26 +295,28 @@ if __name__=="__main__":
     print(loss_function)
 
     train_losses = []
-    val_losses = []
-    best_val_loss = 9999999
+    train_accs = []
+    val_accs = []
+    best_val_acc = 0
     for epoch in range(1, num_epochs+1):
         train_loss = train()
         train_losses.append(train_loss)
         
-        val_loss = validate()
-        val_losses.append(val_loss)
+        train_acc, val_acc = validate_by_knn_acc()
+        train_accs.append(train_acc)
+        val_accs.append(val_acc)
 
-        print('epoch: {}, train loss: {}, validation loss: {}.'.format(epoch, train_loss, val_loss))
+        print('epoch: {}, train loss: {}, train acc: {}， validation acc: {}.'.format(epoch, train_loss, train_acc, val_acc))
         
-        if epoch > lr_decay_epoch: # store results for epochs after decay learning rate
-            if  val_loss < best_val_loss:
-                best_val_loss = val_loss
-                best_val_epoch = epoch
-                torch.save(model.state_dict(), trained_model_dir)
+        #if epoch > lr_decay_epoch: # store results for epochs after decay learning rate
+        if  val_acc >= best_val_acc:
+            best_val_acc = val_acc
+            best_val_epoch = epoch
+            torch.save(model.state_dict(), trained_model_dir)
 
-    print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
+    print('best validation loss {} at epoch {}.'.format(best_val_acc, best_val_epoch))
 
     # write loss history to disk
-    results = {'train_losses': train_losses, 'val_losses': val_losses}
+    results = {'train_losses': train_losses, 'train_accs': train_accs, 'val_accs': val_accs}
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
