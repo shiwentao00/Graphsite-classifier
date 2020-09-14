@@ -265,7 +265,7 @@ if __name__=="__main__":
                                              pop_dir=pop_dir,
                                              clusters=train_clusters,
                                              features_to_use=features_to_use,
-                                             batch_size=batch_size,
+                                             batch_size=num_workers,
                                              shuffle=True,
                                              num_workers=num_workers)
 
@@ -273,7 +273,7 @@ if __name__=="__main__":
                                              pop_dir=pop_dir,
                                              clusters=val_clusters,
                                              features_to_use=features_to_use,
-                                             batch_size=batch_size,
+                                             batch_size=num_workers,
                                              shuffle=True,
                                              num_workers=num_workers)
     # end of dataloaders for validation
