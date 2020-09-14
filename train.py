@@ -122,30 +122,31 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)    
 
-    num_classes = 19
+    num_classes = 14
     print('number of classes (from original clusters):', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
     #print('max number of data of each class:', cluster_th)
     
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
     train_pos_th = 15000 # threshold of number of positive train pairs for each class
-    train_neg_th = 3500 # threshold of number of negative train pairs for each combination
-    val_pos_th = 3000 # threshold of number of positive validation pairs for each class
-    val_neg_th = 700 # threshold of number of negative validation pairs for each combination
+    train_neg_th = 4500 # threshold of number of negative train pairs for each combination
+    val_pos_th = 3600 # threshold of number of positive validation pairs for each class
+    val_neg_th = 1100 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
     print('positive validation pair sampling threshold: ', val_pos_th)
     print('negative validation pair sampling threshold: ', val_neg_th)
 
     # tunable hyper-parameters
-    num_epochs = 60
+    num_epochs = 55
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 30
+    lr_decay_epoch = 25
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
@@ -260,11 +261,12 @@ if __name__=="__main__":
         val_losses.append(val_loss)
 
         print('epoch: {}, train loss: {}, validation loss: {}.'.format(epoch, train_loss, val_loss))
-
-        if  val_loss < best_val_loss:
-            best_val_loss = val_loss
-            best_val_epoch = epoch
-            torch.save(model.state_dict(), trained_model_dir)
+        
+        if epoch > lr_decay_epoch: # store results for epochs after decay learning rate
+            if  val_loss < best_val_loss:
+                best_val_loss = val_loss
+                best_val_epoch = epoch
+                torch.save(model.state_dict(), trained_model_dir)
 
     print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
 

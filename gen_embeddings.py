@@ -87,7 +87,8 @@ if __name__=="__main__":
     #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
     #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
-    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
+    #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
@@ -147,7 +148,7 @@ if __name__=="__main__":
     #                   'binding_probability', 'sequence_entropy']
 
     # load trained model
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = ResidualSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
     #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
     #model = SelectiveSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
 
