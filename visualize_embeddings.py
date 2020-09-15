@@ -73,14 +73,14 @@ if __name__=="__main__":
     #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
     #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
     #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
     print('how to merge clusters: ', merge_info)
     cluster_ids = [str(x) for x in merge_info] # use original cluster ids
 
-    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish"]
+    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish"]
     #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
-    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink"]
+    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink"]
     #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange", "windows blue"]
 
 

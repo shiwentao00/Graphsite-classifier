@@ -14,7 +14,7 @@ def get_args():
 
     return parser.parse_args()
 
-def plot_loss(train_loss, val_loss, loss_dir, time):
+def plot_loss(train_loss, train_acc, val_acc, loss_dir, time):
     """
     Plot loss.
     """
@@ -28,16 +28,18 @@ def plot_loss(train_loss, val_loss, loss_dir, time):
     plt.ylabel('loss')    
     
     # find minimum validaiton loss
-    min_val_loss = np.min(val_loss)
-    pos = np.nonzero(val_loss == min_val_loss)[0]
+    max_val_acc = np.max(val_acc)
+    pos = np.nonzero(val_acc == max_val_acc)[0]
     plt.axvline(x=pos, linewidth=2, color='grey', linestyle='--')
-    plt.text(pos+1, min_val_loss+0.1, str(min_val_loss)[0:6])
+    plt.text(pos+1, max_val_acc-0.05, str(max_val_acc)[0:6])
 
     # plot train and validation curve
     train_loss = np.array(train_loss)
-    val_loss = np.array(val_loss)
-    plt.plot(train_loss, label='Train', linewidth=2)
-    plt.plot(val_loss, label='Validation', linewidth=2)
+    train_acc = np.array(train_acc)
+    val_acc = np.array(val_acc)
+    plt.plot(train_loss, label='Train loss', linewidth=2)
+    plt.plot(train_acc, label='Train acc', linewidth=2)
+    plt.plot(val_acc, label='Val acc', linewidth=2)
     plt.legend()
     
     plt.savefig(loss_dir)
@@ -51,8 +53,10 @@ if __name__=="__main__":
         data = json.load(read_file)
 
     train_loss = data['train_losses']
-    val_loss = data['val_losses']
+    train_acc = data['train_accs']
+    val_acc = data['val_accs']
     time = len(train_loss)
-    plot_loss(train_loss=train_loss, val_loss=val_loss, loss_dir='./results/run_{}/loss_{}.png'.format(run, run), time=time)
+    plot_loss(train_loss=train_loss, train_acc=train_acc, val_acc=val_acc, 
+                loss_dir='./results/run_{}/loss_{}.png'.format(run, run), time=time)
 
     
