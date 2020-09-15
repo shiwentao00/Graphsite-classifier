@@ -50,7 +50,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
     label_list = list(np.hstack(label_list))
     cluster_id_list = [cluster_ids[x] for x in label_list]
 
-    fig = plt.figure(figsize=(12, 12))
+    fig = plt.figure(figsize=(14, 12))
 
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
@@ -60,6 +60,8 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
                          markers='.', 
                          palette= cust_palette
                          )
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.tight_layout()
     plt.savefig(image_path)
 
 

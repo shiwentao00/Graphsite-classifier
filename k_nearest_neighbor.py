@@ -50,7 +50,7 @@ if __name__=="__main__":
     test_embedding = np.load(test_embedding_path)
     test_label = np.load(test_label_path)
 
-    knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
+    knn = KNeighborsClassifier(n_neighbors=7, n_jobs=4)
     knn.fit(train_embedding, train_label)
 
     train_prediction = knn.predict(train_embedding)
