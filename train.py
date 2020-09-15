@@ -155,11 +155,10 @@ if __name__=="__main__":
 
     # threshold of number of pockets in a class
     cluster_th = 10000 # large engouth to select all the data
-    #print('max number of data of each class:', cluster_th)
     
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8], 4, 6, 7, 10, 13]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8], 4, 6, 7, 10, 13]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
@@ -167,24 +166,20 @@ if __name__=="__main__":
 
     train_pos_th = 16000 # threshold of number of positive train pairs for each class
     train_neg_th = 4600 # threshold of number of negative train pairs for each combination
-    #val_pos_th = 3600 # threshold of number of positive validation pairs for each class
-    #val_neg_th = 1100 # threshold of number of negative validation pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
-    #print('positive validation pair sampling threshold: ', val_pos_th)
-    #print('negative validation pair sampling threshold: ', val_neg_th)
 
     # tunable hyper-parameters
-    num_epochs = 55
+    num_epochs = 50
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 25
+    lr_decay_epoch = 20
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
     print('batch size:', batch_size)
     learning_rate = 0.003
-    #weight_decay = 0.0005
-    weight_decay = 0.001
+    weight_decay = 0.0005
+    #weight_decay = 0.001
     normalize = True # whether to normalize the embeddings in constrastive loss
     
     # margins for the relaxed contrastive loss
