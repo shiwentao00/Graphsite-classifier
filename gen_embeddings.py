@@ -88,7 +88,8 @@ if __name__=="__main__":
     #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
     #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
     #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
@@ -104,7 +105,7 @@ if __name__=="__main__":
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
-    num_classes = 14
+    num_classes = 19
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 

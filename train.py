@@ -104,6 +104,8 @@ def validate_by_knn_acc():
     Validate the training performance by k-nearest neighbor 
     accuracy on the validation set.
     """
+    model.eval()
+
     # embeddings of train pockets
     train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
 
@@ -181,7 +183,7 @@ if __name__=="__main__":
     print('batch size:', batch_size)
     learning_rate = 0.003
     weight_decay = 0.0005
-    normalize = True # whether to normalize the embeddings
+    normalize = True # whether to normalize the embeddings in constrastive loss
     
     # margins for the relaxed contrastive loss
     similar_margin = 0.0
@@ -252,13 +254,13 @@ if __name__=="__main__":
     #val_size = len(val_pos_pairs) + len(val_neg_pairs)
     
     train_pair_loader = dataloader_gen(pocket_dir, 
-                                  pop_dir,
-                                  train_pos_pairs, 
-                                  train_neg_pairs, 
-                                  features_to_use, 
-                                  batch_size, 
-                                  shuffle=True,
-                                  num_workers=num_workers)
+                                       pop_dir,
+                                       train_pos_pairs, 
+                                       train_neg_pairs, 
+                                       features_to_use, 
+                                       batch_size, 
+                                       shuffle=True,
+                                       num_workers=num_workers)
 
     # dataloaders for validation 
     train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
@@ -266,7 +268,7 @@ if __name__=="__main__":
                                              clusters=train_clusters,
                                              features_to_use=features_to_use,
                                              batch_size=num_workers,
-                                             shuffle=True,
+                                             shuffle=False,
                                              num_workers=num_workers)
 
     val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir,
@@ -274,7 +276,7 @@ if __name__=="__main__":
                                              clusters=val_clusters,
                                              features_to_use=features_to_use,
                                              batch_size=num_workers,
-                                             shuffle=True,
+                                             shuffle=False,
                                              num_workers=num_workers)
     # end of dataloaders for validation
 
