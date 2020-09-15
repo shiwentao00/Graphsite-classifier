@@ -277,7 +277,7 @@ class SelectiveSiameseNet(torch.nn.Module):
     """
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(SelectiveSiameseNet, self).__init__()
-        self.embedding_net = EmbeddingNet(
+        self.embedding_net = ResidualEmbeddingNet(
             num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, data):

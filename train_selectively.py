@@ -6,10 +6,14 @@ import os
 import random
 import yaml
 import torch
+import copy
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from dataloader import merge_clusters
-from model import SelectiveSiameseNet, SelectiveContrastiveLoss
+from model import ResidualSiameseNet, SelectiveSiameseNet, SelectiveContrastiveLoss
+from gen_embeddings import compute_embeddings
 import json
+from sklearn.neighbors import KNeighborsClassifier
+import sklearn.metrics as metrics
 
 
 def get_args():
@@ -34,6 +38,11 @@ def get_args():
                         default='./pocket_cluster_analysis/results/subclusters_0.yaml',
                         required=False,
                         help='subclusters by chemical reaction of some clusters')
+
+    parser.add_argument('-pretrained_model_dir',
+                        default='../trained_models/trained_model_49.pt',
+                        required=False,
+                        help='directory to store the trained model.')
 
     parser.add_argument('-trained_model_dir',
                         default='../trained_models/pair_selecting_model_1.pt',
@@ -108,6 +117,30 @@ def validate():
     return val_loss
 
 
+def validate_by_knn_acc():
+    """
+    Validate the training performance by k-nearest neighbor 
+    accuracy on the validation set.
+    """
+    model.eval()
+
+    # embeddings of train pockets
+    train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
+
+    # embeddings of validation pockets
+    val_embedding, val_label, _ = compute_embeddings(val_loader, model, device, normalize=True)
+
+    # knn model
+    knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
+    knn.fit(train_embedding, train_label)
+    train_prediction = knn.predict(train_embedding)
+    val_prediction = knn.predict(val_embedding)
+    train_acc = metrics.accuracy_score(train_label, train_prediction)
+    val_acc = metrics.accuracy_score(val_label, val_prediction)
+
+    return train_acc, val_acc
+
+
 if __name__=="__main__":
     random.seed(666)  # deterministic sampled pockets and pairs from dataset
     print('seed: ', 666)
@@ -119,14 +152,17 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)
 
+    pretrained_model_dir = args.pretrained_model_dir
+    print('using pretrained model:', pretrained_model_dir)
+
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
 
-    num_classes = 10
+    num_classes = 14
     print('number of classes:', num_classes)
     cluster_th = 10000  # threshold of number of pockets in a class
 
-    merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False  # whether to further subcluster data according to subcluster_dict
@@ -134,20 +170,20 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 2000
+    num_epochs = 1500
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 1000
+    lr_decay_epoch = 600
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
-    select_hard_pair_epoch = 200
+    select_hard_pair_epoch = 1
     print('begin to select hard pairs at epoch {}'.format(select_hard_pair_epoch))
 
     learning_rate = 0.003
     weight_decay = 0.0005
 
-    batch_size = 96
+    batch_size = 128
     print('batch size:', batch_size)
-    num_hard_pos_pairs = 128
-    num_hard_neg_pairs = 128
+    num_hard_pos_pairs = 256
+    num_hard_neg_pairs = 256
     print('number of hardest positive pairs for each mini-batch: ', num_hard_pos_pairs)
     print('number of hardest negative pairs for each mini-batch: ', num_hard_neg_pairs)
     num_workers = os.cpu_count()
@@ -212,11 +248,16 @@ if __name__=="__main__":
                                              shuffle=True,
                                              num_workers=num_workers)
 
-
+    # initialize model
     model = SelectiveSiameseNet(num_features=num_features,
-        dim=32, train_eps=True, num_edge_attr=1).to(device)
+        dim=48, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
+
+    # load pre-trained model into current model
+    pretrained_model = ResidualSiameseNet(num_features=num_features, dim=48, train_eps=True, num_edge_attr=1).to(device)
+    pretrained_model.load_state_dict(torch.load(pretrained_model_dir))
+    model.embedding_net.load_state_dict(copy.deepcopy(pretrained_model.embedding_net.state_dict()))
 
     optimizer = torch.optim.Adam(
         model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
@@ -230,28 +271,31 @@ if __name__=="__main__":
     print('loss function:')
     print(loss_function)
 
-
     train_losses = []
-    val_losses = []
-    best_val_loss = 9999999
+    train_accs = []
+    val_accs = []
+    best_val_acc = 0
     for epoch in range(1, num_epochs+1):
         train_loss = train()
         train_losses.append(train_loss)
-
-        val_loss = validate()
-        val_losses.append(val_loss)
         
-        print('epoch: {}, train loss: {}, validation loss: {}.'.format(epoch, train_loss, val_loss))
+        train_acc, val_acc = validate_by_knn_acc()
+        train_accs.append(train_acc)
+        val_accs.append(val_acc)
 
-        if  val_loss < best_val_loss:
-            best_val_loss = val_loss
+        print('epoch: {}, train loss: {}, train acc: {}, validation acc: {}.'.format(epoch, train_loss, train_acc, val_acc))
+        
+        #if epoch > lr_decay_epoch: # store results for epochs after decay learning rate
+        if  val_acc >= best_val_acc:
+            best_val_acc = val_acc
             best_val_epoch = epoch
             torch.save(model.state_dict(), trained_model_dir)
 
-    print('best validation loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
-    
+    print('best validation acc {} at epoch {}.'.format(best_val_acc, best_val_epoch))
+
     # write loss history to disk
-    results = {'train_losses': train_losses, 'val_losses': val_losses}
+    results = {'train_losses': train_losses, 'train_accs': train_accs, 'val_accs': val_accs}
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
+
 
