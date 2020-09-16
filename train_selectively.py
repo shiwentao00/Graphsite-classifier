@@ -153,8 +153,9 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)
 
+    use_pretrain_model = False
     pretrained_model_dir = args.pretrained_model_dir
-    print('using pretrained model:', pretrained_model_dir)
+    print('use pre-trained model: {}. model path:{}.'.format(use_pretrain_model, pretrained_model_dir))
 
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
@@ -254,9 +255,10 @@ if __name__=="__main__":
     print(model)
 
     # load pre-trained model into current model
-    pretrained_model = ResidualSiameseNet(num_features=num_features, dim=48, train_eps=True, num_edge_attr=1).to(device)
-    pretrained_model.load_state_dict(torch.load(pretrained_model_dir))
-    model.embedding_net.load_state_dict(copy.deepcopy(pretrained_model.embedding_net.state_dict()))
+    if use_pretrain_model == True:
+        pretrained_model = ResidualSiameseNet(num_features=num_features, dim=48, train_eps=True, num_edge_attr=1).to(device)
+        pretrained_model.load_state_dict(torch.load(pretrained_model_dir))
+        model.embedding_net.load_state_dict(copy.deepcopy(pretrained_model.embedding_net.state_dict()))
 
     optimizer = torch.optim.Adam(
         model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
