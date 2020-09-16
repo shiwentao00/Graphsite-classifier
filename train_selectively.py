@@ -170,9 +170,9 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 1500
+    num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 600
+    lr_decay_epoch = 30
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     select_hard_pair_epoch = 1
     print('begin to select hard pairs at epoch {}'.format(select_hard_pair_epoch))
@@ -247,7 +247,7 @@ if __name__=="__main__":
                                              clusters=val_clusters,
                                              features_to_use=features_to_use,
                                              batch_size=batch_size,
-                                             shuffle=True,
+                                             shuffle=False,
                                              num_workers=num_workers)
 
     # initialize model
