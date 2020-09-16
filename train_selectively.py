@@ -182,7 +182,7 @@ if __name__=="__main__":
 
     batch_size = 128
     print('batch size:', batch_size)
-    num_hard_pos_pairs = 256
+    num_hard_pos_pairs = 192
     num_hard_neg_pairs = 256
     print('number of hardest positive pairs for each mini-batch: ', num_hard_pos_pairs)
     print('number of hardest negative pairs for each mini-batch: ', num_hard_neg_pairs)
@@ -228,8 +228,10 @@ if __name__=="__main__":
     print('number of pockets in test set: ', num_test_pockets)
 
     # missing popsa files for sasa feature at this moment
-    features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
-                       'binding_probability', 'sequence_entropy']
+    #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    #                   'binding_probability', 'sequence_entropy']
+    features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+                       'binding_probability', 'sequence_entropy']      
     num_features = len(features_to_use)
 
     train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
