@@ -157,22 +157,22 @@ if __name__=="__main__":
     cluster_th = 10000 # large engouth to select all the data
     
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8], 4, 6, 7, 10, 13]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8], 4, 6, 7, 10, 13]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
-    train_pos_th = 16000 # threshold of number of positive train pairs for each class
-    train_neg_th = 4600 # threshold of number of negative train pairs for each combination
+    train_pos_th = 24000 # threshold of number of positive train pairs for each class
+    train_neg_th = 8000 # threshold of number of negative train pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
 
     # tunable hyper-parameters
-    num_epochs = 50
+    num_epochs = 35
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 20
+    lr_decay_epoch = 18
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
@@ -204,10 +204,10 @@ if __name__=="__main__":
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sasa', 'sequence_entropy'] 
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
     #features_to_use = ['x', 'y', 'z', 'charge', 'hydrophobicity', 'binding_probability', 'sasa', 'sequence_entropy'] 
-    #features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
-    #                   'binding_probability', 'sequence_entropy']    
-    features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
-                       'binding_probability', 'sequence_entropy']
+    features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+                       'binding_probability', 'sequence_entropy']    
+    #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
+    #                   'binding_probability', 'sequence_entropy']
 
     print('features to use: ', features_to_use)
 
