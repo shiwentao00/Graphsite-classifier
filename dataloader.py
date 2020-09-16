@@ -22,21 +22,10 @@ def dataloader_gen(pocket_dir, pop_dir, pos_pairs, neg_pairs, features_to_use, b
     return dataloader
 
 
-def dataloader_gen_multi_gpu(pocket_dir, train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs, test_pos_pairs, test_neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
-    """Not used"""
-    train_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=train_pos_pairs, neg_pairs=train_neg_pairs, features_to_use=features_to_use)
-    val_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
-    test_set = PairDataset(pocket_dir=pocket_dir, pos_pairs=test_pos_pairs, neg_pairs=test_neg_pairs, features_to_use=features_to_use)
-    train_loader = DataListLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, drop_last=True)
-    val_loader = DataListLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, drop_last=True)
-    test_loader = DataListLoader(test_set, batch_size=batch_size, shuffle=True, num_workers=num_workers, drop_last=True)
-    return train_loader, val_loader, test_loader
-
-
 def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
-    """Dataloader used to wrap Pocket Dataset. Used for inference/testing."""
+    """Dataloader used to wrap PocketDataset."""
     pocketset = PocketDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, clusters=clusters, features_to_use=features_to_use)
-    pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, drop_last=True)
+    pocketloader = DataLoader(pocketset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, drop_last=False)
     return pocketloader, len(pocketset)
 
 

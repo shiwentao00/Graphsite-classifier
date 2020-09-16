@@ -118,7 +118,10 @@ if __name__=="__main__":
     clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
     # select clusters according to rank of sizes and sample large clusters
-    clusters = select_classes(clusters, num_classes, cluster_th)
+    # the thresh hold is set to 10000 so that all the pockets in all clusters are selected.
+    clusters = select_classes(clusters, num_classes, 10000)
+    print('first 5 pockets in cluster 0 before merging (to verify reproducibility):')
+    print(clusters[0][0:5])
 
     # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
     clusters = merge_clusters(clusters, merge_info)
