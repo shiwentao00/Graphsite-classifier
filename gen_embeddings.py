@@ -151,9 +151,9 @@ if __name__=="__main__":
     #                   'binding_probability', 'sequence_entropy']
 
     # load trained model
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
+    #model = ResidualSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
     #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
-    #model = SelectiveSiameseNet(num_features=len(features_to_use), dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = SelectiveSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
 
     model.load_state_dict(torch.load(trained_model_dir))
     model.eval()
