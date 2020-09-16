@@ -9,6 +9,7 @@ import torch
 import copy
 from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
 from dataloader import merge_clusters
+from dataloader import sample_from_list
 from model import ResidualSiameseNet, SelectiveSiameseNet, SelectiveContrastiveLoss
 from gen_embeddings import compute_embeddings
 import json
@@ -160,7 +161,8 @@ if __name__=="__main__":
 
     num_classes = 14
     print('number of classes:', num_classes)
-    cluster_th = 10000  # threshold of number of pockets in a class
+    cluster_sample_th = 1000  # threshold of number of pockets in a class
+    print('max number of {} pockets sampled from each merged class.'.format(cluster_sample_th))
 
     merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     print('how to merge clusters: ', merge_info)
@@ -204,7 +206,10 @@ if __name__=="__main__":
     clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
     # select clusters according to rank of sizes and sample large clusters
-    clusters = select_classes(clusters, num_classes, cluster_th)
+    # the thresh hold is set to 10000 so that all the pockets in all clusters are selected.
+    clusters = select_classes(clusters, num_classes, 10000)
+    print('first 5 pockets in cluster 0 before merging (to verify reproducibility):')
+    print(clusters[0][0:5])
 
     # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
     clusters = merge_clusters(clusters, merge_info)
@@ -227,21 +232,13 @@ if __name__=="__main__":
     print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
 
-    # missing popsa files for sasa feature at this moment
     #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
     #                   'binding_probability', 'sequence_entropy']
     features_to_use = ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
                        'binding_probability', 'sequence_entropy']      
     num_features = len(features_to_use)
 
-    train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
-                                                 pop_dir=pop_dir,
-                                                 clusters=train_clusters,
-                                                 features_to_use=features_to_use,
-                                                 batch_size=batch_size,
-                                                 shuffle=True,
-                                                 num_workers=num_workers)
-
+    # validation dataloader is fixed, but train dataloader is regenerated each epoch.
     val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir,
                                              pop_dir=pop_dir,
                                              clusters=val_clusters,
@@ -278,9 +275,25 @@ if __name__=="__main__":
     val_accs = []
     best_val_acc = 0
     for epoch in range(1, num_epochs+1):
+        # sample each class evenly 
+        sampled_train_clusters = []
+        for cluster in train_clusters:
+            sampled_train_clusters.append(sample_from_list(cluster, cluster_sample_th))
+
+        # re-generate train-loader
+        train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
+                                                     pop_dir=pop_dir,
+                                                     clusters=sampled_train_clusters,
+                                                     features_to_use=features_to_use,
+                                                     batch_size=batch_size,
+                                                     shuffle=True,
+                                                     num_workers=num_workers)
+
+        # train
         train_loss = train()
         train_losses.append(train_loss)
         
+        # validate
         train_acc, val_acc = validate_by_knn_acc()
         train_accs.append(train_acc)
         val_accs.append(val_acc)
