@@ -41,6 +41,13 @@ Current grouping of classes:
 | 5 | 6 | chlorophyll |   
 | 6 | 7 | lipid |
 | 7 | 10 | essential amino acids |   
+| 8 | 15 | S-adenosyl-L-homocysteine |
+| 9 | 17 | coenzymeA |
+| 10 | 18 | pyridoxal phosphate |   
+
+
+
+
 
 
 
