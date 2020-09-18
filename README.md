@@ -19,13 +19,13 @@ Manually identified clusters:
 | 4 | benzene ring containing ligand group such as benzaldehyde, benzoic acid, phenoxyphenylboronic acids etc |
 | 6 | chlorophyll |
 | 7 | lipid containing ligands such as phosphocholine, bromododecanol, tetradecylpropanedioic acids etc |
-| 10 |  essential amino acids like Norvaline, lysine, arginine etc | 
+| 10 | essential amino acids like Norvaline, lysine, arginine etc | 
 | 11 | ether and glycol |
 | 12 | NAD which is the metabolites of ATP | 
 | 13 | carbohydrates like alpha-D galactopyranose, manopyranose |
 | 14 | glucopyranose, pentadiol, trifluroactic acid, phenyllactate, which is a combination of alcohol, carbohydrates and acid groups |
-| 15 |  S-adenosyl-L-homocysteine |
-| 16 |  |
+| 15 | S-adenosyl-L-homocysteine |
+| 16 | citric acid and its derivatives |
 | 17 | coenzymeA |
 | 18 | pyridoxal phosphate group |
 
