@@ -1,0 +1,342 @@
+seed:  666
+use pre-trained model: False. model path:../trained_models/trained_model_49.pt.
+number of classes: 14
+max number of 1000 pockets sampled from each merged class.
+how to merge clusters:  [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+whether to further subcluster data according to chemical reaction: False
+number of epochs to train: 200
+learning rate decay to half at epoch 120.
+begin to select hard pairs at epoch 60
+batch size: 128
+number of hardest positive pairs for each mini-batch:  192
+number of hardest negative pairs for each mini-batch:  256
+number of workers to load data:  36
+similar margin of contrastive loss: 0.0
+dissimilar margin of contrastive loss: 2.0
+device:  cuda
+first 5 pockets in cluster 0 before merging (to verify reproducibility):
+['4tmkA00', '3lv8A00', '3d54A00', '2hs0A00', '4dz6D00']
+number of classes after merging:  8
+number of pockets in training set:  12475
+number of pockets in validation set:  2670
+number of pockets in test set:  2681
+model architecture:
+SelectiveSiameseNet(
+  (embedding_net): ResidualEmbeddingNet(
+    (conv1): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=8, out_features=48, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=48, out_features=48, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=8, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (rb_2): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_3): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_4): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_5): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_6): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_7): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (rb_8): ResidualBlock(
+      (bn1): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv1): GINMolecularConv(nn=Sequential(
+        (0): Linear(in_features=48, out_features=48, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=48, out_features=48, bias=True)
+      ))(edge_transformer=Sequential(
+        (0): Linear(in_features=1, out_features=8, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=8, out_features=48, bias=True)
+        (3): ELU(alpha=1.0)
+      ))
+    )
+    (bn_8): BatchNorm1d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (set2set): Set2Set(48, 96)
+  )
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.003
+    weight_decay: 0.0005
+)
+loss function:
+SelectiveContrastiveLoss(similar_margin=0.0, dissimilar_margin=2.0, num_pos_pair=192, num_neg_pair=256)
+epoch: 1, train loss: 0.9761751474652971, train acc: 0.6637321175915737, validation acc: 0.5284644194756555.
+epoch: 2, train loss: 0.9135667364937918, train acc: 0.667190693287219, validation acc: 0.5779026217228465.
+epoch: 3, train loss: 0.8892865603310721, train acc: 0.6868416915579312, validation acc: 0.5842696629213483.
+epoch: 4, train loss: 0.8556565243857247, train acc: 0.6821254519729603, validation acc: 0.5771535580524345.
+epoch: 5, train loss: 0.8486151736123221, train acc: 0.7019336582298381, validation acc: 0.599625468164794.
+epoch: 6, train loss: 0.8231590039389474, train acc: 0.7151391290677567, validation acc: 0.6063670411985018.
+epoch: 7, train loss: 0.824065775190081, train acc: 0.6991039144788556, validation acc: 0.5925093632958801.
+epoch: 8, train loss: 0.8385907690865653, train acc: 0.7316459676151549, validation acc: 0.6269662921348315.
+epoch: 9, train loss: 0.81351133619036, train acc: 0.7112089294136142, validation acc: 0.5887640449438202.
+epoch: 10, train loss: 0.8092714990888323, train acc: 0.7047634019808207, validation acc: 0.5820224719101124.
+epoch: 11, train loss: 0.7996370683397566, train acc: 0.7503537179688728, validation acc: 0.6591760299625468.
+epoch: 12, train loss: 0.8069964027404786, train acc: 0.7428077346329194, validation acc: 0.6404494382022472.
+epoch: 13, train loss: 0.7939305400848389, train acc: 0.7338468794214746, validation acc: 0.6434456928838951.
+epoch: 14, train loss: 0.796219824382237, train acc: 0.7363622072001258, validation acc: 0.6202247191011236.
+epoch: 15, train loss: 0.7698202664511544, train acc: 0.7376198710894514, validation acc: 0.6397003745318353.
+epoch: 16, train loss: 0.7716496535709926, train acc: 0.7501965099827071, validation acc: 0.6558052434456929.
+epoch: 17, train loss: 0.7484127793993268, train acc: 0.7395063669234397, validation acc: 0.6419475655430712.
+epoch: 18, train loss: 0.7827406229291644, train acc: 0.7363622072001258, validation acc: 0.6546816479400749.
+epoch: 19, train loss: 0.7833676297324045, train acc: 0.7585285332494891, validation acc: 0.6722846441947565.
+epoch: 20, train loss: 0.7813964979989189, train acc: 0.7443798144945764, validation acc: 0.6464419475655431.
+epoch: 21, train loss: 0.7772304643903459, train acc: 0.7239427762930357, validation acc: 0.6265917602996255.
+epoch: 22, train loss: 0.7667218324116298, train acc: 0.7586857412356548, validation acc: 0.6745318352059925.
+epoch: 23, train loss: 0.7551050043106079, train acc: 0.734161295393806, validation acc: 0.6479400749063671.
+epoch: 24, train loss: 0.7527799953733172, train acc: 0.7336896714353089, validation acc: 0.6558052434456929.
+epoch: 25, train loss: 0.7525275094168526, train acc: 0.7509825499135356, validation acc: 0.652059925093633.
+epoch: 26, train loss: 0.7413634082249233, train acc: 0.7505109259550385, validation acc: 0.6588014981273408.
+epoch: 27, train loss: 0.771058691569737, train acc: 0.7479955981763874, validation acc: 0.6595505617977528.
+epoch: 28, train loss: 0.7595944568089077, train acc: 0.7459518943562333, validation acc: 0.6632958801498128.
+epoch: 29, train loss: 0.7649797637122018, train acc: 0.7464235183147304, validation acc: 0.6730337078651686.
+epoch: 30, train loss: 0.7283290842601231, train acc: 0.7462663103285647, validation acc: 0.6651685393258427.
+epoch: 31, train loss: 0.7564865452902657, train acc: 0.7451658544254048, validation acc: 0.6602996254681648.
+epoch: 32, train loss: 0.7447245393480574, train acc: 0.7256720641408584, validation acc: 0.5947565543071162.
+epoch: 33, train loss: 0.7630517223903112, train acc: 0.7417072787297595, validation acc: 0.653558052434457.
+epoch: 34, train loss: 0.7613630403791155, train acc: 0.7481528061625531, validation acc: 0.6719101123595506.
+epoch: 35, train loss: 0.7241624750409807, train acc: 0.7577424933186606, validation acc: 0.6730337078651686.
+epoch: 36, train loss: 0.7450658471243722, train acc: 0.742493318660588, validation acc: 0.652434456928839.
+epoch: 37, train loss: 0.7513637910570418, train acc: 0.7484672221348845, validation acc: 0.6584269662921348.
+epoch: 38, train loss: 0.712988384110587, train acc: 0.744065398522245, validation acc: 0.6513108614232209.
+epoch: 39, train loss: 0.7157392740249634, train acc: 0.7490960540795473, validation acc: 0.6610486891385767.
+epoch: 40, train loss: 0.7482516636167253, train acc: 0.759628989152649, validation acc: 0.6591760299625468.
+epoch: 41, train loss: 0.7572758129664829, train acc: 0.761672692972803, validation acc: 0.6850187265917603.
+epoch: 42, train loss: 0.7167737245559692, train acc: 0.7618299009589687, validation acc: 0.6565543071161049.
+epoch: 43, train loss: 0.7401771817888533, train acc: 0.754441125609181, validation acc: 0.6588014981273408.
+epoch: 44, train loss: 0.7298582635607038, train acc: 0.7549127495676781, validation acc: 0.6385767790262172.
+epoch: 45, train loss: 0.7308312640871321, train acc: 0.7489388460933816, validation acc: 0.6764044943820224.
+epoch: 46, train loss: 0.7245329019001552, train acc: 0.7538122936645182, validation acc: 0.6741573033707865.
+epoch: 47, train loss: 0.7255412040437971, train acc: 0.7593145731803176, validation acc: 0.6569288389513108.
+epoch: 48, train loss: 0.721608269555228, train acc: 0.7516113818581984, validation acc: 0.6782771535580524.
+epoch: 49, train loss: 0.7080343988963536, train acc: 0.7517685898443641, validation acc: 0.6595505617977528.
+epoch: 50, train loss: 0.7029928404944283, train acc: 0.7623015249174658, validation acc: 0.6805243445692883.
+epoch: 51, train loss: 0.7502862003871372, train acc: 0.756013205470838, validation acc: 0.6625468164794007.
+epoch: 52, train loss: 0.7056287281853812, train acc: 0.7490960540795473, validation acc: 0.6734082397003746.
+epoch: 53, train loss: 0.719198272568839, train acc: 0.7473667662317246, validation acc: 0.6647940074906367.
+epoch: 54, train loss: 0.7144039951051985, train acc: 0.7682754283917623, validation acc: 0.6846441947565544.
+epoch: 55, train loss: 0.7542948600224086, train acc: 0.735733375255463, validation acc: 0.6640449438202247.
+epoch: 56, train loss: 0.7143273271833147, train acc: 0.7670177645024367, validation acc: 0.6794007490636704.
+epoch: 57, train loss: 0.7495488112313407, train acc: 0.7685898443640937, validation acc: 0.6883895131086142.
+epoch: 58, train loss: 0.7170622314725603, train acc: 0.7578997013048263, validation acc: 0.6737827715355805.
+epoch: 59, train loss: 0.7173626954214913, train acc: 0.7624587329036315, validation acc: 0.6711610486891386.
+epoch: 60, train loss: 1.741643090929304, train acc: 0.7813236912435152, validation acc: 0.6756554307116105.
+epoch: 61, train loss: 1.4823073387145995, train acc: 0.7487816381072159, validation acc: 0.6606741573033708.
+epoch: 62, train loss: 1.4187900079999651, train acc: 0.7498820940103758, validation acc: 0.6430711610486891.
+epoch: 63, train loss: 1.388255511692592, train acc: 0.761201069014306, validation acc: 0.650187265917603.
+epoch: 64, train loss: 1.3743427113124302, train acc: 0.7582141172771577, validation acc: 0.6265917602996255.
+epoch: 65, train loss: 1.3618644605364119, train acc: 0.7426505266467537, validation acc: 0.6325842696629214.
+epoch: 66, train loss: 1.3564526012965612, train acc: 0.7525546297751926, validation acc: 0.6307116104868914.
+epoch: 67, train loss: 1.3433776800973074, train acc: 0.7360477912277944, validation acc: 0.6146067415730337.
+epoch: 68, train loss: 1.3375891276768275, train acc: 0.7591573651941519, validation acc: 0.6456928838951311.
+epoch: 69, train loss: 1.3315945325578962, train acc: 0.7514541738720327, validation acc: 0.6359550561797753.
+epoch: 70, train loss: 1.3299627985273088, train acc: 0.7366766231724572, validation acc: 0.6415730337078651.
+epoch: 71, train loss: 1.3236912318638392, train acc: 0.7465807263008961, validation acc: 0.6247191011235955.
+epoch: 72, train loss: 1.3182478060041156, train acc: 0.7437509825499136, validation acc: 0.6584269662921348.
+epoch: 73, train loss: 1.3174809047154017, train acc: 0.7585285332494891, validation acc: 0.6539325842696629.
+epoch: 74, train loss: 1.3142633874075753, train acc: 0.758056909290992, validation acc: 0.6460674157303371.
+epoch: 75, train loss: 1.3118283517020088, train acc: 0.7374626631032857, validation acc: 0.6187265917602996.
+epoch: 76, train loss: 1.3110143634251186, train acc: 0.7303883037258293, validation acc: 0.645318352059925.
+epoch: 77, train loss: 1.308233484540667, train acc: 0.7575852853324949, validation acc: 0.6464419475655431.
+epoch: 78, train loss: 1.3078950064522878, train acc: 0.7483100141487188, validation acc: 0.6273408239700374.
+epoch: 79, train loss: 1.3042159162248883, train acc: 0.756013205470838, validation acc: 0.6322097378277154.
+epoch: 80, train loss: 1.3016531263078963, train acc: 0.744065398522245, validation acc: 0.6269662921348315.
+epoch: 81, train loss: 1.2976608167375836, train acc: 0.7585285332494891, validation acc: 0.6374531835205992.
+epoch: 82, train loss: 1.2976187569754465, train acc: 0.7520830058166955, validation acc: 0.6479400749063671.
+epoch: 83, train loss: 1.296180545261928, train acc: 0.7478383901902217, validation acc: 0.6359550561797753.
+epoch: 84, train loss: 1.295107250213623, train acc: 0.7432793585914165, validation acc: 0.6363295880149813.
+epoch: 85, train loss: 1.296216504233224, train acc: 0.7322747995598177, validation acc: 0.6220973782771536.
+epoch: 86, train loss: 1.2942430523463657, train acc: 0.751296965885867, validation acc: 0.650187265917603.
+epoch: 87, train loss: 1.2888192694527763, train acc: 0.7520830058166955, validation acc: 0.6580524344569288.
+epoch: 88, train loss: 1.2893014008658272, train acc: 0.766860556516271, validation acc: 0.6543071161048689.
+epoch: 89, train loss: 1.2903144972664968, train acc: 0.7390347429649426, validation acc: 0.6430711610486891.
+epoch: 90, train loss: 1.2897974559238978, train acc: 0.7555415815123409, validation acc: 0.6359550561797753.
+epoch: 91, train loss: 1.2869356536865235, train acc: 0.7479955981763874, validation acc: 0.6550561797752809.
+epoch: 92, train loss: 1.285800255366734, train acc: 0.7586857412356548, validation acc: 0.6322097378277154.
+epoch: 93, train loss: 1.2856385394505092, train acc: 0.735733375255463, validation acc: 0.6363295880149813.
+epoch: 94, train loss: 1.281162588936942, train acc: 0.738877534978777, validation acc: 0.6602996254681648.
+epoch: 95, train loss: 1.2838202204023088, train acc: 0.7676465964470995, validation acc: 0.6599250936329588.
+epoch: 96, train loss: 1.2807868085588727, train acc: 0.7541267096368496, validation acc: 0.6393258426966292.
+epoch: 97, train loss: 1.2799375316074917, train acc: 0.7534978776921868, validation acc: 0.59812734082397.
+epoch: 98, train loss: 1.283944309779576, train acc: 0.7401351988681025, validation acc: 0.6408239700374532.
+epoch: 99, train loss: 1.2787683514186314, train acc: 0.7539695016506839, validation acc: 0.6426966292134831.
+epoch: 100, train loss: 1.2789221055167062, train acc: 0.7470523502593932, validation acc: 0.6183520599250937.
+epoch: 101, train loss: 1.2790362467084613, train acc: 0.7556987894985066, validation acc: 0.6239700374531835.
+epoch: 102, train loss: 1.277070233481271, train acc: 0.7605722370696432, validation acc: 0.6292134831460674.
+epoch: 103, train loss: 1.2783622687203544, train acc: 0.7613582770004717, validation acc: 0.6430711610486891.
+epoch: 104, train loss: 1.275667631966727, train acc: 0.7472095582455589, validation acc: 0.6756554307116105.
+epoch: 105, train loss: 1.2742713165283204, train acc: 0.7602578210973118, validation acc: 0.648314606741573.
+epoch: 106, train loss: 1.2712819153921944, train acc: 0.7534978776921868, validation acc: 0.6580524344569288.
+epoch: 107, train loss: 1.2712313624790736, train acc: 0.749253262065713, validation acc: 0.6161048689138576.
+epoch: 108, train loss: 1.272081127166748, train acc: 0.7610438610281403, validation acc: 0.648314606741573.
+epoch: 109, train loss: 1.269388256072998, train acc: 0.7597861971388147, validation acc: 0.6494382022471911.
+epoch: 110, train loss: 1.2721352195739746, train acc: 0.7376198710894514, validation acc: 0.6389513108614232.
+epoch: 111, train loss: 1.2724904060363769, train acc: 0.7571136613739978, validation acc: 0.6419475655430712.
+epoch: 112, train loss: 1.2705849511282785, train acc: 0.7720484200597391, validation acc: 0.650187265917603.
+epoch: 113, train loss: 1.2716661616734095, train acc: 0.7483100141487188, validation acc: 0.6599250936329588.
+epoch: 114, train loss: 1.2728423908778599, train acc: 0.7457946863700676, validation acc: 0.6262172284644195.
+epoch: 115, train loss: 1.2734897804260255, train acc: 0.7479955981763874, validation acc: 0.647191011235955.
+epoch: 116, train loss: 1.2682385771615166, train acc: 0.7483100141487188, validation acc: 0.6543071161048689.
+epoch: 117, train loss: 1.2700592367989676, train acc: 0.740921238798931, validation acc: 0.6565543071161049.
+epoch: 118, train loss: 1.2697991425650461, train acc: 0.7566420374155007, validation acc: 0.650936329588015.
+epoch: 119, train loss: 1.2647080121721541, train acc: 0.7451658544254048, validation acc: 0.6187265917602996.
+epoch: 120, train loss: 1.2580164418901716, train acc: 0.7590001572079862, validation acc: 0.6554307116104869.
+epoch: 121, train loss: 1.253098294394357, train acc: 0.7659173085992769, validation acc: 0.6513108614232209.
+epoch: 122, train loss: 1.2518310465131488, train acc: 0.7673321804747681, validation acc: 0.6277153558052434.
+epoch: 123, train loss: 1.2538618905203682, train acc: 0.7773934915893728, validation acc: 0.6752808988764045.
+epoch: 124, train loss: 1.250614253452846, train acc: 0.7720484200597391, validation acc: 0.6573033707865169.
+epoch: 125, train loss: 1.251644401550293, train acc: 0.7717340040874077, validation acc: 0.6602996254681648.
+epoch: 126, train loss: 1.2505462156023297, train acc: 0.7762930356862129, validation acc: 0.6617977528089888.
+epoch: 127, train loss: 1.2507364218575614, train acc: 0.7549127495676781, validation acc: 0.6573033707865169.
+epoch: 128, train loss: 1.2485523414611817, train acc: 0.7679610124194309, validation acc: 0.6629213483146067.
+epoch: 129, train loss: 1.249165393284389, train acc: 0.7662317245716083, validation acc: 0.6546816479400749.
+epoch: 130, train loss: 1.2482006699698311, train acc: 0.7667033485301054, validation acc: 0.6565543071161049.
+epoch: 131, train loss: 1.2470028059823173, train acc: 0.7712623801289106, validation acc: 0.6632958801498128.
+epoch: 132, train loss: 1.2505696814400808, train acc: 0.7711051721427449, validation acc: 0.6479400749063671.
+epoch: 133, train loss: 1.2467548016139438, train acc: 0.773620499921396, validation acc: 0.6700374531835206.
+epoch: 134, train loss: 1.2449491936819894, train acc: 0.7745637478383902, validation acc: 0.6580524344569288.
+epoch: 135, train loss: 1.2449739592415945, train acc: 0.7693758842949222, validation acc: 0.6513108614232209.
+epoch: 136, train loss: 1.246777501787458, train acc: 0.7673321804747681, validation acc: 0.6644194756554307.
+epoch: 137, train loss: 1.2439049502781458, train acc: 0.7698475082534193, validation acc: 0.6838951310861423.
+epoch: 138, train loss: 1.2472598920549665, train acc: 0.7784939474925326, validation acc: 0.6337078651685393.
+epoch: 139, train loss: 1.2455455017089845, train acc: 0.7777079075617042, validation acc: 0.6745318352059925.
+epoch: 140, train loss: 1.2464541489737375, train acc: 0.7830529790913379, validation acc: 0.6722846441947565.
+epoch: 141, train loss: 1.2468775749206542, train acc: 0.7791227794371954, validation acc: 0.6625468164794007.
+epoch: 142, train loss: 1.2425562695094516, train acc: 0.7740921238798931, validation acc: 0.6494382022471911.
+epoch: 143, train loss: 1.2427475139072963, train acc: 0.7651312686684484, validation acc: 0.6456928838951311.
+epoch: 144, train loss: 1.2453767667497908, train acc: 0.7687470523502594, validation acc: 0.6681647940074906.
+epoch: 145, train loss: 1.2438548169817243, train acc: 0.7652884766546141, validation acc: 0.648689138576779.
+epoch: 146, train loss: 1.2431069019862584, train acc: 0.7786511554786983, validation acc: 0.649063670411985.
+epoch: 147, train loss: 1.2418876320975167, train acc: 0.7695330922810879, validation acc: 0.6445692883895131.
+epoch: 148, train loss: 1.2429189000810896, train acc: 0.7597861971388147, validation acc: 0.6479400749063671.
+epoch: 149, train loss: 1.240958409990583, train acc: 0.7841534349944977, validation acc: 0.6591760299625468.
+epoch: 150, train loss: 1.2407737486703054, train acc: 0.7775506995755385, validation acc: 0.6749063670411986.
+epoch: 151, train loss: 1.241512906210763, train acc: 0.7645024367237856, validation acc: 0.6569288389513108.
+epoch: 152, train loss: 1.2413725471496582, train acc: 0.7909133783996227, validation acc: 0.6786516853932584.
+epoch: 153, train loss: 1.2413060869489396, train acc: 0.778808363464864, validation acc: 0.6569288389513108.
+epoch: 154, train loss: 1.2429838371276856, train acc: 0.7674893884609338, validation acc: 0.6662921348314607.
+epoch: 155, train loss: 1.2416967037745885, train acc: 0.7772362836032071, validation acc: 0.6494382022471911.
+epoch: 156, train loss: 1.240859067099435, train acc: 0.7646596447099513, validation acc: 0.6546816479400749.
+epoch: 157, train loss: 1.2413337979997907, train acc: 0.7838390190221664, validation acc: 0.6550561797752809.
+epoch: 158, train loss: 1.2416699164254326, train acc: 0.7769218676308757, validation acc: 0.6745318352059925.
+epoch: 159, train loss: 1.2410077367510115, train acc: 0.771576796101242, validation acc: 0.6756554307116105.
+epoch: 160, train loss: 1.2390225655691964, train acc: 0.7843106429806634, validation acc: 0.6614232209737828.
+epoch: 161, train loss: 1.238622226715088, train acc: 0.7795944033956925, validation acc: 0.648689138576779.
+epoch: 162, train loss: 1.2362921387808663, train acc: 0.7706335481842478, validation acc: 0.6539325842696629.
+epoch: 163, train loss: 1.2386482402256558, train acc: 0.7693758842949222, validation acc: 0.6696629213483146.
+epoch: 164, train loss: 1.2392198726109096, train acc: 0.7656028926269455, validation acc: 0.6651685393258427.
+epoch: 165, train loss: 1.2414510890415738, train acc: 0.7893412985379658, validation acc: 0.6797752808988764.
+epoch: 166, train loss: 1.2362512642996653, train acc: 0.7915422103442855, validation acc: 0.6801498127340824.
+epoch: 167, train loss: 1.237832682473319, train acc: 0.7832101870775036, validation acc: 0.6591760299625468.
+epoch: 168, train loss: 1.236932806287493, train acc: 0.7780223235340356, validation acc: 0.6816479400749064.
+epoch: 169, train loss: 1.236982661655971, train acc: 0.7577424933186606, validation acc: 0.6426966292134831.
+epoch: 170, train loss: 1.236164082118443, train acc: 0.7729916679767332, validation acc: 0.6625468164794007.
+epoch: 171, train loss: 1.2374154717581614, train acc: 0.7825813551328408, validation acc: 0.6741573033707865.
+epoch: 172, train loss: 1.2365817178998675, train acc: 0.7805376513126867, validation acc: 0.6779026217228464.
+epoch: 173, train loss: 1.2352508544921874, train acc: 0.7744065398522245, validation acc: 0.6689138576779026.
+epoch: 174, train loss: 1.2349145535060337, train acc: 0.7849394749253262, validation acc: 0.6730337078651686.
+epoch: 175, train loss: 1.2336347143990654, train acc: 0.7879264266624745, validation acc: 0.6531835205992509.
+epoch: 176, train loss: 1.2358981078011648, train acc: 0.7858827228423204, validation acc: 0.6726591760299625.
+epoch: 177, train loss: 1.2336686733790807, train acc: 0.7753497877692187, validation acc: 0.6790262172284645.
+epoch: 178, train loss: 1.2351752635410853, train acc: 0.7750353717968873, validation acc: 0.6722846441947565.
+epoch: 179, train loss: 1.2360504041399274, train acc: 0.7799088193680239, validation acc: 0.6591760299625468.
+epoch: 180, train loss: 1.2338867514474052, train acc: 0.77676465964471, validation acc: 0.6704119850187266.
+epoch: 181, train loss: 1.2366862515040806, train acc: 0.7841534349944977, validation acc: 0.6812734082397004.
+epoch: 182, train loss: 1.234710374559675, train acc: 0.7792799874233611, validation acc: 0.6805243445692883.
+epoch: 183, train loss: 1.2338473783220563, train acc: 0.7806948592988524, validation acc: 0.6659176029962547.
+epoch: 184, train loss: 1.2353314481462752, train acc: 0.7872975947178117, validation acc: 0.6569288389513108.
+epoch: 185, train loss: 1.2365846361432757, train acc: 0.7909133783996227, validation acc: 0.6726591760299625.
+epoch: 186, train loss: 1.2335104424612864, train acc: 0.7860399308284861, validation acc: 0.6640449438202247.
+epoch: 187, train loss: 1.2323744419642857, train acc: 0.785568306869989, validation acc: 0.6790262172284645.
+epoch: 188, train loss: 1.233919974735805, train acc: 0.7811664832573495, validation acc: 0.6917602996254681.
+epoch: 189, train loss: 1.2341422980172294, train acc: 0.790756170413457, validation acc: 0.6621722846441948.
+epoch: 190, train loss: 1.2338714517865863, train acc: 0.7799088193680239, validation acc: 0.6786516853932584.
+epoch: 191, train loss: 1.2320092037745884, train acc: 0.7621443169313001, validation acc: 0.6606741573033708.
+epoch: 192, train loss: 1.2348708125523158, train acc: 0.778808363464864, validation acc: 0.6741573033707865.
+epoch: 193, train loss: 1.2306719698224748, train acc: 0.7883980506209716, validation acc: 0.6565543071161049.
+epoch: 194, train loss: 1.2319600977216447, train acc: 0.7863543468008175, validation acc: 0.6741573033707865.
+epoch: 195, train loss: 1.2300044550214495, train acc: 0.7857255148561547, validation acc: 0.6835205992509363.
+epoch: 196, train loss: 1.2311101804460798, train acc: 0.7722056280459048, validation acc: 0.6868913857677903.
+epoch: 197, train loss: 1.228600036076137, train acc: 0.7844678509668291, validation acc: 0.6685393258426966.
+epoch: 198, train loss: 1.2298248372759137, train acc: 0.7846250589529948, validation acc: 0.6632958801498128.
+epoch: 199, train loss: 1.2299193109784807, train acc: 0.7865115547869832, validation acc: 0.6644194756554307.
+epoch: 200, train loss: 1.230464984348842, train acc: 0.7877692186763088, validation acc: 0.6310861423220974.
+best validation acc 0.6917602996254681 at epoch 188.

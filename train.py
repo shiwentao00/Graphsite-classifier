@@ -150,29 +150,29 @@ if __name__=="__main__":
         subcluster_dict = yaml.full_load(file)    
 
     # number of clusters selected from the clusters
-    num_classes = 14
+    num_classes = 19
     print('number of classes (from original clusters):', num_classes)
 
     # threshold of number of pockets in a class
     cluster_th = 10000 # large engouth to select all the data
     
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8], 4, 6, 7, 10, 13]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
-    train_pos_th = 24000 # threshold of number of positive train pairs for each class
-    train_neg_th = 8000 # threshold of number of negative train pairs for each combination
+    train_pos_th = 16000 # threshold of number of positive train pairs for each class
+    train_neg_th = 4800 # threshold of number of negative train pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
 
     # tunable hyper-parameters
     num_epochs = 35
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 18
+    lr_decay_epoch = 25
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     
     batch_size = 256
