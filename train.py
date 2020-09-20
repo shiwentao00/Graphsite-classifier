@@ -150,27 +150,27 @@ if __name__=="__main__":
         subcluster_dict = yaml.full_load(file)    
 
     # number of clusters selected from the clusters
-    num_classes = 19
+    num_classes = 24
     print('number of classes (from original clusters):', num_classes)
 
     # threshold of number of pockets in a class
     cluster_th = 10000 # large engouth to select all the data
     
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10, 14, 15, 16, 17, 18]
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18, 19, 20, 21, 22, 23]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
     train_pos_th = 16000 # threshold of number of positive train pairs for each class
-    train_neg_th = 4800 # threshold of number of negative train pairs for each combination
+    train_neg_th = 4500 # threshold of number of negative train pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
 
     # tunable hyper-parameters
-    num_epochs = 35
+    num_epochs = 40
     print('number of epochs to train:', num_epochs)
     lr_decay_epoch = 25
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
@@ -215,7 +215,7 @@ if __name__=="__main__":
     clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
     # select clusters according to rank of sizes and sample large clusters
-    clusters = select_classes(clusters, num_classes, cluster_th)
+    clusters = select_classes(clusters, num_classes, 10000)
 
     # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
     clusters = merge_clusters(clusters, merge_info)
@@ -281,7 +281,7 @@ if __name__=="__main__":
     # end of dataloaders for validation
 
     #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
+    model = ResidualSiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")

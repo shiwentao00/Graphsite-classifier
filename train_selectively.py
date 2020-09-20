@@ -41,7 +41,7 @@ def get_args():
                         help='subclusters by chemical reaction of some clusters')
 
     parser.add_argument('-pretrained_model_dir',
-                        default='../trained_models/trained_model_49.pt',
+                        default='../trained_models/trained_model_57.pt',
                         required=False,
                         help='directory to store the trained model.')
 
