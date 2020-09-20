@@ -236,6 +236,8 @@ if __name__=="__main__":
     print('number of pockets in training set: ', num_train_pockets)
     print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
+    print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
+    print(train_clusters[0][0:5])
 
     # train pairs
     train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)

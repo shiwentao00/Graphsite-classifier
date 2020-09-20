@@ -160,12 +160,12 @@ if __name__=="__main__":
     trained_model_dir = args.trained_model_dir
     loss_dir = args.loss_dir
 
-    num_classes = 14
+    num_classes = 19
     print('number of classes:', num_classes)
     cluster_sample_th = 1000  # threshold of number of pockets in a class
     print('max number of {} pockets sampled from each merged class.'.format(cluster_sample_th))
 
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False  # whether to further subcluster data according to subcluster_dict
@@ -173,11 +173,11 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 200
+    num_epochs = 60
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 120 
+    lr_decay_epoch = 30 
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
-    select_hard_pair_epoch = 60
+    select_hard_pair_epoch = 1
     print('begin to select hard pairs at epoch {}'.format(select_hard_pair_epoch))
 
     learning_rate = 0.003
@@ -209,8 +209,6 @@ if __name__=="__main__":
     # select clusters according to rank of sizes and sample large clusters
     # the thresh hold is set to 10000 so that all the pockets in all clusters are selected.
     clusters = select_classes(clusters, num_classes, 10000)
-    print('first 5 pockets in cluster 0 before merging (to verify reproducibility):')
-    print(clusters[0][0:5])
 
     # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
     clusters = merge_clusters(clusters, merge_info)
@@ -232,6 +230,8 @@ if __name__=="__main__":
     print('number of pockets in training set: ', num_train_pockets)
     print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
+    print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
+    print(train_clusters[0][0:5])
 
     #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
     #                   'binding_probability', 'sequence_entropy']
