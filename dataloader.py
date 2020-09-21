@@ -16,7 +16,7 @@ def dataloader_gen(pocket_dir, pop_dir, pos_pairs, neg_pairs, features_to_use, b
     dataset = PairDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, pos_pairs=pos_pairs, neg_pairs=neg_pairs, features_to_use=features_to_use)
     #val_set = PairDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
     
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=False)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
     #val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
 
     return dataloader

@@ -143,6 +143,10 @@ if __name__=="__main__":
     print('number of pockets in test set: ', num_test_pockets)
     print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
     print(train_clusters[0][0:5])
+    print('first 5 pockets in val set of cluster 0 before merging (to verify reproducibility):')
+    print(val_clusters[0][0:5])
+    print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
+    print(test_clusters[0][0:5])
 
     # missing popsa files for sasa feature at this moment
     #features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 

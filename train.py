@@ -72,11 +72,14 @@ def train():
         data = data.to(device)
         optimizer.zero_grad()
         embedding_a, embedding_b = model(data)
+
         loss = loss_function(embedding_a, embedding_b, data.y)
         loss.backward()
-        total_loss += loss.item() * batch_size # last incomplete batch is dropped, so just use batch_size
+        
+        # last incomplete batch is dropped, so just use batch_size
+        total_loss += loss.item() * batch_size 
+        
         optimizer.step()
-        break
     train_loss = total_loss / train_pair_size
     return train_loss
 
@@ -240,6 +243,10 @@ if __name__=="__main__":
     print('number of pockets in test set: ', num_test_pockets)
     print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
     print(train_clusters[0][0:5])
+    print('first 5 pockets in val set of cluster 0 before merging (to verify reproducibility):')
+    print(val_clusters[0][0:5])
+    print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
+    print(test_clusters[0][0:5])
 
     # train pairs
     train_pos_pairs, train_neg_pairs = gen_pairs(clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)

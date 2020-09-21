@@ -153,7 +153,7 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)
 
-    use_pretrain_model = False
+    use_pretrain_model = True
     pretrained_model_dir = args.pretrained_model_dir
     print('use pre-trained model: {}. model path:{}.'.format(use_pretrain_model, pretrained_model_dir))
 
@@ -173,9 +173,9 @@ if __name__=="__main__":
         subclustering))
 
     # tunable hyper-parameters
-    num_epochs = 2000
+    num_epochs = 80
     print('number of epochs to train:', num_epochs)
-    lr_decay_epoch = 1400 
+    lr_decay_epoch = 40 
     print('learning rate decay to half at epoch {}.'.format(lr_decay_epoch))
     select_hard_pair_epoch = 1
     print('begin to select hard pairs at epoch {}'.format(select_hard_pair_epoch))
@@ -232,6 +232,10 @@ if __name__=="__main__":
     print('number of pockets in test set: ', num_test_pockets)
     print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
     print(train_clusters[0][0:5])
+    print('first 5 pockets in val set of cluster 0 before merging (to verify reproducibility):')
+    print(val_clusters[0][0:5])
+    print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
+    print(test_clusters[0][0:5])
 
     #features_to_use = ['x', 'y', 'z',  'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity',
     #                   'binding_probability', 'sequence_entropy']
