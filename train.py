@@ -10,6 +10,7 @@ from dataloader import pocket_loader_gen
 from gen_embeddings import compute_embeddings
 from model import SiameseNet, ContrastiveLoss
 from model import ResidualSiameseNet
+from model import JKSiameseNet
 from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 import json
@@ -75,6 +76,7 @@ def train():
         loss.backward()
         total_loss += loss.item() * batch_size # last incomplete batch is dropped, so just use batch_size
         optimizer.step()
+        break
     train_loss = total_loss / train_pair_size
     return train_loss
 
@@ -150,22 +152,22 @@ if __name__=="__main__":
         subcluster_dict = yaml.full_load(file)    
 
     # number of clusters selected from the clusters
-    num_classes = 24
+    num_classes = 19
     print('number of classes (from original clusters):', num_classes)
 
     # threshold of number of pockets in a class
     cluster_th = 10000 # large engouth to select all the data
     
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18, 19, 20, 21, 22, 23]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18, 19, 20, 21, 22, 23]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
     print('whether to further subcluster data according to chemical reaction: {}'.format( subclustering))
 
     train_pos_th = 16000 # threshold of number of positive train pairs for each class
-    train_neg_th = 4500 # threshold of number of negative train pairs for each combination
+    train_neg_th = 4800 # threshold of number of negative train pairs for each combination
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
 
@@ -280,8 +282,9 @@ if __name__=="__main__":
                                              num_workers=num_workers)
     # end of dataloaders for validation
 
-    #model = SiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
+    #model = SiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
+    #model = ResidualSiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
+    model = JKSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)
     #print("Model's state_dict:")

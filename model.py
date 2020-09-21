@@ -83,6 +83,7 @@ class EmbeddingNet(torch.nn.Module):
     def forward(self, x, edge_index, edge_attr, batch):
         #x_in = x 
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
+        print(x.shape)
         x = self.bn1(x)
         x = F.leaky_relu(self.conv2(x, edge_index, edge_attr))
         x = self.bn2(x)
@@ -154,6 +155,9 @@ class ResidualBlock(torch.nn.Module):
 
 
 class ResidualEmbeddingNet(torch.nn.Module):
+    """
+    Embedding network with residual connections.
+    """
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualEmbeddingNet, self).__init__()
 
@@ -169,7 +173,6 @@ class ResidualEmbeddingNet(torch.nn.Module):
         self.rb_6 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
         self.rb_7 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
         self.rb_8 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
-
 
         # batch norm for last conv layer
         self.bn_8 = torch.nn.BatchNorm1d(dim)
@@ -201,6 +204,78 @@ class ResidualSiameseNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualSiameseNet, self).__init__()
         self.embedding_net = ResidualEmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+
+    def forward(self, pairdata):
+        embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
+        embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
+        return embedding_a, embedding_b
+
+    def get_embedding(self, data, normalize):
+        """
+        Used to get the embedding of a pocket after training.
+        data: standard PyG graph data.
+        """
+        embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+        
+        # normalize the embedding if the embeddings are normalized during training
+        # see ContrastiveLoss.__init__()
+        if normalize == True:
+            embedding = F.normalize(embedding)
+        
+        return embedding
+
+
+class JKEmbeddingNet(torch.nn.Module):
+    """
+    Jumping knowledge embedding net inspired by the paper "Representation Learning on 
+    Graphs with Jumping Knowledge Networks".
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers=5, layer_aggregate='max'):
+        super(JKEmbeddingNet, self).__init__()
+        self.num_layers = 5
+        self.layer_aggregate = layer_aggregate
+
+        # first layer
+        nn0 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv0 = GINMolecularConv(nn0, train_eps, num_features, num_edge_attr)
+        self.bn0 = torch.nn.BatchNorm1d(dim)
+
+        # rest of the layers
+        for i in range(1, self.num_layers):
+            exec('nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
+            exec('self.conv{} = GINMolecularConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
+            exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
+
+        # read out function
+        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        # GNN layers
+        layer_x = [] # jumping knowledge
+        for i in range(0, self.num_layers):
+            conv = getattr(self, 'conv{}'.format(i))
+            bn = getattr(self, 'bn{}'.format(i))
+            x = F.leaky_relu(conv(x, edge_index, edge_attr))
+            x = bn(x)
+            layer_x.append(x)
+        
+        # layer aggregation
+        if self.layer_aggregate == 'max':
+                x = torch.stack(layer_x, dim=0)
+                x = torch.max(x, dim=0)[0]
+        elif self.layer_aggregate == 'mean':
+                x = torch.stack(layer_x, dim=0)
+                x = torch.mean(x, dim=0)[0]
+
+        # graph readout
+        x = self.set2set(x, batch)
+        return x
+
+
+class JKSiameseNet(torch.nn.Module):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+        super(JKSiameseNet, self).__init__()
+        self.embedding_net = JKEmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, pairdata):
         embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
