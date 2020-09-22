@@ -17,13 +17,31 @@ from model import ResidualSiameseNet
 from model import JKSiameseNet
 
 import copy
-from gen_embeddings import compute_embeddings
 from model import SelectiveSiameseNet, SelectiveContrastiveLoss
 from dataloader import sample_from_list
 
 from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 import numpy as np
+
+
+def compute_embeddings(dataloader, model, device, normalize=True):
+    """
+    Compute embeddings, labels, and set of labels/clusters of a dataloader.
+    """
+    embeddings = []
+    labels = []
+    for cnt, data in enumerate(dataloader):
+        data = data.to(device)
+        labels.append(data.y.cpu().detach().numpy())
+        embedding = model.get_embedding(data=data, normalize=normalize)
+        embeddings.append(embedding.cpu().detach().numpy())
+        #if cnt == 200:
+        #    break
+    embeddings = np.vstack(embeddings)
+    labels = np.hstack(labels)
+    cluster_set = list(set(labels)) # list of the clusters/classes
+    return embeddings, labels, cluster_set
 
 
 def train_by_random_pairs():
