@@ -350,10 +350,17 @@ class SelectiveSiameseNet(torch.nn.Module):
     For this model, only the hardest pairs in a mini-batch are selected dynamically 
     for training and validation.
     """
-    def __init__(self, num_features, dim, train_eps, num_edge_attr):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, which_model='jk'):
         super(SelectiveSiameseNet, self).__init__()
-        self.embedding_net = ResidualEmbeddingNet(
-            num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        if which_model == 'residual':
+            self.embedding_net = ResidualEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        elif which_model == 'jk':
+            self.embedding_net = JKEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        else:
+            self.embedding_net = EmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, data):
         embedding = self.embedding_net(

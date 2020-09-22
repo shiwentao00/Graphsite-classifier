@@ -184,7 +184,6 @@ if __name__=="__main__":
     print('batch size:', batch_size)
     learning_rate = 0.003
     weight_decay = 0.0005
-    #weight_decay = 0.001
     normalize = True # whether to normalize the embeddings in constrastive loss
     
     # margins for the relaxed contrastive loss

@@ -1,0 +1,44 @@
+---
+ run: 62 # id for the training
+ 
+ # directory configuration
+ cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
+ pocket_dir: "../data/googlenet-dataset/"
+ pop_dir: "../data/pops-googlenet/"
+ trained_model_dir: "../trained_models/"
+ loss_dir: "./results/"
+
+ # dataset configuration
+ num_classes: 24
+ merge_info: [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+ train_pos_th: 16000 # threshold of number of positive train pairs for each class
+ train_neg_th: 4800 # threshold of number of negative train pairs for each combination
+ cluster_sample_th: 1000 # threshold of number of pockets sampled in a class for hard pair training 
+ features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
+
+ # phase 1 train by pair configuration
+ pair_num_epoch: 1
+ pair_lr_decay_epoch: 25
+ pair_batch_size: 256
+ pair_learning_rate: 0.003
+ pair_weight_decay: 0.0005
+ normalize: True # whether to normalize the embeddings in constrastive loss
+    
+ similar_margin: 0.0 # for contrastive loss
+ dissimilar_margin: 2.0 # for contrastive loss
+
+ which_model: 'jk' # 'jk', 'residual' or 'normal'
+ model_size: 64 # size of the neural network
+
+ # train selectively configuration
+ selective_num_epoch: 1
+ selective_lr_decay_epoch: 40
+ select_hard_pair_epoch: 1
+ selective_batch_size: 128
+ num_hard_pos_pairs: 192 # number of hardest similar pairs sampled from a mini-batch
+ num_hard_neg_pairs: 256 # number of hardest dissimilar pairs sampled from a mini-batch
+ selective_learning_rate: 0.003
+ selective_weight_decay: 0.0005
+
+
+
