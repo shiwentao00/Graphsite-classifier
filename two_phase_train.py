@@ -60,7 +60,7 @@ def train_by_hard_pairs():
     """
     Train the model for 1 epoch, then return the mean loss of the data 
     in this epoch.
-    Global vars: train_loader, train_size, device, optimizer, model
+    Global vars: sampled_train_loader, device, optimizer, model
     batch_interval: number of mini-batch intervals to log loss
     """
     model.train()
@@ -76,7 +76,7 @@ def train_by_hard_pairs():
 
     total_loss = 0
     num_loss_elements = 0 # total number of pairs used for training in this epoch
-    for data in train_loader:
+    for data in sampled_train_loader:
         data = data.to(device)
         optimizer.zero_grad()
         embedding = model(data)
@@ -373,13 +373,13 @@ if __name__ == "__main__":
             sampled_train_clusters.append(sample_from_list(cluster, cluster_sample_th))
 
         # re-generate train-loader
-        train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
-                                                     pop_dir=pop_dir,
-                                                     clusters=sampled_train_clusters,
-                                                     features_to_use=features_to_use,
-                                                     batch_size=selective_batch_size,
-                                                     shuffle=True,
-                                                     num_workers=num_workers)
+        sampled_train_loader, sampled_train_size = pocket_loader_gen(pocket_dir=pocket_dir,
+                                                       pop_dir=pop_dir,
+                                                       clusters=sampled_train_clusters,
+                                                       features_to_use=features_to_use,
+                                                       batch_size=selective_batch_size,
+                                                       shuffle=True,
+                                                       num_workers=num_workers)
 
         # train
         train_loss = train_by_hard_pairs()
@@ -408,11 +408,4 @@ if __name__ == "__main__":
     print('\n*******************************************************')
     print('             k-nearest neighbor for testing')
     print('*******************************************************')
-    # generate the train loader again
-    train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
-                                                 pop_dir=pop_dir,
-                                                 clusters=train_clusters,
-                                                 features_to_use=features_to_use,
-                                                 batch_size=selective_batch_size,
-                                                 shuffle=False,
-                                                 num_workers=num_workers)
+    test_by_knn()
