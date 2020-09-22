@@ -9,7 +9,7 @@
  loss_dir: "./results/"
 
  # dataset configuration
- num_classes: 24
+ num_classes: 19
  merge_info: [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
  train_pos_th: 16000 # threshold of number of positive train pairs for each class
  train_neg_th: 4800 # threshold of number of negative train pairs for each combination
@@ -17,7 +17,7 @@
  features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # phase 1 train by pair configuration
- pair_num_epoch: 1
+ pair_num_epoch: 40
  pair_lr_decay_epoch: 25
  pair_batch_size: 256
  pair_learning_rate: 0.003
@@ -31,7 +31,7 @@
  model_size: 64 # size of the neural network
 
  # train selectively configuration
- selective_num_epoch: 1
+ selective_num_epoch: 80
  selective_lr_decay_epoch: 40
  select_hard_pair_epoch: 1
  selective_batch_size: 128

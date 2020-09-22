@@ -151,9 +151,9 @@ def test_by_knn():
     test_acc = metrics.accuracy_score(test_label, test_prediction)
     print('train accuracy: {}, validation accuracy: {}, test accuracy: {}'.format(train_acc, val_acc, test_acc))
 
-    train_report = metrics.classification_report(train_label, train_prediction)
-    val_report = metrics.classification_report(val_label, val_prediction)
-    test_report = metrics.classification_report(test_label, test_prediction)
+    train_report = metrics.classification_report(train_label, train_prediction, digits=4)
+    val_report = metrics.classification_report(val_label, val_prediction, digits=4)
+    test_report = metrics.classification_report(test_label, test_prediction, digits=4)
 
     print('train report:')
     print(train_report)
