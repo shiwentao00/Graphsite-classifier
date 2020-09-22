@@ -11,6 +11,7 @@ from dataloader import merge_clusters
 from model import SiameseNet
 from model import ResidualSiameseNet
 from model import SelectiveSiameseNet
+from model import JKSiameseNet
 import yaml
 
 
@@ -86,10 +87,7 @@ if __name__=="__main__":
     with open(subcluster_file) as file:
         subcluster_dict = yaml.full_load(file)  
 
-    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18, 19, 20, 21, 22, 23]
-    #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+    merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
     print('how to merge clusters: ', merge_info)
 
     subclustering = False # whether to further subcluster data according to subcluster_dict
@@ -105,7 +103,7 @@ if __name__=="__main__":
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
-    num_classes = 24
+    num_classes = 19
     print('number of classes:', num_classes)
     cluster_th = 10000 # threshold of number of pockets in a class
 
@@ -156,10 +154,11 @@ if __name__=="__main__":
     #                   'binding_probability', 'sequence_entropy']
 
     # load trained model
-    model = ResidualSiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
+    #model = ResidualSiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
     #model = SiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
     #model = SelectiveSiameseNet(num_features=len(features_to_use), dim=64, train_eps=True, num_edge_attr=1).to(device)
-
+    model = JKSiameseNet(num_features=len(features_to_use), dim=48, train_eps=True, num_edge_attr=1).to(device)
+    
     model.load_state_dict(torch.load(trained_model_dir))
     model.eval()
 

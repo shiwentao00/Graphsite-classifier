@@ -23,6 +23,7 @@ from dataloader import sample_from_list
 
 from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
+import numpy as np
 
 
 def train_by_random_pairs():
@@ -121,17 +122,6 @@ def test_by_knn():
     """
     Run the trained model on the test split. 
     """
-    model.eval()
-
-    # embeddings of train pockets
-    train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
-
-    # embeddings of validation pockets
-    val_embedding, val_label, _ = compute_embeddings(val_loader, model, device, normalize=True)
-    
-    # embeddings of test pockets
-    test_embedding, test_label, _ = compute_embeddings(test_loader, model, device, normalize=True)
-
     knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
     knn.fit(train_embedding, train_label)
 
@@ -408,4 +398,45 @@ if __name__ == "__main__":
     print('\n*******************************************************')
     print('             k-nearest neighbor for testing')
     print('*******************************************************')
+    model.eval()
+
+    # embeddings of train pockets
+    train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
+
+    # embeddings of validation pockets
+    val_embedding, val_label, _ = compute_embeddings(val_loader, model, device, normalize=True)
+    
+    # embeddings of test pockets
+    test_embedding, test_label, _ = compute_embeddings(test_loader, model, device, normalize=True)
+
+    # knn testing
     test_by_knn()
+
+    # save embeddings and labels
+    embedding_dir = config['embedding_dir'] + 'run_{}/'.format(run)
+    if not os.path.exists(embedding_dir):
+        os.makedirs(embedding_dir)
+
+    for which_split in ['train', 'val', 'test']:
+        print('generating embeddings for {}...'.format(which_split))
+        embedding_name = which_split + '_embedding' + '.npy'
+        label_name = which_split + '_label' + '.npy'
+        embedding_path = embedding_dir + embedding_name
+        label_path = embedding_dir + label_name
+        print('embedding path: ', embedding_path)
+        print('label path: ', label_path)
+
+        if which_split == 'train':
+            embedding = train_embedding 
+            label = train_label
+        elif which_split == 'val':
+            embedding = val_embedding 
+            label = val_label
+        elif which_split == 'test':
+            embedding = test_embedding 
+            label = test_label
+
+        print('shape of generated embedding: {}'.format(embedding.shape))
+        print('shape of label: {}'.format(label.shape))
+        np.save(embedding_path, embedding)
+        np.save(label_path, label)

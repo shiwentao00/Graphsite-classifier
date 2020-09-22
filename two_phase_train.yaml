@@ -40,5 +40,8 @@
  selective_learning_rate: 0.003
  selective_weight_decay: 0.0005
 
+ # save embeddings configuration
+ embedding_dir: "../embeddings/"
+
 
 
