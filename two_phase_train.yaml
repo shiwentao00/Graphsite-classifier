@@ -10,8 +10,8 @@
 
  # dataset configuration
  merge_info: [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
- train_pos_th: 16000 # threshold of number of positive train pairs for each class
- train_neg_th: 4800 # threshold of number of negative train pairs for each combination
+ train_pos_th: 14000 # threshold of number of positive train pairs for each class
+ train_neg_th: 4000 # threshold of number of negative train pairs for each combination
  cluster_sample_th: 1000 # threshold of number of pockets sampled in a class for hard pair training 
  features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
