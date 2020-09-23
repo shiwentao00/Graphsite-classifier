@@ -28,6 +28,11 @@ Manually identified clusters:
 | 16 | citric acid and its derivatives |
 | 17 | coenzymeA |
 | 18 | pyridoxal phosphate group |
+| 19 | lipid and fatty acids group of ligands like oleic acid, palmitic acid, hexaenoic acid |
+| 20 | methylbenzamide, pentanamide etc which are derivative of benzoic acid (benzene ring containing group) |
+| 21 | (2R)-2,3-dihydroxy propyl (9Z)-octadec-9-enoate, oleic acid etc . They are fatty acids and lipid groups |
+| 22 | hexaethylene glycol, tetraethylene glycol etc. which are the group of glycols |
+| 23 | 2-(2,3-DIHYDROXY-BENZOYLAMINO)-3-HYDROXY-PROPIONIC ACID, Benzoic acid etc which are the benzene ring containing group |
 
 Current grouping of classes:   
 

@@ -96,31 +96,6 @@ class EmbeddingNet(torch.nn.Module):
         #x = self.global_att(torch.cat((x, x_in), 1), batch)
         x = self.set2set(x, batch)
         return x
-
-    
-class SiameseNet(torch.nn.Module):
-    def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(SiameseNet, self).__init__()
-        self.embedding_net = EmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
-
-    def forward(self, pairdata):
-        embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
-        embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
-        return embedding_a, embedding_b
-
-    def get_embedding(self, data, normalize):
-        """
-        Used to get the embedding of a pocket after training.
-        data: standard PyG graph data.
-        """
-        embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-        
-        # normalize the embedding if the embeddings are normalized during training
-        # see ContrastiveLoss.__init__()
-        if normalize == True:
-            embedding = F.normalize(embedding)
-        
-        return embedding
         
 
 class ResidualBlock(torch.nn.Module):
@@ -200,31 +175,6 @@ class ResidualEmbeddingNet(torch.nn.Module):
         return x
 
 
-class ResidualSiameseNet(torch.nn.Module):
-    def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(ResidualSiameseNet, self).__init__()
-        self.embedding_net = ResidualEmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
-
-    def forward(self, pairdata):
-        embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
-        embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
-        return embedding_a, embedding_b
-
-    def get_embedding(self, data, normalize):
-        """
-        Used to get the embedding of a pocket after training.
-        data: standard PyG graph data.
-        """
-        embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-        
-        # normalize the embedding if the embeddings are normalized during training
-        # see ContrastiveLoss.__init__()
-        if normalize == True:
-            embedding = F.normalize(embedding)
-        
-        return embedding
-
-
 class JKEmbeddingNet(torch.nn.Module):
     """
     Jumping knowledge embedding net inspired by the paper "Representation Learning on 
@@ -272,10 +222,21 @@ class JKEmbeddingNet(torch.nn.Module):
         return x
 
 
-class JKSiameseNet(torch.nn.Module):
-    def __init__(self, num_features, dim, train_eps, num_edge_attr):
-        super(JKSiameseNet, self).__init__()
-        self.embedding_net = JKEmbeddingNet(num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+class SiameseNet(torch.nn.Module):
+    """
+    SiameseNet with 3 choices of architectures
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, which_model):
+        super(SiameseNet, self).__init__()
+        if which_model == 'residual':
+            self.embedding_net = ResidualEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        elif which_model == 'jk':
+            self.embedding_net = JKEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        else:
+            self.embedding_net = EmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, pairdata):
         embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
@@ -350,7 +311,7 @@ class SelectiveSiameseNet(torch.nn.Module):
     For this model, only the hardest pairs in a mini-batch are selected dynamically 
     for training and validation.
     """
-    def __init__(self, num_features, dim, train_eps, num_edge_attr, which_model='jk'):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, which_model):
         super(SelectiveSiameseNet, self).__init__()
         if which_model == 'residual':
             self.embedding_net = ResidualEmbeddingNet(

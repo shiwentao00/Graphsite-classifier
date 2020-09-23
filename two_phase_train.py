@@ -8,13 +8,11 @@ import yaml
 import json
 import os
 import torch
-from dataloader import read_cluster_file_from_yaml, select_classes
+from dataloader import read_cluster_file_from_yaml
 from dataloader import merge_clusters
 from dataloader import divide_clusters, gen_pairs
 from dataloader import dataloader_gen, pocket_loader_gen
 from model import SiameseNet, ContrastiveLoss
-from model import ResidualSiameseNet
-from model import JKSiameseNet
 
 import copy
 from model import SelectiveSiameseNet, SelectiveContrastiveLoss
@@ -178,13 +176,11 @@ if __name__ == "__main__":
     print('save trained model at: ', trained_model_dir)
     print('save loss at: ', loss_dir)
 
-    num_classes = config['num_classes']
     merge_info = config['merge_info']
     train_pos_th = config['train_pos_th']
     train_neg_th = config['train_neg_th']
     cluster_sample_th = config['cluster_sample_th']
     features_to_use = config['features_to_use']
-    print('number of classes (from original clusters):', num_classes)
     print('how to merge clusters: ', merge_info)
     print('positive training pair sampling threshold: ', train_pos_th)
     print('negative training pair sampling threshold: ', train_neg_th)
@@ -212,10 +208,6 @@ if __name__ == "__main__":
 
     # read all the original clusters
     clusters = read_cluster_file_from_yaml(cluster_file_dir)
-
-    # select clusters according to rank of sizes and sample large clusters
-    # the threshold is set to large enough (10000) to select all the pockets.
-    clusters = select_classes(clusters, num_classes, 10000)
 
     # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
     clusters = merge_clusters(clusters, merge_info)
@@ -270,7 +262,7 @@ if __name__ == "__main__":
     print('number of hardest negative pairs for each mini-batch: ', num_hard_neg_pairs)
 
     # train dataloader for validation of phase 1
-    train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir,
+    train_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
                                              pop_dir=pop_dir,
                                              clusters=train_clusters,
                                              features_to_use=features_to_use,
@@ -279,7 +271,7 @@ if __name__ == "__main__":
                                              num_workers=num_workers)
 
     # validation dataloader for both phase 1 and phase 2
-    val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir,
+    val_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
                                              pop_dir=pop_dir,
                                              clusters=val_clusters,
                                              features_to_use=features_to_use,
@@ -288,7 +280,7 @@ if __name__ == "__main__":
                                              num_workers=num_workers)
 
     # test dataloader for knn after phase 1 & 2 finished
-    test_loader, test_size = pocket_loader_gen(pocket_dir=pocket_dir,
+    test_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
                                                pop_dir=pop_dir,
                                                clusters=test_clusters,
                                                features_to_use=features_to_use,
@@ -302,15 +294,8 @@ if __name__ == "__main__":
     which_model = config['which_model']
     model_size = config['model_size']
     assert which_model in ['jk', 'residual', 'normal']
-    if which_model == 'jk':
-        model = JKSiameseNet(num_features=len(features_to_use), dim=model_size, 
-                             train_eps=True, num_edge_attr=1).to(device)
-    elif which_model == 'residual':
-        model = ResidualSiameseNet(num_features=len(features_to_use), dim=model_size, 
-                                   train_eps=True, num_edge_attr=1).to(device)
-    else:
-        model = SiameseNet(num_features=len(features_to_use), dim=model_size, 
-                           train_eps=True, num_edge_attr=1).to(device)
+    model = SiameseNet(num_features=len(features_to_use), dim=model_size, 
+                           train_eps=True, num_edge_attr=1, which_model=which_model).to(device)
     print('model architecture:')
     print(model)
 
@@ -344,7 +329,7 @@ if __name__ == "__main__":
         if  val_acc >= best_val_acc:
             best_val_acc = val_acc
             best_val_epoch = epoch
-            best_model = model.state_dict() 
+            best_model = model.embedding_net.state_dict() # save the weights of embedding_net 
             torch.save(model.state_dict(), trained_model_dir)
 
     print('best validation acc {} at epoch {}.\n'.format(best_val_acc, best_val_epoch))
@@ -353,11 +338,10 @@ if __name__ == "__main__":
     print('             train by random pairs')
     print('*******************************************************')
     # initialize the selective model and load weights to its EmbeddingNet
-    pretrained_model = model
     model = SelectiveSiameseNet(num_features=len(features_to_use),
                                 dim=model_size, train_eps=True, 
                                 num_edge_attr=1, which_model=which_model).to(device)
-    model.embedding_net.load_state_dict(copy.deepcopy(pretrained_model.embedding_net.state_dict()))
+    model.embedding_net.load_state_dict(copy.deepcopy(best_model))
     print('model architecture:')
     print(model)
 
@@ -381,13 +365,13 @@ if __name__ == "__main__":
             sampled_train_clusters.append(sample_from_list(cluster, cluster_sample_th))
 
         # re-generate train-loader
-        sampled_train_loader, sampled_train_size = pocket_loader_gen(pocket_dir=pocket_dir,
-                                                       pop_dir=pop_dir,
-                                                       clusters=sampled_train_clusters,
-                                                       features_to_use=features_to_use,
-                                                       batch_size=selective_batch_size,
-                                                       shuffle=True,
-                                                       num_workers=num_workers)
+        sampled_train_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
+                                                    pop_dir=pop_dir,
+                                                    clusters=sampled_train_clusters,
+                                                    features_to_use=features_to_use,
+                                                    batch_size=selective_batch_size,
+                                                    shuffle=True,
+                                                    num_workers=num_workers)
 
         # train
         train_loss = train_by_hard_pairs()
@@ -400,10 +384,10 @@ if __name__ == "__main__":
 
         print('epoch: {}, train loss: {}, train acc: {}, validation acc: {}.'.format(epoch, train_loss, train_acc, val_acc))
         
-        #if epoch > lr_decay_epoch: # store results for epochs after decay learning rate
         if  val_acc >= best_val_acc:
             best_val_acc = val_acc
             best_val_epoch = epoch
+            best_model = model.embedding_net.state_dict() 
             torch.save(model.state_dict(), trained_model_dir)
 
     print('best validation acc {} at epoch {}.'.format(best_val_acc, best_val_epoch))
@@ -416,6 +400,7 @@ if __name__ == "__main__":
     print('\n*******************************************************')
     print('             k-nearest neighbor for testing')
     print('*******************************************************')
+    model.embedding_net.load_state_dict(copy.deepcopy(best_model)) # load the best model with highest val acc
     model.eval()
 
     # embeddings of train pockets
