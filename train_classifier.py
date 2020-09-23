@@ -1,53 +1,17 @@
 """
 Solve the problem with traditional end-to-end multi-class model.
 """
-import argparse
 import random
 import os
 import torch
 import torch.nn as nn
-from dataloader import read_cluster_file_from_yaml, select_classes, divide_clusters, pocket_loader_gen, cluster_by_chem_react
+from dataloader import read_cluster_file_from_yaml, divide_clusters, pocket_loader_gen
+from dataloader import merge_clusters
 from model import MoNet
 import numpy as np
 import sklearn.metrics as metrics
 import json
 import yaml
-
-
-def get_args():
-    parser = argparse.ArgumentParser('python')
-
-    parser.add_argument('-cluster_file_dir',
-                        default='../data/clusters_after_remove_files_with_no_popsa.yaml',
-                        required=False,
-                        help='text file to get the cluster labels')
-
-    parser.add_argument('-pocket_dir',
-                        default='../data/googlenet-dataset/',
-                        required=False,
-                        help='directory of pockets')
-
-    parser.add_argument('-pop_dir',
-                        default='../data/pops-googlenet/',
-                        required=False,
-                        help='directory of popsa files for sasa feature')
-
-    parser.add_argument('-subcluster_file',
-                        default='./pocket_cluster_analysis/results/subclusters_0.yaml',
-                        required=False,
-                        help='subclusters by chemical reaction of some clusters')
-
-    parser.add_argument('-trained_model_dir',
-                        default='../trained_models/trained_model_classifier_1.pt/',
-                        required=False,
-                        help='directory to store the trained model.')                        
-
-    parser.add_argument('-loss_dir',
-                        default='./results/classifier_train_results_1.json/',
-                        required=False,
-                        help='directory to store the training losses.')
-
-    return parser.parse_args()
 
 
 def train():
@@ -156,32 +120,34 @@ def compute_class_weights(clusters):
 if __name__=="__main__":
     random.seed(666) # deterministic sampled pockets and pairs from dataset
     print('seed: ', 666)
-    args = get_args()
-    cluster_file_dir = args.cluster_file_dir
-    pocket_dir = args.pocket_dir
-    pop_dir = args.pop_dir
-    subcluster_file = args.subcluster_file
-    with open(subcluster_file) as file:
-        subcluster_dict = yaml.full_load(file)        
-    
-    trained_model_dir = args.trained_model_dir
-    loss_dir = args.loss_dir
-    
-    num_classes = 10
-    print('number of classes:', num_classes)
-    cluster_th = 10000 # threshold of number of pockets in a class
-    
-    subclustering = True # whether to further subcluster data according to subcluster_dict
-    print('whether to further subcluster data according to chemical reaction: {}'.format(subclustering))
 
-    # tunable hyper-parameters
-    num_epochs = 100
-    print('number of epochs to train:', num_epochs)
-    learning_rate = 0.0015
-    weight_decay = 0.0005
+    with open('./train_classifier.yaml') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)    
 
-    batch_size = 128
-    print('batch size:', batch_size)
+    run = config['run']
+    cluster_file_dir = config['cluster_file_dir']
+    pocket_dir = config['pocket_dir']
+    pop_dir = config['pop_dir']
+    trained_model_dir = config['trained_model_dir'] + 'trained_model_{}.pt'.format(run)
+    loss_dir = config['loss_dir'] + 'train_results_{}.json'.format(run)
+    print('save trained model at: ', trained_model_dir)
+    print('save loss at: ', loss_dir)
+
+    merge_info = config['merge_info']
+    features_to_use = config['features_to_use']
+    num_features = len(features_to_use)
+    print('how to merge clusters: ', merge_info)
+    print('features to use: ', features_to_use)
+    
+    num_epoch = config['num_epoch']
+    lr_decay_epoch = config['lr_decay_epoch']
+    batch_size = config['batch_size']
+    learning_rate = config['learning_rate']
+    weight_decay = config['weight_decay']
+    print('number of epochs: ', num_epoch)
+    print('learning rate decay at epoch: ', lr_decay_epoch)
+    print('batch size: ', batch_size)
+
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
@@ -189,22 +155,13 @@ if __name__=="__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
     print('device: ', device)
 
-    num_gpu = 0
-    if torch.cuda.is_available():
-        num_gpu = torch.cuda.device_count()
-    print('number of gpus: ', num_gpu)
-
     # read the original clustered pockets
     clusters = read_cluster_file_from_yaml(cluster_file_dir)
 
-    # select clusters according to rank of sizes and sample large clusters
-    clusters = select_classes(clusters, num_classes, cluster_th)
-
-    # replace some clusters with their subclusters
-    if subclustering == True:
-        clusters, cluster_ids = cluster_by_chem_react(clusters, subcluster_dict)
-        num_classes = len(clusters)
-        print('number of classes after further clustering: ', num_classes)
+    # merge clusters as indicated in 'merge_info'. e.g., [[0,3], [1,2], 4]
+    clusters = merge_clusters(clusters, merge_info)
+    num_classes = len(clusters)
+    print('number of classes after merging: ', num_classes)    
 
     # divide the clusters into train, validation and test
     train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
@@ -217,7 +174,7 @@ if __name__=="__main__":
 
     # missing popsa files for sasa feature at this moment
     features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
-    num_features = len(features_to_use)
+
 
     train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                                  pop_dir=pop_dir,
@@ -243,6 +200,9 @@ if __name__=="__main__":
                                              shuffle=False, 
                                              num_workers=num_workers) 
 
+    which_model = config['which_model']
+    model_size = config['model_size']
+    assert which_model in ['jk', 'residual', 'normal']
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=32, train_eps=True, num_edge_attr=1).to(device)
     print('model architecture:')
     print(model)

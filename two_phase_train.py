@@ -163,6 +163,7 @@ def test_by_knn():
 
 if __name__ == "__main__":
     random.seed(666)
+    print('seed: ', 666)
 
     with open('./two_phase_train.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)

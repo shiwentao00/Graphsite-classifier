@@ -1,0 +1,27 @@
+---
+ run: 5 # id for the training
+ 
+ # directory configuration
+ cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
+ pocket_dir: "../data/googlenet-dataset/"
+ pop_dir: "../data/pops-googlenet/"
+ trained_model_dir: "../trained_models/"
+ loss_dir: "./results/"
+
+ # dataset configuration
+ merge_info: [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+ features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
+
+ # model configuration 
+ which_model: 'jk' # 'jk', 'residual' or 'normal'
+ model_size: 64 # size of the neural network
+
+ # train configuration
+ num_epoch: 100
+ lr_decay_epoch: 40
+ batch_size: 128
+ learning_rate: 0.003
+ weight_decay: 0.0005
+
+
+
