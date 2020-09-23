@@ -23,10 +23,11 @@ def plot_loss(train_loss, train_acc, val_acc, loss_dir, time):
 
     epochs = np.array(range(time), dtype=int) + 1
     fig = plt.figure(figsize=(10, 8))
-    plt.title('Loss')
+    plt.title('loss & acc')
     plt.xlabel('epoch')
-    plt.ylabel('loss')    
-    
+    plt.ylabel('loss & acc')    
+    plt.grid(True)
+
     # find minimum validaiton loss
     max_val_acc = np.max(val_acc)
     pos = np.nonzero(val_acc == max_val_acc)[0]
