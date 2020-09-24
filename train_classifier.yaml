@@ -1,5 +1,5 @@
 ---
- run: 5 # id for the training
+ run: 1 # id for the training
  
  # directory configuration
  cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"

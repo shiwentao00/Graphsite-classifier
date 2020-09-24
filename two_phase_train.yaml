@@ -1,6 +1,8 @@
 ---
- run: 64 # id for the training
+ run: 65 # id for the training
  
+ seed: 66666 # seed for the random module
+
  # directory configuration
  cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
  pocket_dir: "../data/googlenet-dataset/"

@@ -162,11 +162,11 @@ def test_by_knn():
     
 
 if __name__ == "__main__":
-    random.seed(666)
-    print('seed: ', 666)
-
     with open('./two_phase_train.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
+    
+    seed = config['seed']
+    print('seed: ', seed)
     
     run = config['run']
     cluster_file_dir = config['cluster_file_dir']
@@ -330,19 +330,19 @@ if __name__ == "__main__":
         if  val_acc >= best_val_acc:
             best_val_acc = val_acc
             best_val_epoch = epoch
-            best_model = model.embedding_net.state_dict() # save the weights of embedding_net 
+            best_model = copy.deepcopy(model.embedding_net.state_dict()) # save the weights of embedding_net 
             torch.save(model.state_dict(), trained_model_dir)
 
     print('best validation acc {} at epoch {}.\n'.format(best_val_acc, best_val_epoch))
 
     print('\n*******************************************************')
-    print('             train by random pairs')
+    print('             train by hard pairs')
     print('*******************************************************')
     # initialize the selective model and load weights to its EmbeddingNet
     model = SelectiveSiameseNet(num_features=len(features_to_use),
                                 dim=model_size, train_eps=True, 
                                 num_edge_attr=1, which_model=which_model).to(device)
-    model.embedding_net.load_state_dict(copy.deepcopy(best_model))
+    model.embedding_net.load_state_dict(best_model)
     print('model architecture:')
     print(model)
 
@@ -388,7 +388,7 @@ if __name__ == "__main__":
         if  val_acc >= best_val_acc:
             best_val_acc = val_acc
             best_val_epoch = epoch
-            best_model = model.embedding_net.state_dict() 
+            best_model = copy.deepcopy(model.embedding_net.state_dict()) # save the weights of embedding_net 
             torch.save(model.state_dict(), trained_model_dir)
 
     print('best validation acc {} at epoch {}.'.format(best_val_acc, best_val_epoch))
@@ -401,7 +401,7 @@ if __name__ == "__main__":
     print('\n*******************************************************')
     print('             k-nearest neighbor for testing')
     print('*******************************************************')
-    model.embedding_net.load_state_dict(copy.deepcopy(best_model)) # load the best model with highest val acc
+    model.embedding_net.load_state_dict(best_model) # load the best model with highest val acc
     model.eval()
 
     # embeddings of train pockets
@@ -444,3 +444,5 @@ if __name__ == "__main__":
         print('shape of label: {}'.format(label.shape))
         np.save(embedding_path, embedding)
         np.save(label_path, label)
+
+    print('\nprogram finished.')
