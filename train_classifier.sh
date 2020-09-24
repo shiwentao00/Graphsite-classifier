@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -q hybrid
+#PBS -q v100
 #PBS -l nodes=1:ppn=20
 #PBS -l walltime=72:00:00
 #PBS -A hpc_michal01
