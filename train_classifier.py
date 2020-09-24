@@ -1,6 +1,7 @@
 """
 Solve the problem with traditional end-to-end multi-class model.
 """
+import yaml
 import random
 import os
 import torch
@@ -11,7 +12,7 @@ from model import MoNet
 import numpy as np
 import sklearn.metrics as metrics
 import json
-import yaml
+
 
 
 def train():
@@ -21,7 +22,7 @@ def train():
     Global vars: train_loader, train_size, device, optimizer, model
     """
     model.train()
-    if epoch == 20:
+    if epoch == lr_decay_epoch:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
@@ -128,8 +129,8 @@ if __name__=="__main__":
     cluster_file_dir = config['cluster_file_dir']
     pocket_dir = config['pocket_dir']
     pop_dir = config['pop_dir']
-    trained_model_dir = config['trained_model_dir'] + 'trained_model_{}.pt'.format(run)
-    loss_dir = config['loss_dir'] + 'train_results_{}.json'.format(run)
+    trained_model_dir = config['trained_model_dir'] + 'trained_classifier_model_{}.pt'.format(run)
+    loss_dir = config['loss_dir'] + 'train_classifier_results_{}.json'.format(run)    
     print('save trained model at: ', trained_model_dir)
     print('save loss at: ', loss_dir)
 
@@ -172,16 +173,12 @@ if __name__=="__main__":
     print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
 
-    # missing popsa files for sasa feature at this moment
-    features_to_use = ['charge', 'hydrophobicity', 'binding_probability', 'r', 'theta', 'phi', 'sequence_entropy'] 
-
-
     train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                                  pop_dir=pop_dir,
                                                  clusters=train_clusters, 
                                                  features_to_use=features_to_use, 
                                                  batch_size=batch_size, 
-                                                 shuffle=False, 
+                                                 shuffle=True, 
                                                  num_workers=num_workers)
 
     val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir, 
@@ -203,9 +200,11 @@ if __name__=="__main__":
     which_model = config['which_model']
     model_size = config['model_size']
     assert which_model in ['jk', 'residual', 'normal']
-    model = MoNet(num_classes=num_classes, num_features=num_features, dim=32, train_eps=True, num_edge_attr=1).to(device)
+    model = MoNet(num_classes=num_classes, num_features=num_features, dim=model_size, 
+                  train_eps=True, num_edge_attr=1, which_model=which_model).to(device)
     print('model architecture:')
     print(model)
+
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
     print('optimizer:')
     print(optimizer)
@@ -224,7 +223,7 @@ if __name__=="__main__":
     test_losses = []
     test_accs = []
     print('begin training...')
-    for epoch in range(1, 1+num_epochs):
+    for epoch in range(1, 1 + num_epoch):
         train_loss, train_acc = train()
         val_loss, val_acc = validate()
         test_loss, test_acc = test()
