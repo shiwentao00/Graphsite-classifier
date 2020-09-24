@@ -1,7 +1,7 @@
 ---
- run: 65 # id for the training
+ run: 66 # id for the training
  
- seed: 66666 # seed for the random module
+ seed: 666 # seed for the random module
 
  # directory configuration
  cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
@@ -11,15 +11,15 @@
  loss_dir: "./results/"
 
  # dataset configuration
- merge_info: [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
+ merge_info: [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 25, 26, 27, 28, 29, 30]
  train_pos_th: 14000 # threshold of number of positive train pairs for each class
- train_neg_th: 4000 # threshold of number of negative train pairs for each combination
+ train_neg_th: 3000 # threshold of number of negative train pairs for each combination
  cluster_sample_th: 1000 # threshold of number of pockets sampled in a class for hard pair training 
  features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # phase 1 train by pair configuration
- pair_num_epoch: 50
- pair_lr_decay_epoch: 25
+ pair_num_epoch: 40
+ pair_lr_decay_epoch: 20
  pair_batch_size: 256
  pair_learning_rate: 0.003
  pair_weight_decay: 0.0005
@@ -29,11 +29,11 @@
  dissimilar_margin: 2.0 # for contrastive loss
 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
- model_size: 64 # size of the neural network
+ model_size: 80 # size of the neural network
 
  # train selectively configuration
- selective_num_epoch: 100
- selective_lr_decay_epoch: 40
+ selective_num_epoch: 120
+ selective_lr_decay_epoch: 50
  select_hard_pair_epoch: 1
  selective_batch_size: 128
  num_hard_pos_pairs: 192 # number of hardest similar pairs sampled from a mini-batch
