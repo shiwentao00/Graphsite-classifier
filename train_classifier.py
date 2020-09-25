@@ -205,6 +205,12 @@ if __name__=="__main__":
     print('number of pockets in training set: ', num_train_pockets)
     print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
+    print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
+    print(train_clusters[0][0:5])
+    print('first 5 pockets in val set of cluster 0 before merging (to verify reproducibility):')
+    print(val_clusters[0][0:5])
+    print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
+    print(test_clusters[0][0:5])
 
     train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir, 
                                                  pop_dir=pop_dir,
