@@ -29,7 +29,7 @@ def train():
             param_group['lr'] = 0.5 * param_group['lr']
 
     # increasing gamma of FocalLoss
-    if which_loss == 'Focal':
+    if which_loss == 'Focal' and focal_gamma_ascent == True:
         if epoch in focal_strength_increase_epoch:
             global gamma
             gamma += 1
@@ -249,9 +249,12 @@ if __name__=="__main__":
         class_weights = torch.FloatTensor(class_weights).to(device)
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
     elif which_loss == 'Focal':
-        gamma = 0
-        focal_strength_increase_epoch = config['focal_strength_increase_epoch']
+        gamma = config['initial_focal_gamma']
+        print('initial gamms of FocalLoss: ', gamma)
         loss_function = FocalLoss(gamma=gamma, reduction='mean')
+        focal_gamma_ascent = config['focal_gamma_ascent']
+        if focal_gamma_ascent == True:
+            focal_strength_increase_epoch = config['focal_strength_increase_epoch']
     print('loss function:')
     print(loss_function)
     
@@ -291,7 +294,7 @@ if __name__=="__main__":
 
     # load the best model to generate a detailed classification report
     print('****************************************************************')
-    model.embedding_net.load_state_dict(best_model)
+    model.load_state_dict(best_model)
     train_report = gen_classification_report(train_loader)
     val_report = gen_classification_report(val_loader)
     test_report = gen_classification_report(test_loader)
