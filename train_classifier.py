@@ -12,7 +12,7 @@ from model import MoNet, FocalLoss
 import numpy as np
 import sklearn.metrics as metrics
 import json
-
+import copy
 
 
 def train():
@@ -22,9 +22,17 @@ def train():
     Global vars: train_loader, train_size, device, optimizer, model
     """
     model.train()
+
+    # learning rate delay
     if epoch == lr_decay_epoch:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
+
+    # increasing gamma of FocalLoss
+    if which_loss == 'Focal':
+        if epoch in focal_strength_increase_epoch:
+            gamma += 1
+            loss_function.set_gamma(gamma)
 
     loss_total = 0
     epoch_pred = [] # all the predictions for the epoch
@@ -116,6 +124,29 @@ def compute_class_weights(clusters):
     cluster_weights = cluster_weights/np.mean(cluster_weights) # normalize the weights with mean 
     #print(cluster_weights)
     return cluster_weights
+
+
+def gen_classification_report(dataloader):
+    """
+    Generate a detailed classification report.
+    """
+    model.eval()
+
+    epoch_pred = [] # all the predictions for the epoch
+    epoch_label = [] # all the labels for the epoch
+    for data in dataloader:
+        data = data.to(device)
+        output = model(data.x, data.edge_index, data.edge_attr, data.batch)
+        pred = output.max(dim=1)[1]
+        
+        pred_cpu = list(pred.cpu().detach().numpy()) # used to compute evaluation metrics
+        label = list(data.y.cpu().detach().numpy()) # used to compute evaluation metrics
+
+        epoch_pred.extend(pred_cpu)
+        epoch_label.extend(label)
+
+    report = metrics.classification_report(epoch_label, epoch_pred, digits=4)
+    return report
 
 
 if __name__=="__main__":
@@ -216,7 +247,9 @@ if __name__=="__main__":
         class_weights = torch.FloatTensor(class_weights).to(device)
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
     elif which_loss == 'Focal':
-        loss_function = FocalLoss(gamma=2, reduction='mean')
+        gamma = 0
+        focal_strength_increase_epoch = config['focal_strength_increase_epoch']
+        loss_function = FocalLoss(gamma=gamma, reduction='mean')
     print('loss function:')
     print(loss_function)
     
@@ -244,11 +277,27 @@ if __name__=="__main__":
         if  val_loss < best_val_loss:
             best_val_loss = val_loss
             best_val_epoch = epoch
+            best_model = copy.deepcopy(model.state_dict())
             torch.save(model.state_dict(), trained_model_dir)
 
     print('best val loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
 
+    # save the history of loss and accuracy
     results = {'train_losses': train_losses, 'train_accs': train_accs, 'val_losses': val_losses, 'val_accs': val_accs}
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
+
+    # load the best model to generate a detailed classification report
+    print('****************************************************************')
+    model.embedding_net.load_state_dict(best_model)
+    train_report = gen_classification_report(train_loader)
+    val_report = gen_classification_report(val_loader)
+    test_report = gen_classification_report(test_loader)
+    print('train report:')
+    print(train_report)
+    print('validation report:')
+    print(val_report)
+    print('test report: ')
+    print(test_report)
+
 

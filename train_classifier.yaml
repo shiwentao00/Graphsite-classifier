@@ -1,5 +1,5 @@
 ---
- run: 2 # id for the training
+ run: 3 # id for the training
  
  # directory configuration
  cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
@@ -23,6 +23,7 @@
  batch_size: 256
  learning_rate: 0.003
  weight_decay: 0.0005
+ focal_strength_increase_epoch: [20, 40, 80, 100] # gamma = 1, 2, 3, 4
 
 
 
