@@ -31,7 +31,9 @@ def train():
     # increasing gamma of FocalLoss
     if which_loss == 'Focal':
         if epoch in focal_strength_increase_epoch:
+            global gamma
             gamma += 1
+            print('epoch {}, gamma increased to {}.'.format(epoch, gamma))
             loss_function.set_gamma(gamma)
 
     loss_total = 0
