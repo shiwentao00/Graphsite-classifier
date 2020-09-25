@@ -474,7 +474,49 @@ class MoNet(torch.nn.Module):
         x = F.leaky_relu(self.fc1(x))
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.fc2(x)
-        return F.log_softmax(x, dim=-1)
+        
+        # returned tensor should be processed by a softmax layer
+        return x 
+
+
+class FocalLoss(torch.nn.Module):
+    """
+    Implement the Focal Loss introduced in the paper "Focal Loss for Dense Object Detection"
+    """
+    def __init__(self, gamma = 2, alpha = 1, reduction='mean'):
+        """
+        gamma: the modulation factor in the paper.
+        alpha: class weights, default is scalar 1 which means equal weights for all instances.
+               Can also be a tensor with size num_class
+        mean: reduction method, 'mean' or 'sum'
+        """
+        super(FocalLoss, self).__init__()
+        self.gamma = gamma
+        self.alpha = alpha
+        assert reduction in ['mean', 'sum']
+        self.reduction = reduction
+    
+    def forward(self, logits, labels):
+        """
+        logits: output by model, size: [batch_size, num_class].
+        labels: groud truth of classification label, size: [batch_size].
+        """
+        # cross entropy loss
+        ce_loss = F.cross_entropy(logits, labels, reduction='none')
+
+        # reversely compute the softmax probability
+        pt = torch.exp(-ce_loss)
+
+        # rescale the cross entropy loss
+        focal_loss = self.alpha * (1-pt)**self.gamma * ce_loss
+
+        if self.reduction == 'mean':
+            return focal_loss.mean()
+        elif self.reduction == 'sum':
+            return focal_loss.sum()
+
+    def __repr__(self):
+        return '{}(gamma={}, alpha={}, reduction={})'.format(self.__class__.__name__, self.gamma, self.alpha, self.reduction)
 
 # TO-DO: functions to accumulate/reset ls and ld for analysis.
 

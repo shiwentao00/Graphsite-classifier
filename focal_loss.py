@@ -5,39 +5,41 @@ from torch import nn
 import numpy as np
 from torch.nn import CrossEntropyLoss
 
-class FocalLoss(nn.Module):
-    def __init__(self, gamma = 2, alpha = 1, mean=True, size_average = True):
+class FocalLoss(torch.nn.Module):
+    """
+    Implement the Focal Loss introduced in the paper "Focal Loss for Dense Object Detection"
+    """
+    def __init__(self, gamma = 2, alpha = 1, reduction='mean'):
+        """
+        gamma: the modulation factor in the paper.
+        alpha: class weights, default is scalar 1 which means equal weights for all instances.
+               Can also be a tensor with size num_class
+        mean: reduction method, 'mean' or 'sum'
+        """
         super(FocalLoss, self).__init__()
         self.gamma = gamma
         self.alpha = alpha
-        self.mean= mean
-        self.size_average = size_average
-        self.epsilon = 0.00000001
+        assert reduction in ['mean', 'sum']
+        self.reduction = reduction
     
     def forward(self, logits, labels):
         """
-        calculates loss
-        logits: output by model, size: [batch_size, num_class]
-        labels: groud truth of classification label, size: [batch_size]
+        logits: output by model, size: [batch_size, num_class].
+        labels: groud truth of classification label, size: [batch_size].
         """
-        print(F.softmax(logits, dim=-1))
-        print(-1 * F.log_softmax(logits, dim=-1))
+        # cross entropy loss
         ce_loss = F.cross_entropy(logits, labels, reduction='none')
-        print(ce_loss)
+
+        # reversely compute the softmax probability
         pt = torch.exp(-ce_loss)
-        print(pt)
 
-        '''
-        logits = F.log_softmax(logits, dim=-1)
-        print(logits)
-        batch_size = logits.shape[0]
-        print(batch_size)
-        pt = torch.zeros([batch_size])
-        print(pt)
-        '''
-        return None
+        # rescale the cross entropy loss
+        focal_loss = self.alpha * (1-pt)**self.gamma * ce_loss
 
-
+        if self.reduction == 'mean':
+            return focal_loss.mean()
+        elif self.reduction == 'sum':
+            return focal_loss.sum()
 
 
 if __name__ == "__main__":

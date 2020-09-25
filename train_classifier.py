@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from dataloader import read_cluster_file_from_yaml, divide_clusters, pocket_loader_gen
 from dataloader import merge_clusters
-from model import MoNet
+from model import MoNet, FocalLoss
 import numpy as np
 import sklearn.metrics as metrics
 import json
@@ -199,7 +199,9 @@ if __name__=="__main__":
 
     which_model = config['which_model']
     model_size = config['model_size']
+    which_loss = config['which_loss']
     assert which_model in ['jk', 'residual', 'normal']
+    assert which_loss in ['CrossEntropy', 'Focal']
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=model_size, 
                   train_eps=True, num_edge_attr=1, which_model=which_model).to(device)
     print('model architecture:')
@@ -209,9 +211,12 @@ if __name__=="__main__":
     print('optimizer:')
     print(optimizer)
 
-    class_weights = compute_class_weights(train_clusters)
-    class_weights = torch.FloatTensor(class_weights).to(device)
-    loss_function = nn.NLLLoss(weight=class_weights)
+    if which_loss == 'CrossEntropy':
+        class_weights = compute_class_weights(train_clusters)
+        class_weights = torch.FloatTensor(class_weights).to(device)
+        loss_function = nn.CrossEntropyLoss(weight=class_weights)
+    elif which_loss == 'Focal':
+        loss_function = FocalLoss(gamma=2, reduction='mean')
     print('loss function:')
     print(loss_function)
     

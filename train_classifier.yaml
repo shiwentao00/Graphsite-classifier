@@ -15,11 +15,12 @@
  # model configuration 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
  model_size: 64 # size of the neural network
+ which_loss: 'CrossEntropy' # 'CrossEntropy' or 'Focal'
 
  # train configuration
  num_epoch: 100
- lr_decay_epoch: 40
- batch_size: 2
+ lr_decay_epoch: 50
+ batch_size: 256
  learning_rate: 0.003
  weight_decay: 0.0005
 
