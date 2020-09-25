@@ -20,7 +20,7 @@
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'
  initial_focal_gamma: 0
  focal_gamma_ascent: True
- focal_gamma_ascent_epoch: [20, 50, 90] # gamma = 1, 2, 3
+ focal_gamma_ascent_epoch: [20, 60, 100] # gamma = 1, 2, 3
 
  # train configuration
  num_epoch: 120

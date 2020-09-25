@@ -30,7 +30,7 @@ def train():
 
     # increasing gamma of FocalLoss
     if which_loss == 'Focal' and focal_gamma_ascent == True:
-        if epoch in focal_strength_increase_epoch:
+        if epoch in focal_gamma_ascent_epoch:
             global gamma
             gamma += 1
             print('epoch {}, gamma increased to {}.'.format(epoch, gamma))
@@ -250,11 +250,12 @@ if __name__=="__main__":
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
     elif which_loss == 'Focal':
         gamma = config['initial_focal_gamma']
-        print('initial gamms of FocalLoss: ', gamma)
+        print('initial gamma of FocalLoss: ', gamma)
         loss_function = FocalLoss(gamma=gamma, reduction='mean')
         focal_gamma_ascent = config['focal_gamma_ascent']
         if focal_gamma_ascent == True:
-            focal_strength_increase_epoch = config['focal_strength_increase_epoch']
+            focal_gamma_ascent_epoch = config['focal_gamma_ascent_epoch']
+            print('increase gamma of FocalLoss at epochs: ', focal_gamma_ascent_epoch)
     print('loss function:')
     print(loss_function)
     
