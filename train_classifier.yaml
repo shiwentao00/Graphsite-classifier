@@ -18,8 +18,8 @@
  which_loss: 'CrossEntropy' # 'CrossEntropy' or 'Focal'
 
  # train configuration
- num_epoch: 100
- lr_decay_epoch: 50
+ num_epoch: 120
+ lr_decay_epoch: 60
  batch_size: 256
  learning_rate: 0.003
  weight_decay: 0.0005
