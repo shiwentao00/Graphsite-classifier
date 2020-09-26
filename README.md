@@ -46,16 +46,18 @@ Current grouping of classes:
 | class | clusters | label |
 | --- | --- | --- |
 | 0 | 0, 9, 12 | ATP |
-| 1 | 1, 5, 11 | glycol and ether |
+| 1 | 1, 5, 11, 22 | glycol and ether |
 | 2 | 2 | heme |
 | 3 | 3, 8, 13 | carbonhydrate |
 | 4 | 4 | benzene ring |
 | 5 | 6 | chlorophyll |   
-| 6 | 7 | lipid |
+| 6 | 7, 19, 21 | lipid |
 | 7 | 10, 16 | essential amino/citric acids |   
 | 8 | 15 | S-adenosyl-L-homocysteine |
 | 9 | 17 | coenzymeA |
 | 10 | 18 | pyridoxal phosphate |   
+| 11 | 20 |
+| 12 | 23 |
 
 
 
