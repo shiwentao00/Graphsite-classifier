@@ -45,7 +45,7 @@ Current grouping of classes:
 
 | class | clusters | label |
 | --- | --- | --- |
-| 0 | 0, 9, 12 | ATP |
+| 0 | 0, 9, 12, 25 | ATP |
 | 1 | 1, 5, 11, 22 | glycol and ether |
 | 2 | 2 | heme |
 | 3 | 3, 8, 13 | carbonhydrate |
@@ -58,6 +58,12 @@ Current grouping of classes:
 | 10 | 18 | pyridoxal phosphate |   
 | 11 | 20 | benzoic acid 1 |
 | 12 | 23 | benzoic acid 2 |
+| 13 | 24 | FMN |
+| 14 | 26 | morpholine ring |
+| 15 | 27, 30 | glucopyranose |
+| 16 | 28 | Tartaric acid |
+| 17 | 29 |phosphate |
+
 
 
 
