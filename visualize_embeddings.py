@@ -11,6 +11,7 @@ import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
 import umap
+from sklearn.decomposition import PCA
 
 
 def get_args():
@@ -25,6 +26,10 @@ def get_args():
                         required=True,
                         type=int,
                         help='which experiment.')     
+
+    parser.add_argument('-which_algorithm',
+                         default='umap',
+                         help='which algorithm to use for manifold learning.')   
 
     return parser.parse_args()
 
@@ -54,6 +59,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
 
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
+    #cust_palette = sns.color_palette("Spectral", len(list(set(cluster_id_list))))
     ax = sns.scatterplot(x=embedding_list[:,0], 
                          y=embedding_list[:,1], 
                          hue=cluster_id_list, 
@@ -69,6 +75,7 @@ if __name__=="__main__":
     args = get_args()
     embedding_root = args.embedding_dir
     run = args.run
+    which_algorithm = args.which_algorithm
     embedding_dir = embedding_root + 'run_{}/'.format(run)
 
     #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -77,7 +84,8 @@ if __name__=="__main__":
     #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
-    merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
+    #merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
+    merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 25, 26, 27, 28, 29, 30]
     print('how to merge clusters: ', merge_info)
     cluster_ids = [str(x) for x in merge_info] # use original cluster ids
 
@@ -88,9 +96,16 @@ if __name__=="__main__":
     #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink"]
     #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue",
     #         "neon green", "bright pink", "crimson", "bright orange", "windows blue"]
+    
+    # 13 colors
+    # colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
+    #          "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", 
+    #          "greyish"]
+
+    # 20 colors
     colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
-              "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", 
-              "greyish"]
+              "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish",
+              "yellow", "tomato", "navy", "turquoise", "azure", "darkgreen", "wheat"]
 
     for which_split in ['train', 'val', 'test']:
         print('computing evaluation metrics for {}'.format(which_split))
@@ -105,16 +120,23 @@ if __name__=="__main__":
         labels = np.load(label_path)
         labels = labels.astype(int)
         
-        for which_algorithm in ['tsne', 'umap']:
-            image_path = './results/run_{}/{}_{}_{}.png'.format(run, which_algorithm, which_split, run)
-            print('image saved to: ', image_path)
-            
-            if which_algorithm == 'tsne':
-                print('computing TSNE...')
-                vis_embedding = TSNE(n_components=2).fit_transform(embeddings)
-            elif which_algorithm == 'umap':
-                print('computing UMAP...')
-                umap_inst = umap.UMAP()
-                vis_embedding = umap_inst.fit_transform(embeddings)
+        print('denoising with PCA...')
+        pca_model = PCA(n_components=96)
+        embeddings = pca_model.fit_transform(embeddings)
+        print('shape after PCA: ', embeddings.shape)
+        print('total explained variance ratio:', np.sum(pca_model.explained_variance_ratio_))
 
-            visualize_embeddings(vis_embedding, labels, cluster_ids, image_path, colors)
+        image_path = './results/run_{}/{}_{}_{}.png'.format(run, which_algorithm, which_split, run)
+        print('image saved to: ', image_path)
+        
+        if which_algorithm == 'tsne':
+            print('computing TSNE...')
+            tsne = TSNE(n_components=2, perplexity=40, learning_rate=25, n_iter=2000)
+            vis_embedding = tsne.fit_transform(embeddings)
+            print('KL divergence after optimizaton: ', tsne.kl_divergence_)
+        elif which_algorithm == 'umap':
+            print('computing UMAP...')
+            umap_inst = umap.UMAP(n_components=2, n_neighbors=100, min_dist=0.0, metric='euclidean')
+            vis_embedding = umap_inst.fit_transform(embeddings)
+
+        visualize_embeddings(vis_embedding, labels, cluster_ids, image_path, colors)
