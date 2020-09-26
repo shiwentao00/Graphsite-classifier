@@ -56,8 +56,8 @@ Current grouping of classes:
 | 8 | 15 | S-adenosyl-L-homocysteine |
 | 9 | 17 | coenzymeA |
 | 10 | 18 | pyridoxal phosphate |   
-| 11 | 20 |
-| 12 | 23 |
+| 11 | 20 | benzoic acid 1 |
+| 12 | 23 | benzoic acid 2 |
 
 
 
