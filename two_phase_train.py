@@ -166,6 +166,7 @@ if __name__ == "__main__":
         config = yaml.load(f, Loader=yaml.FullLoader)
     
     seed = config['seed']
+    random.seed(seed)
     print('seed: ', seed)
     
     run = config['run']

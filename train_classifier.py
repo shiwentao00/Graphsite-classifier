@@ -152,11 +152,12 @@ def gen_classification_report(dataloader):
 
 
 if __name__=="__main__":
-    random.seed(666) # deterministic sampled pockets and pairs from dataset
-    print('seed: ', 666)
-
     with open('./train_classifier.yaml') as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)    
+        config = yaml.load(f, Loader=yaml.FullLoader)  
+
+    seed = config['seed']
+    random.seed(666) 
+    print('seed: ', 666)
 
     run = config['run']
     cluster_file_dir = config['cluster_file_dir']
