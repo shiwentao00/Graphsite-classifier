@@ -1,5 +1,5 @@
 ---
- run: 3 # id for the training
+ run: 4 # id for the training
  
  # directory configuration
  cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
@@ -9,12 +9,12 @@
  loss_dir: "./results/"
 
  # dataset configuration
- merge_info: [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
+ merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
  features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # model configuration 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
- model_size: 64 # size of the neural network
+ model_size: 80 # size of the neural network
 
  # FocalLoss configuration
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'

@@ -1,5 +1,5 @@
 ---
- run: 66 # id for the training
+ run: 67 # id for the training
  
  seed: 666 # seed for the random module
 
@@ -11,7 +11,7 @@
  loss_dir: "./results/"
 
  # dataset configuration
- merge_info: [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 25, 26, 27, 28, 29, 30]
+ merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
  train_pos_th: 14000 # threshold of number of positive train pairs for each class
  train_neg_th: 3000 # threshold of number of negative train pairs for each combination
  cluster_sample_th: 1000 # threshold of number of pockets sampled in a class for hard pair training 
