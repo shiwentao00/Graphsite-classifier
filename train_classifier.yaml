@@ -1,5 +1,5 @@
 ---
- run: 5 # id for the training
+ run: 6 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -11,7 +11,7 @@
 
  # dataset configuration
  merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
- features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
+ features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # model configuration 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
