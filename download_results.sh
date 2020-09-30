@@ -1,4 +1,4 @@
-run=66
+run=67
 
 mkdir ./results/run_${run}/
 

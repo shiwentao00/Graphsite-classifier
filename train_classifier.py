@@ -148,7 +148,8 @@ def gen_classification_report(dataloader):
         epoch_label.extend(label)
 
     report = metrics.classification_report(epoch_label, epoch_pred, digits=4)
-    return report
+    confusion_mat = metrics.confusion_matrix(epoch_label, epoch_pred) 
+    return report, confusion_mat
 
 
 if __name__=="__main__":
@@ -303,14 +304,30 @@ if __name__=="__main__":
     # load the best model to generate a detailed classification report
     print('****************************************************************')
     model.load_state_dict(best_model)
-    train_report = gen_classification_report(train_loader)
-    val_report = gen_classification_report(val_loader)
-    test_report = gen_classification_report(test_loader)
+    train_report, train_confusion_mat = gen_classification_report(train_loader)
+    val_report, val_confusion_mat = gen_classification_report(val_loader)
+    test_report, test_confusion_mat = gen_classification_report(test_loader)
+    
     print('train report:')
     print(train_report)
+    print('train confusion matrix:')
+    print(train_confusion_mat)
+    print('---------------------------------------')
+    
     print('validation report:')
     print(val_report)
+    print('validation confusion matrix:')
+    print(val_confusion_mat)
+    print('---------------------------------------')
+    
     print('test report: ')
     print(test_report)
+    print('test confusion matrix:')
+    print(test_confusion_mat)
+    print('---------------------------------------')
+    
+    print('program finished.')
+
+    
 
 

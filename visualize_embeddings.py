@@ -85,7 +85,7 @@ if __name__=="__main__":
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
     #merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
-    merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 25, 26, 27, 28, 29, 30]
+    merge_info = [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
     print('how to merge clusters: ', merge_info)
     cluster_ids = [str(x) for x in merge_info] # use original cluster ids
 
@@ -102,10 +102,10 @@ if __name__=="__main__":
     #          "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", 
     #          "greyish"]
 
-    # 20 colors
+    # 18 colors
     colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
               "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish",
-              "yellow", "tomato", "navy", "turquoise", "azure", "darkgreen", "wheat"]
+              "yellow", "tomato", "navy", "turquoise", "azure"]
 
     for which_split in ['train', 'val', 'test']:
         print('computing evaluation metrics for {}'.format(which_split))
