@@ -1,5 +1,5 @@
 ---
- run: 9 # id for the training
+ run: 10 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -15,18 +15,18 @@
 
  # model configuration 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
- model_size: 80 # size of the neural network
+ model_size: 64 # size of the neural network
  num_layers: 4
 
  # FocalLoss configuration
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'
  initial_focal_gamma: 0
  focal_gamma_ascent: True
- focal_gamma_ascent_epoch: [20, 60, 100] # gamma = 1, 2, 3
+ focal_gamma_ascent_epoch: [20, 60, 130] # gamma = 1, 2, 3
 
  # train configuration
- num_epoch: 100
- lr_decay_epoch: 60
+ num_epoch: 150
+ lr_decay_epoch: 90
  batch_size: 256
  learning_rate: 0.003
  weight_decay: 0.0005

@@ -268,7 +268,7 @@ if __name__=="__main__":
     print('loss function:')
     print(loss_function)
     
-    best_val_loss = 9999999
+    best_val_acc = 0
     train_losses = []
     train_accs = []
     val_losses = []
@@ -289,13 +289,13 @@ if __name__=="__main__":
         test_accs.append(test_acc)
         print('epoch: {}, train loss: {}, acc: {}, val loss: {}, acc: {}, test loss: {}, acc: {}'.format(epoch, train_loss, train_acc, val_loss, val_acc, test_loss, test_acc))
 
-        if  val_loss < best_val_loss:
-            best_val_loss = val_loss
+        if  val_acc > best_val_acc:
+            best_val_acc = val_acc
             best_val_epoch = epoch
             best_model = copy.deepcopy(model.state_dict())
             torch.save(model.state_dict(), trained_model_dir)
 
-    print('best val loss {} at epoch {}.'.format(best_val_loss, best_val_epoch))
+    print('best val acc {} at epoch {}.'.format(best_val_acc, best_val_epoch))
 
     # save the history of loss and accuracy
     results = {'train_losses': train_losses, 'train_accs': train_accs, 'val_losses': val_losses, 'val_accs': val_accs}
