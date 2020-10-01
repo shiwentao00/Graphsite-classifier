@@ -1,5 +1,5 @@
 ---
- run: 7 # id for the training
+ run: 8 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -16,6 +16,7 @@
  # model configuration 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
  model_size: 80 # size of the neural network
+ num_layers: 6
 
  # FocalLoss configuration
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'

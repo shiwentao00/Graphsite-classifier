@@ -170,9 +170,9 @@ class JKEmbeddingNet(torch.nn.Module):
     Jumping knowledge embedding net inspired by the paper "Representation Learning on 
     Graphs with Jumping Knowledge Networks".
     """
-    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers=5, layer_aggregate='max'):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
         super(JKEmbeddingNet, self).__init__()
-        self.num_layers = 5
+        self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
 
         # first layer
@@ -449,7 +449,7 @@ class SelectiveContrastiveLoss(torch.nn.Module):
 
 class MoNet(torch.nn.Module):
     """Standard classifier to solve the problem.""" 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model):
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers):
         super(MoNet, self).__init__()
         self.num_classes = num_classes
 
@@ -459,7 +459,7 @@ class MoNet(torch.nn.Module):
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
         elif which_model == 'jk':
             self.embedding_net = JKEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
         else:
             self.embedding_net = EmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
