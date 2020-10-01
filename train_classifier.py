@@ -13,6 +13,7 @@ import numpy as np
 import sklearn.metrics as metrics
 import json
 import copy
+import matplotlib
 import matplotlib.pyplot as plt
 
 
@@ -311,13 +312,16 @@ if __name__=="__main__":
     val_report, val_confusion_mat = gen_classification_report(val_loader)
     test_report, test_confusion_mat = gen_classification_report(test_loader)
     
+    font = {'size'   : 20}
+    matplotlib.rc('font', **font)   
+
     print('train report:')
     print(train_report)
     print('train confusion matrix:')
     print(train_confusion_mat)
-    fig = plt.figure()
+    fig, ax = plt.subplots(figsize=(24, 20))
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_train.png'.format(run)
-    metrics.ConfusionMatrixDisplay(train_confusion_mat, display_labels=None).plot()
+    metrics.ConfusionMatrixDisplay(train_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
@@ -325,9 +329,9 @@ if __name__=="__main__":
     print(val_report)
     print('validation confusion matrix:')
     print(val_confusion_mat)
-    fig = plt.figure()
+    fig, ax = plt.subplots(figsize=(24, 20))
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_val.png'.format(run)
-    metrics.ConfusionMatrixDisplay(val_confusion_mat, display_labels=None).plot()
+    metrics.ConfusionMatrixDisplay(val_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
@@ -335,9 +339,9 @@ if __name__=="__main__":
     print(test_report)
     print('test confusion matrix:')
     print(test_confusion_mat)
-    fig = plt.figure()
+    fig, ax = plt.subplots(figsize=(24, 20))
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_test.png'.format(run)
-    metrics.ConfusionMatrixDisplay(test_confusion_mat, display_labels=None).plot()
+    metrics.ConfusionMatrixDisplay(test_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
