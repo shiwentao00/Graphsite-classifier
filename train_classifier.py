@@ -13,6 +13,7 @@ import numpy as np
 import sklearn.metrics as metrics
 import json
 import copy
+import matplotlib.pyplot as plt
 
 
 def train():
@@ -148,7 +149,7 @@ def gen_classification_report(dataloader):
         epoch_label.extend(label)
 
     report = metrics.classification_report(epoch_label, epoch_pred, digits=4)
-    confusion_mat = metrics.confusion_matrix(epoch_label, epoch_pred) 
+    confusion_mat = metrics.confusion_matrix(y_true=epoch_label, y_pred=epoch_pred, normalize='true') 
     return report, confusion_mat
 
 
@@ -166,6 +167,7 @@ if __name__=="__main__":
     pop_dir = config['pop_dir']
     trained_model_dir = config['trained_model_dir'] + 'trained_classifier_model_{}.pt'.format(run)
     loss_dir = config['loss_dir'] + 'train_classifier_results_{}.json'.format(run)    
+    confusion_matrix_dir = config['confusion_matrix_dir']
     print('save trained model at: ', trained_model_dir)
     print('save loss at: ', loss_dir)
 
@@ -313,18 +315,27 @@ if __name__=="__main__":
     print(train_report)
     print('train confusion matrix:')
     print(train_confusion_mat)
+    fig = plt.figure()
+    confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_train.png'.format(run)
+    plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
     print('validation report:')
     print(val_report)
     print('validation confusion matrix:')
     print(val_confusion_mat)
+    fig = plt.figure()
+    confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_val.png'.format(run)
+    plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
     print('test report: ')
     print(test_report)
     print('test confusion matrix:')
     print(test_confusion_mat)
+    fig = plt.figure()
+    confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_test.png'.format(run)
+    plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
     print('program finished.')
