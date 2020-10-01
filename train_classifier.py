@@ -317,6 +317,7 @@ if __name__=="__main__":
     print(train_confusion_mat)
     fig = plt.figure()
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_train.png'.format(run)
+    cm_display = metrics.ConfusionMatrixDisplay(train_confusion_mat).plot()
     plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
@@ -326,6 +327,7 @@ if __name__=="__main__":
     print(val_confusion_mat)
     fig = plt.figure()
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_val.png'.format(run)
+    cm_display = metrics.ConfusionMatrixDisplay(val_confusion_mat).plot()
     plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
@@ -335,6 +337,7 @@ if __name__=="__main__":
     print(test_confusion_mat)
     fig = plt.figure()
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_test.png'.format(run)
+    cm_display = metrics.ConfusionMatrixDisplay(test_confusion_mat).plot()
     plt.savefig(confusion_matrix_path)
     print('---------------------------------------')
     
