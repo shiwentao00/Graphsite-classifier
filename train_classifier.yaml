@@ -16,18 +16,18 @@
 
  # model configuration 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
- model_size: 64 # size of the neural network
+ model_size: 96 # size of the neural network
  num_layers: 4
 
  # FocalLoss configuration
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'
  initial_focal_gamma: 0
  focal_gamma_ascent: True
- focal_gamma_ascent_epoch: [20, 60, 130] # gamma = 1, 2, 3
+ focal_gamma_ascent_epoch: [15, 80, 150] # gamma = 1, 2, 3
 
  # train configuration
- num_epoch: 1
- lr_decay_epoch: 90
+ num_epoch: 200
+ lr_decay_epoch: [100, 170]
  batch_size: 256
  learning_rate: 0.003
  weight_decay: 0.0005

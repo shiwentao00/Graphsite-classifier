@@ -26,7 +26,7 @@ def train():
     model.train()
 
     # learning rate delay
-    if epoch == lr_decay_epoch:
+    if epoch in lr_decay_epoch:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.5 * param_group['lr']
 
