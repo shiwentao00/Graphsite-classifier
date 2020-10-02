@@ -9,6 +9,7 @@ import torch.nn as nn
 from dataloader import read_cluster_file_from_yaml, divide_clusters, pocket_loader_gen
 from dataloader import merge_clusters
 from model import MoNet, FocalLoss
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import numpy as np
 import sklearn.metrics as metrics
 import json
@@ -26,9 +27,9 @@ def train():
     model.train()
 
     # learning rate delay
-    if epoch in lr_decay_epoch:
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = 0.5 * param_group['lr']
+    #if epoch in lr_decay_epoch:
+    #    for param_group in optimizer.param_groups:
+    #        param_group['lr'] = 0.5 * param_group['lr']
 
     # increasing gamma of FocalLoss
     if which_loss == 'Focal' and focal_gamma_ascent == True:
@@ -179,12 +180,12 @@ if __name__=="__main__":
     print('features to use: ', features_to_use)
     
     num_epoch = config['num_epoch']
-    lr_decay_epoch = config['lr_decay_epoch']
+    #lr_decay_epoch = config['lr_decay_epoch']
     batch_size = config['batch_size']
     learning_rate = config['learning_rate']
     weight_decay = config['weight_decay']
     print('number of epochs: ', num_epoch)
-    print('learning rate decay at epoch: ', lr_decay_epoch)
+    #print('learning rate decay at epoch: ', lr_decay_epoch)
     print('batch size: ', batch_size)
 
     num_workers = os.cpu_count()
@@ -256,14 +257,19 @@ if __name__=="__main__":
     print('optimizer:')
     print(optimizer)
 
-    class_weights = compute_class_weights(train_clusters)
-    class_weights = torch.FloatTensor(class_weights).to(device)
+    # decay learning rate when validation accuracy stops increasing.
+    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=10, cooldown=40, min_lr=0.0001, verbose=True)
+    print('learning rate scheduler: ')
+    print(scheduler)
+
     if which_loss == 'CrossEntropy':
+        class_weights = compute_class_weights(train_clusters)
+        class_weights = torch.FloatTensor(class_weights).to(device)
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
     elif which_loss == 'Focal':
         gamma = config['initial_focal_gamma']
         print('initial gamma of FocalLoss: ', gamma)
-        loss_function = FocalLoss(gamma=gamma, alpha=class_weights, reduction='mean')
+        loss_function = FocalLoss(gamma=gamma, reduction='mean')
         focal_gamma_ascent = config['focal_gamma_ascent']
         if focal_gamma_ascent == True:
             focal_gamma_ascent_epoch = config['focal_gamma_ascent_epoch']
@@ -298,6 +304,8 @@ if __name__=="__main__":
             best_model = copy.deepcopy(model.state_dict())
             torch.save(model.state_dict(), trained_model_dir)
 
+        scheduler.step(val_acc)
+
     print('best val acc {} at epoch {}.'.format(best_val_acc, best_val_epoch))
 
     # save the history of loss and accuracy
@@ -319,7 +327,7 @@ if __name__=="__main__":
     print(train_report)
     print('train confusion matrix:')
     print(train_confusion_mat)
-    fig, ax = plt.subplots(figsize=(24, 20))
+    fig, ax = plt.subplots(figsize=(28, 24))
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_train.png'.format(run)
     metrics.ConfusionMatrixDisplay(train_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)
@@ -329,7 +337,7 @@ if __name__=="__main__":
     print(val_report)
     print('validation confusion matrix:')
     print(val_confusion_mat)
-    fig, ax = plt.subplots(figsize=(24, 20))
+    fig, ax = plt.subplots(figsize=(28, 24))
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_val.png'.format(run)
     metrics.ConfusionMatrixDisplay(val_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)
@@ -339,7 +347,7 @@ if __name__=="__main__":
     print(test_report)
     print('test confusion matrix:')
     print(test_confusion_mat)
-    fig, ax = plt.subplots(figsize=(24, 20))
+    fig, ax = plt.subplots(figsize=(28, 24))
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_test.png'.format(run)
     metrics.ConfusionMatrixDisplay(test_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)

@@ -1,5 +1,5 @@
 ---
- run: 12 # id for the training
+ run: 13 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -23,7 +23,7 @@
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'
  initial_focal_gamma: 0
  focal_gamma_ascent: True
- focal_gamma_ascent_epoch: [15, 80, 150] # gamma = 1, 2, 3
+ focal_gamma_ascent_epoch: [25, 100, 170] # gamma = 1, 2, 3
 
  # train configuration
  num_epoch: 200
