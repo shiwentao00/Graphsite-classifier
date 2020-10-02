@@ -1,5 +1,5 @@
 ---
- run: 11 # id for the training
+ run: 12 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -28,7 +28,7 @@
  # train configuration
  num_epoch: 200
  lr_decay_epoch: [100, 170]
- batch_size: 256
+ batch_size: 2
  learning_rate: 0.003
  weight_decay: 0.0005
 

@@ -256,14 +256,14 @@ if __name__=="__main__":
     print('optimizer:')
     print(optimizer)
 
+    class_weights = compute_class_weights(train_clusters)
+    class_weights = torch.FloatTensor(class_weights).to(device)
     if which_loss == 'CrossEntropy':
-        class_weights = compute_class_weights(train_clusters)
-        class_weights = torch.FloatTensor(class_weights).to(device)
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
     elif which_loss == 'Focal':
         gamma = config['initial_focal_gamma']
         print('initial gamma of FocalLoss: ', gamma)
-        loss_function = FocalLoss(gamma=gamma, reduction='mean')
+        loss_function = FocalLoss(gamma=gamma, alpha=class_weights, reduction='mean')
         focal_gamma_ascent = config['focal_gamma_ascent']
         if focal_gamma_ascent == True:
             focal_gamma_ascent_epoch = config['focal_gamma_ascent_epoch']
