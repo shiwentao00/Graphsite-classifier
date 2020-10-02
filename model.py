@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch.nn import Sequential, Linear, ReLU, LeakyReLU, ELU
+from torch.nn import ModuleList
 from torch_geometric.nn import GINConv
 from torch_geometric.nn import global_add_pool
 from torch_geometric.nn import GlobalAttention
@@ -210,6 +211,54 @@ class JKEmbeddingNet(torch.nn.Module):
         # graph readout
         x = self.set2set(x, batch)
         return x
+
+
+class PNAEmbeddingNet(torch.nn.Module):
+    """
+    EmbeddingNet with PNAConv layers from the paper "Principal 
+    Neighbourhood Aggregation for Graph Nets".
+    """
+    def __init__(self, num_features, dim, num_edge_attr, num_layers, deg):
+        super(PNAEmbeddingNet, self).__init__()
+
+        # define the aggregators and scalers, can be more
+        aggregators = ['mean', 'min', 'max', 'std']
+        scalers = ['identity', 'amplification', 'attenuation']
+
+        self.convs = ModuleList()
+        self.batch_norms = ModuleList()
+
+        # first layer
+        conv0 = PNAConv(in_channels=num_features, out_channels=dim,
+                        aggregators=aggregators, scalers=scalers, deg=deg,
+                           edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
+                           divide_input=False)
+        
+
+        # rest layers
+        for _ in range(1, num_layers):
+            conv = PNAConv(in_channels=75, out_channels=75,
+                           aggregators=aggregators, scalers=scalers, deg=deg,
+                           edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
+                           divide_input=False)
+            self.convs.append(conv)
+            self.batch_norms.append(BatchNorm(dim))
+
+        self.mlp = Sequential(Linear(75, 50), ReLU(), Linear(50, 25), ReLU(),
+                              Linear(25, 1))
+
+        # read out function
+        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        x = self.node_emb(x.squeeze())
+        edge_attr = self.edge_emb(edge_attr)
+
+        for conv, batch_norm in zip(self.convs, self.batch_norms):
+            x = F.relu(batch_norm(conv(x, edge_index, edge_attr)))
+
+        x = global_add_pool(x, batch)
+        return self.mlp(x)
 
 
 class SiameseNet(torch.nn.Module):
