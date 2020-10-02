@@ -4,6 +4,7 @@ from torch import Tensor
 from torch.nn import Sequential, Linear, ReLU, LeakyReLU, ELU
 from torch.nn import ModuleList
 from torch_geometric.nn import GINConv
+from torch_geometric.nn import PNAConv, BatchNorm, 
 from torch_geometric.nn import global_add_pool
 from torch_geometric.nn import GlobalAttention
 from torch_geometric.nn import Set2Set
@@ -231,34 +232,33 @@ class PNAEmbeddingNet(torch.nn.Module):
         # first layer
         conv0 = PNAConv(in_channels=num_features, out_channels=dim,
                         aggregators=aggregators, scalers=scalers, deg=deg,
-                           edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
-                           divide_input=False)
-        
+                        edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
+                        divide_input=False)
+        bn0 = BatchNorm(dim)
+        self.convs.append(conv0)
+        self.batch_norms.append(bn0)
 
         # rest layers
         for _ in range(1, num_layers):
-            conv = PNAConv(in_channels=75, out_channels=75,
+            conv = PNAConv(in_channels=dim, out_channels=dim,
                            aggregators=aggregators, scalers=scalers, deg=deg,
                            edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
                            divide_input=False)
             self.convs.append(conv)
             self.batch_norms.append(BatchNorm(dim))
 
-        self.mlp = Sequential(Linear(75, 50), ReLU(), Linear(50, 25), ReLU(),
-                              Linear(25, 1))
-
         # read out function
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
-        x = self.node_emb(x.squeeze())
-        edge_attr = self.edge_emb(edge_attr)
 
         for conv, batch_norm in zip(self.convs, self.batch_norms):
-            x = F.relu(batch_norm(conv(x, edge_index, edge_attr)))
+            x = F.leaky_relu(batch_norm(conv(x, edge_index, edge_attr)))
 
-        x = global_add_pool(x, batch)
-        return self.mlp(x)
+        # graph readout
+        x = self.set2set(x, batch)
+
+        return x
 
 
 class SiameseNet(torch.nn.Module):
@@ -498,7 +498,11 @@ class SelectiveContrastiveLoss(torch.nn.Module):
 
 class MoNet(torch.nn.Module):
     """Standard classifier to solve the problem.""" 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers):
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, deg=None):
+        """
+        train_eps: for the GINMolecularConv module only when which_model in ['jk', 'residual', 'normal'].
+        deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
+        """
         super(MoNet, self).__init__()
         self.num_classes = num_classes
 
@@ -509,6 +513,9 @@ class MoNet(torch.nn.Module):
         elif which_model == 'jk':
             self.embedding_net = JKEmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
+        elif which_model == 'pna':
+            self.embedding_net = PNAEmbeddingNet(
+                num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
         else:
             self.embedding_net = EmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)

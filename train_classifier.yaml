@@ -1,5 +1,5 @@
 ---
- run: 13 # id for the training
+ run: 12 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -15,7 +15,7 @@
  features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # model configuration 
- which_model: 'jk' # 'jk', 'residual' or 'normal'
+ which_model: 'jk' # 'jk', 'residual', 'pna' or 'normal'
  model_size: 96 # size of the neural network
  num_layers: 4
 
