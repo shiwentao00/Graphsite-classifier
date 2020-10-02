@@ -269,7 +269,7 @@ if __name__=="__main__":
     elif which_loss == 'Focal':
         gamma = config['initial_focal_gamma']
         print('initial gamma of FocalLoss: ', gamma)
-        loss_function = FocalLoss(gamma=gamma, alpha=class_weights reduction='mean')
+        loss_function = FocalLoss(gamma=gamma, alpha=class_weights, reduction='mean')
         focal_gamma_ascent = config['focal_gamma_ascent']
         if focal_gamma_ascent == True:
             focal_gamma_ascent_epoch = config['focal_gamma_ascent_epoch']
