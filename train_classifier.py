@@ -127,7 +127,7 @@ def compute_class_weights(clusters):
     cluster_lengths = [len(x) for x in clusters]
     cluster_weights = np.array([1/x for x in cluster_lengths])
     cluster_weights = cluster_weights/np.mean(cluster_weights) # normalize the weights with mean 
-    #print(cluster_weights)
+    
     return cluster_weights
 
 
@@ -262,8 +262,14 @@ if __name__=="__main__":
     print('learning rate scheduler: ')
     print(scheduler)
 
-    class_weights = compute_class_weights(train_clusters)
-    class_weights = torch.FloatTensor(class_weights).to(device)
+    # compute class weights as a tensor of size num_classes
+    use_class_weights = config['use_class_weights']
+    if use_class_weights==True:
+        class_weights = compute_class_weights(train_clusters)
+        class_weights = torch.FloatTensor(class_weights).to(device)
+    else:
+        class_weights = 1
+
     if which_loss == 'CrossEntropy':
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
     elif which_loss == 'Focal':

@@ -1,5 +1,5 @@
 ---
- run: 13 # id for the training
+ run: 14 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -15,12 +15,13 @@
  features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # model configuration 
- which_model: 'jk' # 'jk', 'residual', 'pna' or 'normal'
+ which_model: 'pna' # 'jk', 'residual', 'pna' or 'normal'
  model_size: 96 # size of the neural network
  num_layers: 4
 
- # FocalLoss configuration
+ # loss configuration
  which_loss: 'Focal' # 'CrossEntropy' or 'Focal'
+ use_class_weights: False
  initial_focal_gamma: 0
  focal_gamma_ascent: True
  focal_gamma_ascent_epoch: [25, 100, 170] # gamma = 1, 2, 3
