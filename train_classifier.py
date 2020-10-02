@@ -246,7 +246,7 @@ if __name__=="__main__":
     model_size = config['model_size']
     num_layers = config['num_layers']
     which_loss = config['which_loss']
-    assert which_model in ['jk', 'residual', 'normal']
+    assert which_model in ['jk', 'residual', 'normal', 'pna']
     assert which_loss in ['CrossEntropy', 'Focal']
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=model_size, 
                   train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers).to(device)
