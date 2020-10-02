@@ -252,7 +252,7 @@ if __name__=="__main__":
 
     # the degrees for the PNA model
     if which_model=='pna':
-        deg = torch.zeros(30, dtype=torch.long)
+        deg = torch.zeros(31, dtype=torch.long)
         for data in train_set:
             #print(cnt)
             d = degree(data.edge_index[1], num_nodes=data.num_nodes, dtype=torch.long)
