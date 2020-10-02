@@ -232,7 +232,7 @@ class PNAEmbeddingNet(torch.nn.Module):
         # first layer
         conv0 = PNAConv(in_channels=num_features, out_channels=dim,
                         aggregators=aggregators, scalers=scalers, deg=deg,
-                        edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
+                        edge_dim=num_edge_attr, towers=4, pre_layers=1, post_layers=1,
                         divide_input=False)
         bn0 = BatchNorm(dim)
         self.convs.append(conv0)
@@ -242,7 +242,7 @@ class PNAEmbeddingNet(torch.nn.Module):
         for _ in range(1, num_layers):
             conv = PNAConv(in_channels=dim, out_channels=dim,
                            aggregators=aggregators, scalers=scalers, deg=deg,
-                           edge_dim=num_edge_attr, towers=5, pre_layers=1, post_layers=1,
+                           edge_dim=num_edge_attr, towers=4, pre_layers=1, post_layers=1,
                            divide_input=False)
             self.convs.append(conv)
             self.batch_norms.append(BatchNorm(dim))
