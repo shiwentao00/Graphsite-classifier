@@ -9,6 +9,7 @@ import torch.nn as nn
 from dataloader import read_cluster_file_from_yaml, divide_clusters, pocket_loader_gen
 from dataloader import merge_clusters
 from model import MoNet, FocalLoss
+from torch_geometric.utils import degree
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import numpy as np
 import sklearn.metrics as metrics
@@ -218,7 +219,7 @@ if __name__=="__main__":
     print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
     print(test_clusters[0][0:5])
 
-    train_loader, train_size = pocket_loader_gen(pocket_dir=pocket_dir, 
+    train_loader, train_size, train_set = pocket_loader_gen(pocket_dir=pocket_dir, 
                                                  pop_dir=pop_dir,
                                                  clusters=train_clusters, 
                                                  features_to_use=features_to_use, 
@@ -226,7 +227,7 @@ if __name__=="__main__":
                                                  shuffle=True, 
                                                  num_workers=num_workers)
 
-    val_loader, val_size = pocket_loader_gen(pocket_dir=pocket_dir, 
+    val_loader, val_size, _ = pocket_loader_gen(pocket_dir=pocket_dir, 
                                              pop_dir=pop_dir,
                                              clusters=val_clusters, 
                                              features_to_use=features_to_use, 
@@ -234,7 +235,7 @@ if __name__=="__main__":
                                              shuffle=False, 
                                              num_workers=num_workers) 
 
-    test_loader, test_size = pocket_loader_gen(pocket_dir=pocket_dir, 
+    test_loader, test_size, _ = pocket_loader_gen(pocket_dir=pocket_dir, 
                                              pop_dir=pop_dir,
                                              clusters=test_clusters, 
                                              features_to_use=features_to_use, 
@@ -248,8 +249,18 @@ if __name__=="__main__":
     which_loss = config['which_loss']
     assert which_model in ['jk', 'residual', 'normal', 'pna']
     assert which_loss in ['CrossEntropy', 'Focal']
+
+    # the degrees for the PNA model
+    if which_model=='pna':
+        deg = torch.zeros(5, dtype=torch.long)
+        for data in train_set:
+            d = degree(data.edge_index[1], num_nodes=data.num_nodes, dtype=torch.long)
+            deg += torch.bincount(d, minlength=deg.numel())
+    else:
+        deg = None
+
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=model_size, 
-                  train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers).to(device)
+                  train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers, deg=deg).to(device)
     print('model architecture:')
     print(model)
 
