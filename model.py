@@ -4,7 +4,7 @@ from torch import Tensor
 from torch.nn import Sequential, Linear, ReLU, LeakyReLU, ELU
 from torch.nn import ModuleList
 from torch_geometric.nn import GINConv
-from torch_geometric.nn import PNAConv, BatchNorm, 
+from torch_geometric.nn import PNAConv, BatchNorm
 from torch_geometric.nn import global_add_pool
 from torch_geometric.nn import GlobalAttention
 from torch_geometric.nn import Set2Set
