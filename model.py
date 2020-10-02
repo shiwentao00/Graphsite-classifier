@@ -571,7 +571,7 @@ class FocalLoss(torch.nn.Module):
         alpha = self.alpha[labels]
 
         # rescale the cross entropy loss
-        focal_loss = self.alpha * (1-pt)**self.gamma * ce_loss
+        focal_loss = alpha * (1-pt)**self.gamma * ce_loss
 
         if self.reduction == 'mean':
             return focal_loss.mean()
