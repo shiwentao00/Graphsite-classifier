@@ -16,7 +16,7 @@
 
  # model configuration 
  which_model: 'pna' # 'jk', 'residual', 'pna' or 'normal'
- model_size: 96 # size of the neural network
+ model_size: 64 # size of the neural network
  num_layers: 4
 
  # loss configuration
