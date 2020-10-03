@@ -223,8 +223,10 @@ class PNAEmbeddingNet(torch.nn.Module):
         super(PNAEmbeddingNet, self).__init__()
 
         # define the aggregators and scalers, can be more
-        aggregators = ['mean', 'min', 'max', 'std']
-        scalers = ['identity', 'amplification', 'attenuation']
+        #aggregators = ['mean', 'min', 'max', 'std']
+        #scalers = ['identity', 'amplification', 'attenuation']
+        aggregators = ['mean', 'min', 'max']
+        scalers = ['identity', 'amplification']        
 
         self.convs = ModuleList()
         self.batch_norms = ModuleList()
@@ -252,8 +254,14 @@ class PNAEmbeddingNet(torch.nn.Module):
 
     def forward(self, x, edge_index, edge_attr, batch):
 
+        layer_x = [] # jumping knowledge
         for conv, batch_norm in zip(self.convs, self.batch_norms):
             x = F.leaky_relu(batch_norm(conv(x, edge_index, edge_attr)))
+            layer_x.append(x)
+
+        # layer aggregation
+        x = torch.stack(layer_x, dim=0)
+        x = torch.max(x, dim=0)[0]
 
         # graph readout
         x = self.set2set(x, batch)
