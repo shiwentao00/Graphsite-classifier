@@ -226,7 +226,7 @@ class PNAEmbeddingNet(torch.nn.Module):
         #aggregators = ['mean', 'min', 'max', 'std']
         #scalers = ['identity', 'amplification', 'attenuation']
         aggregators = ['mean', 'min', 'max']
-        scalers = ['identity', 'amplification']        
+        scalers = ['identity']        
 
         self.convs = ModuleList()
         self.batch_norms = ModuleList()
