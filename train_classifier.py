@@ -280,7 +280,7 @@ if __name__=="__main__":
         class_weights = compute_class_weights(train_clusters)
         class_weights = torch.FloatTensor(class_weights).to(device)
     else:
-        class_weights = torch.ones(num_classes)
+        class_weights = torch.ones(num_classes).to(device)
 
     if which_loss == 'CrossEntropy':
         loss_function = nn.CrossEntropyLoss(weight=class_weights)
