@@ -1,5 +1,5 @@
 ---
- run: 15 # id for the training
+ run: 16 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -11,12 +11,13 @@
  confusion_matrix_dir: "./results/"
 
  # dataset configuration
- merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
+ #merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
+ merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 29]
  features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # model configuration 
- which_model: 'pna' # 'jk', 'residual', 'pna' or 'normal'
- model_size: 80 # size of the neural network
+ which_model: 'jk' # 'jk', 'residual', 'pna' or 'normal'
+ model_size: 96 # size of the neural network
  num_layers: 4
 
  # loss configuration
@@ -29,7 +30,7 @@
  # train configuration
  num_epoch: 200
  lr_decay_epoch: [100, 170]
- batch_size: 144
+ batch_size: 256
  learning_rate: 0.003
  weight_decay: 0.0005
 
