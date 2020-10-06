@@ -39,6 +39,8 @@ class GINMolecularConv(GINConv):
 
     def message(self, x_j, edge_attr):
         weight = self.edge_transformer(edge_attr)
+        print('x_j:', x_j.shape)
+        print('weight:', weight.shape)
         return x_j * weight # element wise multiplication
 
     def __repr__(self):
