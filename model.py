@@ -20,7 +20,8 @@ class GINMolecularConv(GINConv):
         super(GINMolecularConv, self).__init__(nn=nn, train_eps=train_eps)
         self.edge_transformer = Sequential(Linear(num_edge_attr, 8), 
                                            LeakyReLU(), 
-                                           Linear(8, num_features),
+                                           #Linear(8, num_features),
+                                           Linear(8, 1),
                                            ELU()) # make it possible to reach -1
 
     def forward(self, x, edge_index, edge_attr, size = None):
