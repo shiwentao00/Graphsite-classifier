@@ -39,9 +39,11 @@ class GINMolecularConv(GINConv):
 
     def message(self, x_j, edge_attr):
         weight = self.edge_transformer(edge_attr)
-        print('x_j:', x_j.shape)
-        print('weight:', weight.shape)
-        return x_j * weight # element wise multiplication
+        
+        # message size: num_features or dim
+        # weight size: 1
+        # all the dimensions in a node share one weight generated from edge attribute
+        return x_j * weight
 
     def __repr__(self):
         return '{}(nn={})(edge_transformer={})'.format(self.__class__.__name__, self.nn, self.edge_transformer)
