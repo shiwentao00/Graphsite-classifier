@@ -67,12 +67,15 @@ if __name__ == "__main__":
     #print(sim)
 
     # combinations of all pockets in this cluster
-    comb = list(combinations(cluster, 2))
-    num_comb = len(comb)
+    combs = list(combinations(cluster, 2))
+    num_comb = len(combs)
     print('number of combinations: ', num_comb)
 
+    """
     # divide the combination list into list of lists
     comb_chunks = [comb[x:x+chunk_size] for x in range(0, num_comb, chunk_size)]
+    print('length of chunks: ')
+    print([len(x) for x in comb_chunks])
 
     # use multiprocessing to process chunks in parallel
     with Pool(processes=parallel) as pool:
@@ -80,6 +83,14 @@ if __name__ == "__main__":
 
     # sum up the similarites of each process, and average
     cluster_similarity = sum(result)
+    """
+    cluster_similarity = 0
+    for comb in combs:
+        if '{}-{}'.format(comb[0], comb[1]) in sim:
+            cluster_similarity += sim['{}-{}'.format(comb[0], comb[1])]
+        elif '{}-{}'.format(comb[1], comb[0]) in sim:
+            cluster_similarity += sim['{}-{}'.format(comb[1], comb[0])]
+
     print('cluster similarity of cluster {}: {}'.format(cluster_num, cluster_similarity))
 
     
