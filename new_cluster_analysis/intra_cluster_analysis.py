@@ -17,7 +17,7 @@ def get_args():
                         help='which cluster (0 to 29) to compute intra-similarity.')     
 
     parser.add_argument('-parallel',
-                        default=16,
+                        default=20,
                         type=int,
                         help='how many processes to compute in parallel.')     
 
