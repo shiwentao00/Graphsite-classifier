@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     # get similarities as ditionary
     #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
-    sim = pd.read_csv('../../similarity-coeff.csv.', sep=' ', names=['pair', 'value'], engine='python')
+    sim = pd.read_csv('../../similarity-coeff.csv', sep=' ', names=['pair', 'value'], engine='python')
     sim = dict(zip(sim.pair, sim.value))
     #print(sim['2q7gA01-3ze8A02'])
     #print(sim['aa'])
