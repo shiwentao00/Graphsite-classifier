@@ -6,6 +6,7 @@ import yaml
 from itertools import combinations 
 import pandas as pd
 from multiprocessing import Pool
+import time
 
 
 def get_args():
@@ -56,11 +57,14 @@ if __name__ == "__main__":
 
     # get similarities as ditionary
     #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
+    tic = time.perf_counter()
     sim = pd.read_csv('../../similarity-coeff.csv', sep=' ', names=['pair', 'value'], engine='python')
     sim = dict(zip(sim.pair, sim.value))
+    toc = time.perf_counter()
+    print(f"Loaded all similarities in {toc - tic:0.4f} seconds")
     #print(sim['2q7gA01-3ze8A02'])
     #print(sim['aa'])
-    print(sim)
+    #print(sim)
 
     # combinations of all pockets in this cluster
     comb = list(combinations(cluster, 2))
