@@ -37,7 +37,7 @@ if __name__=="__main__":
 
         cluster_similarity = 0
         num_comb = 0 # include valid combinations only
-        for comb in tqdm(combs):
+        for comb in combs:
             if '{}-{}'.format(comb[0], comb[1]) in sim:
                 cluster_similarity += sim['{}-{}'.format(comb[0], comb[1])]
                 num_comb += 1
