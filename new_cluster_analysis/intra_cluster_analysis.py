@@ -85,7 +85,8 @@ if __name__ == "__main__":
                 cluster_similarity += sim['{}-{}'.format(comb[1], comb[0])]
                 num_comb += 1
 
-        cluster_similarity = cluster_similarity/float(num_comb)
+        print('valid number of pairs: ', num_comb)
+        cluster_similarity = cluster_similarity/float(num_comb+0.000000000000000001)
 
         print('cluster similarity of cluster {}: {}'.format(cluster_num, cluster_similarity))
         print('**************************************************************\n')

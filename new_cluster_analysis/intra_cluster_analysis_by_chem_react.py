@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import time
+from itertools import combinations 
 
 
 if __name__=="__main__":
@@ -32,6 +33,21 @@ if __name__=="__main__":
     for clusters_num in range(30):
         print('generating similarity matrix for cluster {}...'.format(clusters_num))
         cluster = clusters[clusters_num]
+        combs = list(combinations(cluster, 2))
 
+        cluster_similarity = 0
+        num_comb = 0 # include valid combinations only
+        for comb in tqdm(combs):
+            if '{}-{}'.format(comb[0], comb[1]) in sim:
+                cluster_similarity += sim['{}-{}'.format(comb[0], comb[1])]
+                num_comb += 1
+            elif '{}-{}'.format(comb[1], comb[0]) in sim:
+                cluster_similarity += sim['{}-{}'.format(comb[1], comb[0])]
+                num_comb += 1
 
+        print('valid number of pairs: ', num_comb)
+        cluster_similarity = cluster_similarity/float(num_comb+0.000000000000000001)
+
+        print('cluster similarity of cluster {}: {}'.format(cluster_num, cluster_similarity))
+        print('**************************************************************\n')
 
