@@ -20,8 +20,8 @@ if __name__=="__main__":
 
     # get similarities as ditionary
     tic = time.perf_counter()
-    sim = pd.read_csv('../../data/googlenet-ssc.dat', sep=' ', names=['pair', 'value'], engine='python')
-    #sim = pd.read_csv('./chem_react_test.dat', sep=' ', names=['pair', 'pair_b', 'value'], engine='python')
+    #sim = pd.read_csv('../../data/googlenet-ssc.dat', sep=' ', names=['pair', 'value'], engine='python')
+    sim = pd.read_csv('../../data/googlenet-ssc.dat', sep=' ', names=['pair', 'pair_b', 'value'], engine='python')
     sim['pair'] = sim.pair + '-' + sim.pair_b
     sim = dict(zip(sim.pair, sim.value))
     toc = time.perf_counter()
