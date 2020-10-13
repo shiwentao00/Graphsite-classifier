@@ -34,12 +34,15 @@ def get_args():
 def accumulate_sim(combs):
     """Accumulate similarities by traversing through the combinations"""
     accum = 0
+    num_comb = 0
     for comb in combs:
         if '{}-{}'.format(comb[0], comb[1]) in sim:
             accum += sim['{}-{}'.format(comb[0], comb[1])]
+            num_comb += 1
         elif '{}-{}'.format(comb[1], comb[0]) in sim:
             accum += sim['{}-{}'.format(comb[1], comb[0])]
-    return accum
+            num_comb += 1
+    return accum, num_comb
 
 if __name__ == "__main__":
     args = get_args()
@@ -69,17 +72,20 @@ if __name__ == "__main__":
 
         # combinations of all pockets in this cluster
         combs = list(combinations(cluster, 2))
-        num_comb = len(combs)
-        print('number of combinations: ', num_comb)
+        #num_comb = len(combs)
+        #print('number of combinations: ', num_comb)
 
         cluster_similarity = 0
+        num_comb = 0 # include valid combinations only
         for comb in tqdm(combs):
             if '{}-{}'.format(comb[0], comb[1]) in sim:
                 cluster_similarity += sim['{}-{}'.format(comb[0], comb[1])]
+                num_comb += 1
             elif '{}-{}'.format(comb[1], comb[0]) in sim:
                 cluster_similarity += sim['{}-{}'.format(comb[1], comb[0])]
+                num_comb += 1
 
-        cluster_similarity = cluster_similarity/num_comb
+        cluster_similarity = cluster_similarity/float(num_comb)
 
         print('cluster similarity of cluster {}: {}'.format(cluster_num, cluster_similarity))
         print('**************************************************************\n')
