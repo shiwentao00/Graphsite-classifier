@@ -30,9 +30,9 @@ if __name__=="__main__":
 
     print(sim)
 
-    for clusters_num in range(30):
-        print('generating similarity matrix for cluster {}...'.format(clusters_num))
-        cluster = clusters[clusters_num]
+    for cluster_num in range(30):
+        print('generating similarity matrix for cluster {}...'.format(cluster_num))
+        cluster = clusters[cluster_num]
         combs = list(combinations(cluster, 2))
 
         cluster_similarity = 0
