@@ -31,7 +31,7 @@ if __name__=="__main__":
 
     # intra-cluster similarity
     for cluster_num in range(30):
-        print('generating similarity matrix for cluster {}...'.format(cluster_num))
+        print('computing intra-cluster similarity of cluster {}...'.format(cluster_num))
         cluster = clusters[cluster_num]
         combs = list(combinations(cluster, 2))
 
@@ -54,6 +54,7 @@ if __name__=="__main__":
     # inter-cluster similarity
     for a in range(30):
         for b in range(cluster_a + 1, 30):
+            print('computing inter-cluster similarity of cluster {} and {}...'.format(a, b))
             cluster_a = clusters[a]
             cluster_b = clusters[b]
             combs = list(product(cluster_a, cluster_b))
