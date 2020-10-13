@@ -53,7 +53,7 @@ if __name__=="__main__":
 
     # inter-cluster similarity
     for a in range(30):
-        for b in range(cluster_a + 1, 30):
+        for b in range(a + 1, 30):
             print('computing inter-cluster similarity of cluster {} and {}...'.format(a, b))
             cluster_a = clusters[a]
             cluster_b = clusters[b]
