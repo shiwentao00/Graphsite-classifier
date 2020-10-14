@@ -10,7 +10,6 @@ import numpy as np
 from tqdm import tqdm
     
 
-
 if __name__ == "__main__":
     cluster_file_dir = "../../data/clusters_after_remove_files_with_no_popsa.yaml"
     with open(cluster_file_dir) as file:
@@ -35,7 +34,7 @@ if __name__ == "__main__":
 
         for comb in combs:
             if ('{}-{}'.format(comb[0], comb[1]) not in sim) and ('{}-{}'.format(comb[1], comb[0]) not in sim):
-                print('{}-{}'.format(comb[0], comb[1]))
+                print('{},{}'.format(comb[0], comb[1]))
 
     # inter-cluster similarity
     for a in range(30):
@@ -46,7 +45,7 @@ if __name__ == "__main__":
             
             for comb in combs:
                 if ('{}-{}'.format(comb[0], comb[1]) not in sim) and ('{}-{}'.format(comb[1], comb[0]) not in sim):
-                    print('{}-{}'.format(comb[0], comb[1]))
+                    print('{},{}'.format(comb[0], comb[1]))
 
 
 
