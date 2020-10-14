@@ -25,12 +25,6 @@ def accumulate_sim(combs):
 
 
 if __name__ == "__main__":
-    args = get_args()
-    #cluster_num = int(args.cluster)
-    parallel = int(args.parallel)
-    chunk_size = int(args.chunk_size)
-    #chunk_size = 5
-
     cluster_file_dir = "../../data/clusters_after_remove_files_with_no_popsa.yaml"
     with open(cluster_file_dir) as file:
         clusters = yaml.full_load(file) 
@@ -39,8 +33,8 @@ if __name__ == "__main__":
     print([len(x) for x in clusters])
 
     # get similarities as ditionary
-    #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
     tic = time.perf_counter()
+    #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
     sim = pd.read_csv('../../similarity-coeff.csv', sep=' ', names=['pair', 'value'], engine='python')
     sim = dict(zip(sim.pair, sim.value))
     toc = time.perf_counter()
