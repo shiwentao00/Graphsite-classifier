@@ -1,0 +1,2328 @@
+lengths of clusters:
+[5729, 1416, 1158, 1088, 1054, 1012, 968, 906, 874, 839, 719, 715, 681, 667, 619, 602, 577, 573, 566, 548, 475, 436, 432, 422, 417, 376, 374, 372, 367, 337]
+Loaded all similarities in 699.4991 seconds
+computing intra-cluster similarity of cluster 0...
+valid number of pairs:  9237295
+cluster similarity of cluster 0: 0.0973130034783648
+**************************************************************
+
+computing intra-cluster similarity of cluster 1...
+valid number of pairs:  0
+cluster similarity of cluster 1: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 2...
+valid number of pairs:  0
+cluster similarity of cluster 2: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 3...
+valid number of pairs:  470554
+cluster similarity of cluster 3: 0.17719905365546412
+**************************************************************
+
+computing intra-cluster similarity of cluster 4...
+valid number of pairs:  551565
+cluster similarity of cluster 4: 0.14262394604009773
+**************************************************************
+
+computing intra-cluster similarity of cluster 5...
+valid number of pairs:  509594
+cluster similarity of cluster 5: 0.17497439822031774
+**************************************************************
+
+computing intra-cluster similarity of cluster 6...
+valid number of pairs:  430146
+cluster similarity of cluster 6: 0.19586029681984676
+**************************************************************
+
+computing intra-cluster similarity of cluster 7...
+valid number of pairs:  0
+cluster similarity of cluster 7: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 8...
+valid number of pairs:  0
+cluster similarity of cluster 8: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 9...
+valid number of pairs:  0
+cluster similarity of cluster 9: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 10...
+valid number of pairs:  0
+cluster similarity of cluster 10: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 11...
+valid number of pairs:  0
+cluster similarity of cluster 11: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 12...
+valid number of pairs:  0
+cluster similarity of cluster 12: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 13...
+valid number of pairs:  0
+cluster similarity of cluster 13: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 14...
+valid number of pairs:  0
+cluster similarity of cluster 14: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 15...
+valid number of pairs:  0
+cluster similarity of cluster 15: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 16...
+valid number of pairs:  0
+cluster similarity of cluster 16: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 17...
+valid number of pairs:  0
+cluster similarity of cluster 17: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 18...
+valid number of pairs:  0
+cluster similarity of cluster 18: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 19...
+valid number of pairs:  0
+cluster similarity of cluster 19: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 20...
+valid number of pairs:  0
+cluster similarity of cluster 20: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 21...
+valid number of pairs:  0
+cluster similarity of cluster 21: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 22...
+valid number of pairs:  0
+cluster similarity of cluster 22: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 23...
+valid number of pairs:  0
+cluster similarity of cluster 23: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 24...
+valid number of pairs:  0
+cluster similarity of cluster 24: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 25...
+valid number of pairs:  0
+cluster similarity of cluster 25: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 26...
+valid number of pairs:  0
+cluster similarity of cluster 26: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 27...
+valid number of pairs:  0
+cluster similarity of cluster 27: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 28...
+valid number of pairs:  0
+cluster similarity of cluster 28: 0.0
+**************************************************************
+
+computing intra-cluster similarity of cluster 29...
+valid number of pairs:  0
+cluster similarity of cluster 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 1...
+valid number of pairs:  2737137
+cluster similarity of cluster 0 and 1: 0.014423216872636152
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 2...
+valid number of pairs:  2250263
+cluster similarity of cluster 0 and 2: 0.011598575378238139
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 3...
+valid number of pairs:  4371609
+cluster similarity of cluster 0 and 3: 0.06793329474391904
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 4...
+valid number of pairs:  5868368
+cluster similarity of cluster 0 and 4: 0.07136286157549884
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 5...
+valid number of pairs:  5633738
+cluster similarity of cluster 0 and 5: 0.04992673431156263
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 6...
+valid number of pairs:  4500174
+cluster similarity of cluster 0 and 6: 0.025362113193850025
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 7...
+valid number of pairs:  1736214
+cluster similarity of cluster 0 and 7: 0.009399896232974287
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 8...
+valid number of pairs:  1696992
+cluster similarity of cluster 0 and 8: 0.022218612758641013
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 9...
+valid number of pairs:  1626165
+cluster similarity of cluster 0 and 9: 0.04504918933868594
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 10...
+valid number of pairs:  1394486
+cluster similarity of cluster 0 and 10: 0.01582081914450923
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 11...
+valid number of pairs:  1379798
+cluster similarity of cluster 0 and 11: 0.014787254393344822
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 12...
+valid number of pairs:  1325135
+cluster similarity of cluster 0 and 12: 0.05391968035469278
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 13...
+valid number of pairs:  1295878
+cluster similarity of cluster 0 and 13: 0.019208025242040863
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 14...
+valid number of pairs:  1193789
+cluster similarity of cluster 0 and 14: 0.017267611063043545
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 15...
+valid number of pairs:  1168044
+cluster similarity of cluster 0 and 15: 0.05577615314984939
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 16...
+valid number of pairs:  1114911
+cluster similarity of cluster 0 and 16: 0.015647983306059602
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 17...
+valid number of pairs:  1112373
+cluster similarity of cluster 0 and 17: 0.038148968065172685
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 18...
+valid number of pairs:  1100859
+cluster similarity of cluster 0 and 18: 0.034853884242788354
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 19...
+valid number of pairs:  1054891
+cluster similarity of cluster 0 and 19: 0.012082181448447433
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 20...
+valid number of pairs:  922539
+cluster similarity of cluster 0 and 20: 0.01050508823987496
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 21...
+valid number of pairs:  840582
+cluster similarity of cluster 0 and 21: 0.0072625348100193035
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 22...
+valid number of pairs:  833803
+cluster similarity of cluster 0 and 22: 0.008120093998687987
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 23...
+valid number of pairs:  818089
+cluster similarity of cluster 0 and 23: 0.027283716172547684
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 24...
+valid number of pairs:  810600
+cluster similarity of cluster 0 and 24: 0.03336221788846001
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 25...
+valid number of pairs:  729616
+cluster similarity of cluster 0 and 25: 0.05690769990678164
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 26...
+valid number of pairs:  724663
+cluster similarity of cluster 0 and 26: 0.023019965500587384
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 27...
+valid number of pairs:  720343
+cluster similarity of cluster 0 and 27: 0.016633285754230325
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 28...
+valid number of pairs:  711301
+cluster similarity of cluster 0 and 28: 0.01871973747980718
+**************************************************************
+
+computing inter-cluster similarity of cluster 0 and 29...
+valid number of pairs:  652170
+cluster similarity of cluster 0 and 29: 0.03192368153487727
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 2...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 2: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 3...
+valid number of pairs:  842277
+cluster similarity of cluster 1 and 3: 0.040314470001416934
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 4...
+valid number of pairs:  1413322
+cluster similarity of cluster 1 and 4: 0.06465605669546104
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 5...
+valid number of pairs:  1378839
+cluster similarity of cluster 1 and 5: 0.11779433241791802
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 6...
+valid number of pairs:  982792
+cluster similarity of cluster 1 and 6: 0.02928517941353212
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 7...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 7: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 8...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 8: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 9...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 9: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 10...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 10: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 11...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 11: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 1 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 1 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 3...
+valid number of pairs:  690054
+cluster similarity of cluster 2 and 3: 0.03544784126408509
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 4...
+valid number of pairs:  1166324
+cluster similarity of cluster 2 and 4: 0.07826469113467519
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 5...
+valid number of pairs:  1128493
+cluster similarity of cluster 2 and 5: 0.0662928408322472
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 6...
+valid number of pairs:  808166
+cluster similarity of cluster 2 and 6: 0.14492189351123186
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 7...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 7: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 8...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 8: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 9...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 9: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 10...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 10: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 11...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 11: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 2 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 2 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 4...
+valid number of pairs:  1123615
+cluster similarity of cluster 3 and 4: 0.10102566291578606
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 5...
+valid number of pairs:  1082551
+cluster similarity of cluster 3 and 5: 0.08545746265401011
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 6...
+valid number of pairs:  919141
+cluster similarity of cluster 3 and 6: 0.06023616386116333
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 7...
+valid number of pairs:  527512
+cluster similarity of cluster 3 and 7: 0.02688733910370181
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 8...
+valid number of pairs:  525513
+cluster similarity of cluster 3 and 8: 0.07615941327902315
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 9...
+valid number of pairs:  502194
+cluster similarity of cluster 3 and 9: 0.059098405840283474
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 10...
+valid number of pairs:  426889
+cluster similarity of cluster 3 and 10: 0.04091621328645851
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 11...
+valid number of pairs:  424811
+cluster similarity of cluster 3 and 11: 0.03939631581655979
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 12...
+valid number of pairs:  404921
+cluster similarity of cluster 3 and 12: 0.05225067752872544
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 13...
+valid number of pairs:  397905
+cluster similarity of cluster 3 and 13: 0.08925213725856179
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 14...
+valid number of pairs:  371991
+cluster similarity of cluster 3 and 14: 0.04338325275589181
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 15...
+valid number of pairs:  360838
+cluster similarity of cluster 3 and 15: 0.07002267258647654
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 16...
+valid number of pairs:  345021
+cluster similarity of cluster 3 and 16: 0.03844279966104307
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 17...
+valid number of pairs:  342006
+cluster similarity of cluster 3 and 17: 0.028442397148649292
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 18...
+valid number of pairs:  337639
+cluster similarity of cluster 3 and 18: 0.07307984144407438
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 19...
+valid number of pairs:  325509
+cluster similarity of cluster 3 and 19: 0.03719949045996453
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 20...
+valid number of pairs:  284069
+cluster similarity of cluster 3 and 20: 0.02883897832817677
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 21...
+valid number of pairs:  260749
+cluster similarity of cluster 3 and 21: 0.026143279057609506
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 22...
+valid number of pairs:  256408
+cluster similarity of cluster 3 and 22: 0.02730616617306826
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 23...
+valid number of pairs:  253152
+cluster similarity of cluster 3 and 23: 0.06699205464177063
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 24...
+valid number of pairs:  250507
+cluster similarity of cluster 3 and 24: 0.048944846328820374
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 25...
+valid number of pairs:  226840
+cluster similarity of cluster 3 and 25: 0.07166837941958992
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 26...
+valid number of pairs:  225370
+cluster similarity of cluster 3 and 26: 0.05018779981913479
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 27...
+valid number of pairs:  220901
+cluster similarity of cluster 3 and 27: 0.0721903092386205
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 28...
+valid number of pairs:  220927
+cluster similarity of cluster 3 and 28: 0.042926878806710055
+**************************************************************
+
+computing inter-cluster similarity of cluster 3 and 29...
+valid number of pairs:  201014
+cluster similarity of cluster 3 and 29: 0.03830870625327815
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 5...
+valid number of pairs:  1053982
+cluster similarity of cluster 4 and 5: 0.07618195037159087
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 6...
+valid number of pairs:  1004776
+cluster similarity of cluster 4 and 6: 0.06145454447438732
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 7...
+valid number of pairs:  863205
+cluster similarity of cluster 4 and 7: 0.04939204481193153
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 8...
+valid number of pairs:  880053
+cluster similarity of cluster 4 and 8: 0.07503079366383568
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 9...
+valid number of pairs:  847487
+cluster similarity of cluster 4 and 9: 0.08112033617319955
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 10...
+valid number of pairs:  715057
+cluster similarity of cluster 4 and 10: 0.06621363611169272
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 11...
+valid number of pairs:  714733
+cluster similarity of cluster 4 and 11: 0.06264832605722064
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 12...
+valid number of pairs:  685654
+cluster similarity of cluster 4 and 12: 0.08486911897057194
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 13...
+valid number of pairs:  674588
+cluster similarity of cluster 4 and 13: 0.07274014890087573
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 14...
+valid number of pairs:  619595
+cluster similarity of cluster 4 and 14: 0.07311278367200698
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 15...
+valid number of pairs:  602850
+cluster similarity of cluster 4 and 15: 0.07394534663077856
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 16...
+valid number of pairs:  576087
+cluster similarity of cluster 4 and 16: 0.055645087296426914
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 17...
+valid number of pairs:  578948
+cluster similarity of cluster 4 and 17: 0.04796253779336569
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 18...
+valid number of pairs:  570992
+cluster similarity of cluster 4 and 18: 0.09952521439440125
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 19...
+valid number of pairs:  543980
+cluster similarity of cluster 4 and 19: 0.06757464957963687
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 20...
+valid number of pairs:  474411
+cluster similarity of cluster 4 and 20: 0.06617582542695497
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 21...
+valid number of pairs:  431086
+cluster similarity of cluster 4 and 21: 0.042276049736252326
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 22...
+valid number of pairs:  423465
+cluster similarity of cluster 4 and 22: 0.03950403665049886
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 23...
+valid number of pairs:  425179
+cluster similarity of cluster 4 and 23: 0.12167362653665409
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 24...
+valid number of pairs:  420848
+cluster similarity of cluster 4 and 24: 0.09351137382314162
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 25...
+valid number of pairs:  376422
+cluster similarity of cluster 4 and 25: 0.08071446667205624
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 26...
+valid number of pairs:  377655
+cluster similarity of cluster 4 and 26: 0.06510185795900542
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 27...
+valid number of pairs:  376045
+cluster similarity of cluster 4 and 27: 0.07081021097305006
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 28...
+valid number of pairs:  365858
+cluster similarity of cluster 4 and 28: 0.06542624179851099
+**************************************************************
+
+computing inter-cluster similarity of cluster 4 and 29...
+valid number of pairs:  337768
+cluster similarity of cluster 4 and 29: 0.051649626405566904
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 6...
+valid number of pairs:  973221
+cluster similarity of cluster 5 and 6: 0.04746850908926389
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 7...
+valid number of pairs:  885650
+cluster similarity of cluster 5 and 7: 0.07664888119600743
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 8...
+valid number of pairs:  853789
+cluster similarity of cluster 5 and 8: 0.08969632940182877
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 9...
+valid number of pairs:  816800
+cluster similarity of cluster 5 and 9: 0.05699825220121238
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 10...
+valid number of pairs:  701172
+cluster similarity of cluster 5 and 10: 0.10228763186679185
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 11...
+valid number of pairs:  693010
+cluster similarity of cluster 5 and 11: 0.1506013930732704
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 12...
+valid number of pairs:  669651
+cluster similarity of cluster 5 and 12: 0.06080911296453777
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 13...
+valid number of pairs:  655276
+cluster similarity of cluster 5 and 13: 0.06575154813897134
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 14...
+valid number of pairs:  604519
+cluster similarity of cluster 5 and 14: 0.10133645367065143
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 15...
+valid number of pairs:  584038
+cluster similarity of cluster 5 and 15: 0.08781256976085759
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 16...
+valid number of pairs:  565498
+cluster similarity of cluster 5 and 16: 0.09226023592108905
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 17...
+valid number of pairs:  562411
+cluster similarity of cluster 5 and 17: 0.07433615635065327
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 18...
+valid number of pairs:  557236
+cluster similarity of cluster 5 and 18: 0.07010201783544322
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 19...
+valid number of pairs:  536643
+cluster similarity of cluster 5 and 19: 0.09692674403506933
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 20...
+valid number of pairs:  465264
+cluster similarity of cluster 5 and 20: 0.0554890472228193
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 21...
+valid number of pairs:  425031
+cluster similarity of cluster 5 and 21: 0.10167563775971909
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 22...
+valid number of pairs:  422224
+cluster similarity of cluster 5 and 22: 0.1256517278765848
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 23...
+valid number of pairs:  411317
+cluster similarity of cluster 5 and 23: 0.08794412312908592
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 24...
+valid number of pairs:  408596
+cluster similarity of cluster 5 and 24: 0.08076565624971706
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 25...
+valid number of pairs:  365159
+cluster similarity of cluster 5 and 25: 0.07093532135650332
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 26...
+valid number of pairs:  364619
+cluster similarity of cluster 5 and 26: 0.07954152047095188
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 27...
+valid number of pairs:  362290
+cluster similarity of cluster 5 and 27: 0.0733201129457405
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 28...
+valid number of pairs:  358452
+cluster similarity of cluster 5 and 28: 0.09756132136435584
+**************************************************************
+
+computing inter-cluster similarity of cluster 5 and 29...
+valid number of pairs:  332071
+cluster similarity of cluster 5 and 29: 0.098841463271625
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 7...
+valid number of pairs:  630783
+cluster similarity of cluster 6 and 7: 0.044972850874782574
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 8...
+valid number of pairs:  606706
+cluster similarity of cluster 6 and 8: 0.03066036036462356
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 9...
+valid number of pairs:  582747
+cluster similarity of cluster 6 and 9: 0.0317987322570081
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 10...
+valid number of pairs:  503534
+cluster similarity of cluster 6 and 10: 0.03038946999391336
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 11...
+valid number of pairs:  498201
+cluster similarity of cluster 6 and 11: 0.0320368491013182
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 12...
+valid number of pairs:  473406
+cluster similarity of cluster 6 and 12: 0.02286142006772335
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 13...
+valid number of pairs:  463753
+cluster similarity of cluster 6 and 13: 0.030499955084443447
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 14...
+valid number of pairs:  428059
+cluster similarity of cluster 6 and 14: 0.03854085001136119
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 15...
+valid number of pairs:  416795
+cluster similarity of cluster 6 and 15: 0.027401657011068208
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 16...
+valid number of pairs:  401110
+cluster similarity of cluster 6 and 16: 0.024867372917770518
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 17...
+valid number of pairs:  397569
+cluster similarity of cluster 6 and 17: 0.016994879783078513
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 18...
+valid number of pairs:  392417
+cluster similarity of cluster 6 and 18: 0.04874903264899828
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 19...
+valid number of pairs:  380480
+cluster similarity of cluster 6 and 19: 0.04216337206671334
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 20...
+valid number of pairs:  328565
+cluster similarity of cluster 6 and 20: 0.015509140930843681
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 21...
+valid number of pairs:  300898
+cluster similarity of cluster 6 and 21: 0.049902748028651446
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 22...
+valid number of pairs:  298755
+cluster similarity of cluster 6 and 22: 0.023494301442456393
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 23...
+valid number of pairs:  290986
+cluster similarity of cluster 6 and 23: 0.046983632642670095
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 24...
+valid number of pairs:  291382
+cluster similarity of cluster 6 and 24: 0.03411772152526336
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 25...
+valid number of pairs:  260716
+cluster similarity of cluster 6 and 25: 0.0342966524529667
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 26...
+valid number of pairs:  260657
+cluster similarity of cluster 6 and 26: 0.019105744796040068
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 27...
+valid number of pairs:  258819
+cluster similarity of cluster 6 and 27: 0.025328870634496792
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 28...
+valid number of pairs:  254835
+cluster similarity of cluster 6 and 28: 0.02722536424438076
+**************************************************************
+
+computing inter-cluster similarity of cluster 6 and 29...
+valid number of pairs:  234739
+cluster similarity of cluster 6 and 29: 0.023251403977733252
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 8...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 8: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 9...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 9: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 10...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 10: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 11...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 11: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 7 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 7 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 9...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 9: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 10...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 10: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 11...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 11: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 8 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 8 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 10...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 10: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 11...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 11: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 9 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 9 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 11...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 11: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 10 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 10 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 12...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 12: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 11 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 11 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 13...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 13: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 12 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 12 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 14...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 14: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 13 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 13 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 15...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 15: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 14 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 14 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 16...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 16: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 15 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 15 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 17...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 17: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 16 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 16 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 18...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 18: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 17 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 17 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 19...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 19: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 18 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 18 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 20...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 20: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 19 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 19 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 21...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 21: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 20 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 20 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 22...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 22: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 21 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 21 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 23...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 23: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 22 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 22 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 23 and 24...
+valid number of pairs:  0
+cluster similarity of cluster 23 and 24: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 23 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 23 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 23 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 23 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 23 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 23 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 23 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 23 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 23 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 23 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 24 and 25...
+valid number of pairs:  0
+cluster similarity of cluster 24 and 25: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 24 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 24 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 24 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 24 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 24 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 24 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 24 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 24 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 25 and 26...
+valid number of pairs:  0
+cluster similarity of cluster 25 and 26: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 25 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 25 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 25 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 25 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 25 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 25 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 26 and 27...
+valid number of pairs:  0
+cluster similarity of cluster 26 and 27: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 26 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 26 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 26 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 26 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 27 and 28...
+valid number of pairs:  0
+cluster similarity of cluster 27 and 28: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 27 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 27 and 29: 0.0
+**************************************************************
+
+computing inter-cluster similarity of cluster 28 and 29...
+valid number of pairs:  0
+cluster similarity of cluster 28 and 29: 0.0
+**************************************************************
+
