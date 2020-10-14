@@ -1,34 +1,13 @@
 """
 Read the similarity file and 
 """
-import argparse
+#import argparse
 import yaml
-from itertools import combinations 
+from itertools import combinations, product 
 import pandas as pd
-from multiprocessing import Pool
 import time
+import numpy as np
 from tqdm import tqdm
-
-
-def get_args():
-    parser = argparse.ArgumentParser('python')              
-
-    parser.add_argument('-cluster',
-                        required=True,
-                        type=int,
-                        help='which cluster (0 to 29) to compute intra-similarity.')     
-
-    parser.add_argument('-parallel',
-                        default=20,
-                        type=int,
-                        help='how many processes to compute in parallel.')     
-
-    parser.add_argument('-chunk_size',
-                        default=50000,
-                        type=int,
-                        help='how many processes to compute in parallel.')   
-
-    return parser.parse_args()
     
 
 def accumulate_sim(combs):
@@ -43,6 +22,7 @@ def accumulate_sim(combs):
             accum += sim['{}-{}'.format(comb[1], comb[0])]
             num_comb += 1
     return accum, num_comb
+
 
 if __name__ == "__main__":
     args = get_args()
@@ -66,14 +46,14 @@ if __name__ == "__main__":
     toc = time.perf_counter()
     print(f"Loaded all similarities in {toc - tic:0.4f} seconds")
 
-    for cluster_num in range(0, 30):
-        print('processing cluster {}...'.format(cluster_num))
-        cluster = clusters[cluster_num]
+    # numpy array for similarities
+    similarity_mat = np.empty([30, 30])
 
-        # combinations of all pockets in this cluster
+    # intra-cluster similarity
+    for cluster_num in range(30):
+        print('computing intra-cluster similarity of cluster {}...'.format(cluster_num))
+        cluster = clusters[cluster_num]
         combs = list(combinations(cluster, 2))
-        #num_comb = len(combs)
-        #print('number of combinations: ', num_comb)
 
         cluster_similarity = 0
         num_comb = 0 # include valid combinations only
@@ -86,24 +66,36 @@ if __name__ == "__main__":
                 num_comb += 1
 
         print('valid number of pairs: ', num_comb)
-        cluster_similarity = cluster_similarity/float(num_comb+0.000000000000000001)
-
+        cluster_similarity = cluster_similarity/float(len(combs)+0.000000000000000001)
         print('cluster similarity of cluster {}: {}'.format(cluster_num, cluster_similarity))
+        similarity_mat[cluster_num][cluster_num] = cluster_similarity
         print('**************************************************************\n')
 
-        """
-        # divide the combination list into list of lists
-        comb_chunks = [comb[x:x+chunk_size] for x in range(0, num_comb, chunk_size)]
-        print('length of chunks: ')
-        print([len(x) for x in comb_chunks])
+    # inter-cluster similarity
+    for a in range(30):
+        for b in range(a + 1, 30):
+            print('computing inter-cluster similarity of cluster {} and {}...'.format(a, b))
+            cluster_a = clusters[a]
+            cluster_b = clusters[b]
+            combs = list(product(cluster_a, cluster_b))
+            
+            cluster_similarity = 0
+            num_comb = 0 # include valid combinations only
+            for comb in combs:
+                if '{}-{}'.format(comb[0], comb[1]) in sim:
+                    cluster_similarity += sim['{}-{}'.format(comb[0], comb[1])]
+                    num_comb += 1
+                elif '{}-{}'.format(comb[1], comb[0]) in sim:
+                    cluster_similarity += sim['{}-{}'.format(comb[1], comb[0])]
+                    num_comb += 1
 
-        # use multiprocessing to process chunks in parallel
-        with Pool(processes=parallel) as pool:
-            result = pool.map(accumulate_sim, comb_chunks)
+            print('valid number of pairs: ', num_comb)
+            cluster_similarity = cluster_similarity/float(len(combs)+0.000000000000000001)
+            print('cluster similarity of cluster {} and {}: {}'.format(a, b, cluster_similarity))
+            similarity_mat[a][b] = cluster_similarity
+            similarity_mat[b][a] = cluster_similarity
+            print('**************************************************************\n')  
 
-        # sum up the similarites of each process, and average
-        cluster_similarity = sum(result)
-        """
-
-    
+    # save the matrix to plot a heatmap
+    np.save('./cluster_similarity_matrix.npy', similarity_mat)     
 
