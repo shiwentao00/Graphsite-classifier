@@ -33,12 +33,24 @@ if __name__ == "__main__":
     print([len(x) for x in clusters])
 
     # get similarities as ditionary
+    print('loading similarity file 1...')
     tic = time.perf_counter()
     #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
-    sim = pd.read_csv('../../similarity-coeff.csv', sep=' ', names=['pair', 'value'], engine='python')
+    sim = pd.read_csv('../../similarity/similarity-coeff.csv', sep=' ', names=['pair', 'value'], engine='python')
     sim = dict(zip(sim.pair, sim.value))
     toc = time.perf_counter()
-    print(f"Loaded all similarities in {toc - tic:0.4f} seconds")
+    print(f"Loaded in {toc - tic:0.4f} seconds")
+
+    print('loading similarity file 2...')
+    tic = time.perf_counter()
+    #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
+    sim_missing = pd.read_csv('../../similarity/missing_pairs_score.txt ', sep=' ', names=['pair', 'value'], engine='python')
+    sim_missing = dict(zip(sim_missing.pair, sim_missing.value))
+    toc = time.perf_counter()
+    print(f"Loaded in {toc - tic:0.4f} seconds")
+
+    # combine two dictionaries.
+    sim.update(sim_missing)
 
     # numpy array for similarities
     similarity_mat = np.empty([30, 30])
