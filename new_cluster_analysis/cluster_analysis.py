@@ -44,7 +44,7 @@ if __name__ == "__main__":
     print('loading similarity file 2...')
     tic = time.perf_counter()
     #sim = pd.read_csv('./test.csv', sep=' ', names=['pair', 'value'], engine='python')
-    sim_missing = pd.read_csv('../../similarity/missing_pairs_score.txt ', sep=' ', names=['pair', 'value'], engine='python')
+    sim_missing = pd.read_csv('../../similarity/missing_pairs_score.txt', sep=' ', names=['pair', 'value'], engine='python')
     sim_missing = dict(zip(sim_missing.pair, sim_missing.value))
     toc = time.perf_counter()
     print(f"Loaded in {toc - tic:0.4f} seconds")
