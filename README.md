@@ -42,7 +42,7 @@ Manually identified clusters:
 | 27 | glucopyranose |
 | 28 | Tartaric acid, tetraglycine phosphinate, 1,3 dihydroxyacetone phosphate |
 | 29 | glycerol-1-phosphate, dihydroxyacetone phosphate, glycerolaldehyde 3 phosphate etc. |
-| 30 | octyl beta-D-glucopyranose, 2 aceto amido-2-deoxy beta-D glucopyranose |
+<!--| 30 | octyl beta-D-glucopyranose, 2 aceto amido-2-deoxy beta-D glucopyranose |-->
 
 Current grouping of classes:   
 
@@ -51,7 +51,7 @@ Current grouping of classes:
 | 0 | 0, 9, 12, 25 | ATP |
 | 1 | 1, 5, 11, 22 | glycol and ether |
 | 2 | 2 | heme |
-| 3 | 3, 8, 13 | carbonhydrate |
+| 3 | 3, 8, 13, 27 | carbonhydrate |
 | 4 | 4 | benzene ring |
 | 5 | 6 | chlorophyll |   
 | 6 | 7, 19, 21 | lipid |
@@ -63,9 +63,13 @@ Current grouping of classes:
 | 12 | 23 | benzoic acid 2 |
 | 13 | 24 | FMN |
 | 14 | 26 | morpholine ring |
-| 15 | 27, 30 | glucopyranose |
-| 16 | 28 | Tartaric acid |
-| 17 | 29 |phosphate |
+| 15 | 28 | Tartaric acid |   
+| 16 | 29 | phosphate |   
+
+<!--| 15 | 27, 30 | glucopyranose |-->
+
+
+
 
 
 
