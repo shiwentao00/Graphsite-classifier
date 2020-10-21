@@ -59,12 +59,11 @@ Current grouping of classes:
 | 8 | 15 | S-adenosyl-L-homocysteine |
 | 9 | 17 | coenzymeA |
 | 10 | 18 | pyridoxal phosphate |   
-| 11 | 20 | benzoic acid 1 |
-| 12 | 23 | benzoic acid 2 |
-| 13 | 24 | FMN |
-| 14 | 26 | morpholine ring |
-| 15 | 28 | Tartaric acid |   
-| 16 | 29 | phosphate |   
+| 11 | 20, 23 | benzoic acid |
+| 12 | 24 | FMN |
+| 13 | 26 | morpholine ring |
+| 14 | 28 | Tartaric acid |   
+| 15 | 29 | phosphate |   
 
 <!--| 15 | 27, 30 | glucopyranose |-->
 
