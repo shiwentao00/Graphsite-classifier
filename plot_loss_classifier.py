@@ -32,8 +32,8 @@ def plot_loss(train_loss, train_acc, val_loss, val_acc, loss_dir, time):
     max_val_acc = np.max(val_acc)
     pos = np.nonzero(val_acc == max_val_acc)[0]
     max_val_acc = val_acc[pos[0]]
-    plt.axvline(x=pos, linewidth=2, color='grey', linestyle='--')
-    plt.text(pos+0.5, max_val_acc+0.05, 'val acc: ' + str(max_val_acc)[0:6])
+    plt.axvline(x=pos[0], linewidth=2, color='grey', linestyle='--')
+    plt.text(pos[0]+0.5, max_val_acc+0.05, 'val acc: ' + str(max_val_acc)[0:6])
 
     # plot train and validation curve
     train_loss = np.array(train_loss)
