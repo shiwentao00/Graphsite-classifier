@@ -55,16 +55,16 @@ Current grouping of classes:
 | 4 | 4 | benzene ring |
 | 5 | 6 | chlorophyll |   
 | 6 | 7, 19, 21 | lipid |
-| 7 | 10, 16 | essential amino/citric acids |   
+| 7 | 10, 16, 28 | essential amino/citric acids/ tartaric acid |   
 | 8 | 15 | S-adenosyl-L-homocysteine |
 | 9 | 17 | coenzymeA |
 | 10 | 18 | pyridoxal phosphate |   
 | 11 | 20, 23 | benzoic acid |
-| 12 | 24 | FMN |
+| 12 | 24 | flavin mononucleotide |
 | 13 | 26 | morpholine ring |
-| 14 | 28 | Tartaric acid |   
-| 15 | 29 | phosphate |   
+| 14 | 29 | phosphate |   
 
+<!--| 14 | 28 | Tartaric acid |-->   
 <!--| 15 | 27, 30 | glucopyranose |-->
 
 
