@@ -1,5 +1,5 @@
 ---
- run: 23 # id for the training
+ run: 24 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration
@@ -17,7 +17,7 @@
 
  # model configuration 
  which_model: 'jk' # 'jk', 'residual', 'pna' or 'normal'
- model_size: 96 # size of the neural network
+ model_size: 80 # size of the neural network
  num_layers: 5
 
  # loss configuration
@@ -32,7 +32,7 @@
  lr_decay_epoch: [100, 170]
  batch_size: 256
  learning_rate: 0.003
- weight_decay: 0.0005
+ weight_decay: 0.0007
 
 
 
