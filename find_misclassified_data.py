@@ -35,7 +35,7 @@ class PocketDatasetwithName(PocketDataset):
 
 if __name__ == "__main__":
     # which experiment
-    run = 23
+    run = 25
 
     # hardware to use
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     # load the model
     which_model = 'jk'
     model_size = 96
-    num_layers = 5
+    num_layers = 6
     assert which_model in ['jk', 'residual', 'normal', 'pna']
 
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=model_size, 
@@ -100,8 +100,6 @@ if __name__ == "__main__":
     labels = [] # all the labels for the epoch
     names = []
     for data in tqdm(testloader):
-        #print(data.name)
-
         data = data.to(device)
         output = model(data.x, data.edge_index, data.edge_attr, data.batch)
         pred = output.max(dim=1)[1]
@@ -120,17 +118,24 @@ if __name__ == "__main__":
     
     morpholine_ring_as_atp = []
     morpholine_ring_as_carbonhydrate = []
+    morpholine_ring_as_essential_amino_acid = []
     for name, label, pred in zip(names, labels, preds):
         if label == 12 and pred == 0:
             morpholine_ring_as_atp.append(name)
         elif label == 12 and pred == 2:
             morpholine_ring_as_carbonhydrate.append(name)
-    
+        elif label == 12 and pred == 6:
+            morpholine_ring_as_essential_amino_acid.append(name)
+
     print('morpholine ring misclassified as ATP:')
     for x in morpholine_ring_as_atp:
         print(x)
 
-    print('morpholine ring misclassified as Carbonhydrate:')
+    print('morpholine ring misclassified as carbonhydrate:')
     for x in morpholine_ring_as_carbonhydrate:
+        print(x)
+
+    print('morpholine ring misclassified as essential amino acid:')
+    for x in morpholine_ring_as_essential_amino_acid:
         print(x)
             
