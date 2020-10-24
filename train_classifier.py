@@ -161,8 +161,8 @@ if __name__=="__main__":
         config = yaml.load(f, Loader=yaml.FullLoader)  
 
     seed = config['seed']
-    random.seed(666) 
-    print('seed: ', 666)
+    random.seed(seed) 
+    print('seed: ', seed)
 
     run = config['run']
     cluster_file_dir = config['cluster_file_dir']
