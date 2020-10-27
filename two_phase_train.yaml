@@ -1,5 +1,5 @@
 ---
- run: 67 # id for the training
+ run: 68 # id for the training
  
  seed: 666 # seed for the random module
 
@@ -15,7 +15,8 @@
  train_pos_th: 14000 # threshold of number of positive train pairs for each class
  train_neg_th: 3000 # threshold of number of negative train pairs for each combination
  cluster_sample_th: 1000 # threshold of number of pockets sampled in a class for hard pair training 
- features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
+ #features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
+ features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # phase 1 train by pair configuration
  pair_num_epoch: 40
@@ -29,7 +30,8 @@
  dissimilar_margin: 2.0 # for contrastive loss
 
  which_model: 'jk' # 'jk', 'residual' or 'normal'
- model_size: 80 # size of the neural network
+ model_size: 96 # size of the neural network
+ num_layers: 7
 
  # train selectively configuration
  selective_num_epoch: 120
