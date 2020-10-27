@@ -10,7 +10,7 @@ import os
 import torch
 from dataloader import read_cluster_file_from_yaml
 from dataloader import merge_clusters
-from dataloader import divide_clusters, gen_pairs
+from dataloader import divide_clusters_train_test, gen_pairs
 from dataloader import dataloader_gen, pocket_loader_gen
 from model import SiameseNet, ContrastiveLoss
 
@@ -121,7 +121,7 @@ def validate_by_knn_acc():
     train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
 
     # embeddings of validation pockets
-    val_embedding, val_label, _ = compute_embeddings(val_loader, model, device, normalize=True)
+    val_embedding, val_label, _ = compute_embeddings(test_loader, model, device, normalize=True)
 
     # knn model
     knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
@@ -142,21 +142,16 @@ def test_by_knn():
     knn.fit(train_embedding, train_label)
 
     train_prediction = knn.predict(train_embedding)
-    val_prediction = knn.predict(val_embedding)
     test_prediction = knn.predict(test_embedding)
     train_acc = metrics.accuracy_score(train_label, train_prediction)
-    val_acc = metrics.accuracy_score(val_label, val_prediction)
     test_acc = metrics.accuracy_score(test_label, test_prediction)
     print('train accuracy: {}, validation accuracy: {}, test accuracy: {}'.format(train_acc, val_acc, test_acc))
 
     train_report = metrics.classification_report(train_label, train_prediction, digits=4)
-    val_report = metrics.classification_report(val_label, val_prediction, digits=4)
     test_report = metrics.classification_report(test_label, test_prediction, digits=4)
 
     print('train report:')
     print(train_report)
-    print('validation report:')
-    print(val_report)
     print('test report: ')
     print(test_report)
     
@@ -217,17 +212,13 @@ if __name__ == "__main__":
     print('number of classes after merging: ', num_classes)    
 
     # divide the clusters into train, validation and test
-    train_clusters, val_clusters, test_clusters = divide_clusters(clusters)
+    train_clusters, test_clusters = divide_clusters_train_test(clusters)
     num_train_pockets = sum([len(x) for x in train_clusters])
-    num_val_pockets = sum([len(x) for x in val_clusters])
     num_test_pockets = sum([len(x) for x in test_clusters])
     print('number of pockets in training set: ', num_train_pockets)
-    print('number of pockets in validation set: ', num_val_pockets)
     print('number of pockets in test set: ', num_test_pockets)
     print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
     print(train_clusters[0][0:5])
-    print('first 5 pockets in val set of cluster 0 before merging (to verify reproducibility):')
-    print(val_clusters[0][0:5])
     print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
     print(test_clusters[0][0:5])
 
@@ -264,7 +255,7 @@ if __name__ == "__main__":
     print('number of hardest negative pairs for each mini-batch: ', num_hard_neg_pairs)
 
     # train dataloader for validation of phase 1
-    train_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
+    train_loader, _, _ = pocket_loader_gen(pocket_dir=pocket_dir,
                                              pop_dir=pop_dir,
                                              clusters=train_clusters,
                                              features_to_use=features_to_use,
@@ -272,17 +263,8 @@ if __name__ == "__main__":
                                              shuffle=False,
                                              num_workers=num_workers)
 
-    # validation dataloader for both phase 1 and phase 2
-    val_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
-                                             pop_dir=pop_dir,
-                                             clusters=val_clusters,
-                                             features_to_use=features_to_use,
-                                             batch_size=num_workers,
-                                             shuffle=False,
-                                             num_workers=num_workers)
-
-    # test dataloader for knn after phase 1 & 2 finished
-    test_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
+    # test dataloader for knn for phase 1 & 2
+    test_loader, _, _ = pocket_loader_gen(pocket_dir=pocket_dir,
                                                pop_dir=pop_dir,
                                                clusters=test_clusters,
                                                features_to_use=features_to_use,
@@ -408,9 +390,6 @@ if __name__ == "__main__":
 
     # embeddings of train pockets
     train_embedding, train_label, _ = compute_embeddings(train_loader, model, device, normalize=True)
-
-    # embeddings of validation pockets
-    val_embedding, val_label, _ = compute_embeddings(val_loader, model, device, normalize=True)
     
     # embeddings of test pockets
     test_embedding, test_label, _ = compute_embeddings(test_loader, model, device, normalize=True)
@@ -423,7 +402,7 @@ if __name__ == "__main__":
     if not os.path.exists(embedding_dir):
         os.makedirs(embedding_dir)
 
-    for which_split in ['train', 'val', 'test']:
+    for which_split in ['train', 'test']:
         print('generating embeddings for {}...'.format(which_split))
         embedding_name = which_split + '_embedding' + '.npy'
         label_name = which_split + '_label' + '.npy'
@@ -435,9 +414,6 @@ if __name__ == "__main__":
         if which_split == 'train':
             embedding = train_embedding 
             label = train_label
-        elif which_split == 'val':
-            embedding = val_embedding 
-            label = val_label
         elif which_split == 'test':
             embedding = test_embedding 
             label = test_label

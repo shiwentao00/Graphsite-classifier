@@ -530,6 +530,31 @@ def divide_clusters(clusters):
     return train_clusters, val_clusters, test_clusters
 
 
+def divide_clusters_train_test(clusters):
+    """
+    Shuffle and divide the clusters into train, validation and test
+    """
+    # shuffle the pockets in each cluster
+    [random.shuffle(x) for x in clusters] # random.shuffle happens inplace
+
+    # sizes of the clusters
+    cluster_sizes = [len(x) for x in clusters]
+    #print('total pockets:{}'.format(sum(cluster_sizes)))
+
+    # train
+    train_sizes = [int(0.8 * x) for x in cluster_sizes]
+
+    # test
+    #test_sizes = [a - b for a, b in zip(cluster_sizes, train_sizes)]
+    
+    train_clusters = []
+    test_clusters = []
+    for i in range(len(clusters)):
+        train_clusters.append(clusters[i][0:train_sizes[i]])
+        test_clusters.append(clusters[i][train_sizes[i]:])
+    return train_clusters, test_clusters
+
+
 def gen_pairs(clusters, pos_pair_th=1000, neg_pair_th=20):
     """
     Generate pairs of pockets from input clusters.
