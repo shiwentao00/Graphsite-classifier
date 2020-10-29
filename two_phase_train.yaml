@@ -1,5 +1,5 @@
 ---
- run: 68 # id for the training
+ run: 69 # id for the training
  
  seed: 666 # seed for the random module
 
@@ -13,15 +13,15 @@
  # dataset configuration
  #merge_info: [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
  #merge_info: [[0, 9, 12, 25], 2, [3, 8, 13, 27], 4, 6, [7, 19, 21], [10, 16, 28], 15, 17, 18, [20, 23], 24, 26, 29]
- merge_info: [0, 2, 3, 4, 6, 7, 8]
+ merge_info: [0, 2, 3, 4, 6, 7, 8, 9]
  train_pos_th: 9000 # threshold of number of positive train pairs for each class
- train_neg_th: 3000 # threshold of number of negative train pairs for each combination
+ train_neg_th: 2500 # threshold of number of negative train pairs for each combination
  cluster_sample_th: 1000 # threshold of number of pockets sampled in a class for hard pair training 
  #features_to_use: ['r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
  features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # phase 1 train by pair configuration
- pair_num_epoch: 40
+ pair_num_epoch: 35
  pair_lr_decay_epoch: 20
  pair_batch_size: 256
  pair_learning_rate: 0.003
@@ -36,7 +36,7 @@
  num_layers: 7
 
  # train selectively configuration
- selective_num_epoch: 120
+ selective_num_epoch: 80
  selective_lr_decay_epoch: 50
  select_hard_pair_epoch: 1
  selective_batch_size: 128

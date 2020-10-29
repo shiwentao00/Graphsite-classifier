@@ -28,7 +28,7 @@ def get_args():
                         help='which experiment.')     
 
     parser.add_argument('-which_algorithm',
-                         default='umap',
+                         default='tsne',
                          help='which algorithm to use for manifold learning.')   
 
     return parser.parse_args()
@@ -85,10 +85,12 @@ if __name__=="__main__":
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
     #merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
-    merge_info = [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
+    #merge_info = [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
+    merge_info = [0, 2, 3, 4, 6, 7, 8]
     print('how to merge clusters: ', merge_info)
     cluster_ids = [str(x) for x in merge_info] # use original cluster ids
 
+    colors = ["faded green", "dusty purple", "red", "yellow green", "midnight blue", "bright pink", "cyan"]
     #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
     #          "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", 
     #          "greyish", 'teal', 'sienna', 'pink']
@@ -103,11 +105,11 @@ if __name__=="__main__":
     #          "greyish"]
 
     # 18 colors
-    colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
-              "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish",
-              "yellow", "tomato", "navy", "turquoise", "azure"]
+    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
+    #          "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish",
+    #          "yellow", "tomato", "navy", "turquoise", "azure"]
 
-    for which_split in ['train', 'val', 'test']:
+    for which_split in ['train', 'test']:
         print('computing evaluation metrics for {}'.format(which_split))
         embedding_name = which_split + '_embedding' + '.npy'
         label_name = which_split + '_label' + '.npy'
@@ -126,17 +128,17 @@ if __name__=="__main__":
         print('shape after PCA: ', embeddings.shape)
         print('total explained variance ratio:', np.sum(pca_model.explained_variance_ratio_))
 
-        image_path = './results/run_{}/{}_{}_{}.png'.format(run, which_algorithm, which_split, run)
+        image_path = './siamese_results/run_{}/{}_{}_{}.png'.format(run, which_algorithm, which_split, run)
         print('image saved to: ', image_path)
         
         if which_algorithm == 'tsne':
             print('computing TSNE...')
-            tsne = TSNE(n_components=2, perplexity=40, learning_rate=25, n_iter=2000)
+            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=2000)
             vis_embedding = tsne.fit_transform(embeddings)
             print('KL divergence after optimizaton: ', tsne.kl_divergence_)
         elif which_algorithm == 'umap':
             print('computing UMAP...')
-            umap_inst = umap.UMAP(n_components=2, n_neighbors=100, min_dist=0.0, metric='euclidean')
+            umap_inst = umap.UMAP(n_components=2, n_neighbors=200, min_dist=1, metric='euclidean')
             vis_embedding = umap_inst.fit_transform(embeddings)
 
         visualize_embeddings(vis_embedding, labels, cluster_ids, image_path, colors)
