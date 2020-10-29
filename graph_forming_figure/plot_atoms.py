@@ -97,5 +97,5 @@ if __name__ == "__main__":
     # save figure
     ax.view_init(10, 35)
     plt.tight_layout()
-    plt.savefig('./atoms.png', bbox_inches='tight')
+    plt.savefig('./atoms.tif', bbox_inches='tight')
 
