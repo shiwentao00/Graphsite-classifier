@@ -1,4 +1,11 @@
-# Siamese-MoNet
+# MoNet   
+Ligand-binding sites are transformed to graphs for deep learning.   
+
+<p align="center">
+<img width="700" height="600" src="graph_forming_figure/atoms.png">
+</p>   
+
+
 
 ## Dataset
 The dataset has 51677 pockets clustered into 1301 clusters.    
