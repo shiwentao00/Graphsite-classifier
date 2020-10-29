@@ -350,7 +350,7 @@ if __name__ == "__main__":
             sampled_train_clusters.append(sample_from_list(cluster, cluster_sample_th))
 
         # re-generate train-loader
-        sampled_train_loader, _ = pocket_loader_gen(pocket_dir=pocket_dir,
+        sampled_train_loader, _, _ = pocket_loader_gen(pocket_dir=pocket_dir,
                                                     pop_dir=pop_dir,
                                                     clusters=sampled_train_clusters,
                                                     features_to_use=features_to_use,
