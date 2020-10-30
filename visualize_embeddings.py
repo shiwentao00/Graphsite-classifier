@@ -34,7 +34,7 @@ def get_args():
     return parser.parse_args()
 
 
-def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
+def visualize_embeddings(embeddings, labels, cluster_ids, image_path, image_path_tif, colors):
     """Visualize 2d embeddings and color them by labels.
     """
     font = {'size': 12}
@@ -71,6 +71,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
     plt.legend(bbox_to_anchor=(0.6, 1), loc=2, borderaxespad=0., frameon=False)
     plt.tight_layout()
     plt.savefig(image_path)
+    plt.savefig(image_path_tif)
 
 
 if __name__=="__main__":
@@ -133,11 +134,12 @@ if __name__=="__main__":
         print('total explained variance ratio:', np.sum(pca_model.explained_variance_ratio_))
 
         image_path = './siamese_results/run_{}/{}_{}_{}.png'.format(run, which_algorithm, which_split, run)
+        image_path_tif = './siamese_results/run_{}/{}_{}_{}.tif'.format(run, which_algorithm, which_split, run)
         print('image saved to: ', image_path)
         
         if which_algorithm == 'tsne':
             print('computing TSNE...')
-            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=1500, random_state=22479)
+            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=1500, random_state=6)
             vis_embedding = tsne.fit_transform(embeddings)
             print('KL divergence after optimizaton: ', tsne.kl_divergence_)
         elif which_algorithm == 'umap':
@@ -145,4 +147,4 @@ if __name__=="__main__":
             umap_inst = umap.UMAP(n_components=2, n_neighbors=200, min_dist=1, metric='euclidean')
             vis_embedding = umap_inst.fit_transform(embeddings)
 
-        visualize_embeddings(vis_embedding, labels, cluster_ids, image_path, colors)
+        visualize_embeddings(vis_embedding, labels, cluster_ids, image_path, image_path_tif, colors)
