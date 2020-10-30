@@ -28,7 +28,7 @@ def get_args():
                         help='which experiment.')     
 
     parser.add_argument('-which_algorithm',
-                         default='tsne',
+                         default='umap',
                          help='which algorithm to use for manifold learning.')   
 
     return parser.parse_args()
@@ -37,7 +37,7 @@ def get_args():
 def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
     """Visualize 2d embeddings and color them by labels.
     """
-    font = {'size'   : 16}
+    font = {'size': 12}
     matplotlib.rc('font', **font)   
 
     # list of the clusters/classes
@@ -55,7 +55,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
     label_list = list(np.hstack(label_list))
     cluster_id_list = [cluster_ids[x] for x in label_list]
 
-    fig = plt.figure(figsize=(14, 12))
+    fig = plt.figure(figsize=(9, 8), dpi=350)
 
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
@@ -63,10 +63,11 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
     ax = sns.scatterplot(x=embedding_list[:,0], 
                          y=embedding_list[:,1], 
                          hue=cluster_id_list, 
+                         alpha = 0.7,
                          markers='.', 
                          palette= cust_palette
                          )
-    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.legend(bbox_to_anchor=(0.5, 1), loc=2, borderaxespad=0., frameon=False)
     plt.tight_layout()
     plt.savefig(image_path)
 
@@ -86,18 +87,20 @@ if __name__=="__main__":
     #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
     #merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
     #merge_info = [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
-    merge_info = [0, 2, 3, 4, 6, 7, 8]
+    merge_info = [0, 2, 3, 4, 6, 7, 8, 9]
     print('how to merge clusters: ', merge_info)
-    cluster_ids = [str(x) for x in merge_info] # use original cluster ids
+    cluster_name_dict = {0: '0: ADP and ANP', 
+                         2: '2: heme', 
+                         3: '3: glucopyranose and fructose',
+                         4: '4: benzene ring',
+                         6: '6: chlorophyll',
+                         7: '7: lipid',
+                         8: '8: glucopyranose',
+                         9: '9: UMP and thymidine monophosphate'}
+    cluster_ids = [cluster_name_dict[x] for x in merge_info] # use original cluster ids
 
-    colors = ["faded green", "dusty purple", "red", "yellow green", "midnight blue", "bright pink", "cyan"]
-    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
-    #          "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", 
-    #          "greyish", 'teal', 'sienna', 'pink']
-    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink", "crimson", "bright orange"]
-    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", "neon green", "bright pink"]
-    #colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue",
-    #         "neon green", "bright pink", "crimson", "bright orange", "windows blue"]
+    # 8 colors
+    colors = ["faded green", "dusty purple", "red", "yellow green", "midnight blue", "bright pink", "cyan", "bright orange"]
     
     # 13 colors
     # colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
@@ -133,7 +136,7 @@ if __name__=="__main__":
         
         if which_algorithm == 'tsne':
             print('computing TSNE...')
-            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=2000)
+            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=2000, random_state=6)
             vis_embedding = tsne.fit_transform(embeddings)
             print('KL divergence after optimizaton: ', tsne.kl_divergence_)
         elif which_algorithm == 'umap':

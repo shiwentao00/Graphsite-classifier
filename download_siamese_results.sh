@@ -1,4 +1,4 @@
-run=68
+run=69
 
 mkdir ./siamese_results/run_${run}/
 
