@@ -37,7 +37,7 @@ def get_args():
 def visualize_embeddings(embeddings, labels, cluster_ids, image_path, image_path_tif, colors):
     """Visualize 2d embeddings and color them by labels.
     """
-    font = {'size': 12}
+    font = {'size': 8}
     matplotlib.rc('font', **font)   
 
     # list of the clusters/classes
@@ -55,7 +55,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, image_path
     label_list = list(np.hstack(label_list))
     cluster_id_list = [cluster_ids[x] for x in label_list]
 
-    fig = plt.figure(figsize=(9, 8), dpi=350)
+    fig = plt.figure(figsize=(5.5, 5), dpi=300)
 
     #cust_palette = sns.color_palette("RdBu_r", len(list(set(cluster_id_list))))
     cust_palette = sns.xkcd_palette(colors)
@@ -65,10 +65,10 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, image_path
                          hue=cluster_id_list, 
                          alpha = 0.8,
                          markers='.', 
-                         s=20,
+                         s=15,
                          palette= cust_palette
                          )
-    plt.legend(bbox_to_anchor=(0.6, 1), loc=2, borderaxespad=0., frameon=False)
+    plt.legend(bbox_to_anchor=(0.55, 1), loc=2, borderaxespad=0., frameon=False)
     plt.tight_layout()
     plt.savefig(image_path)
     plt.savefig(image_path_tif)
@@ -81,14 +81,6 @@ if __name__=="__main__":
     which_algorithm = args.which_algorithm
     embedding_dir = embedding_root + 'run_{}/'.format(run)
 
-    #merge_info = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    #merge_info = [[0, 9], 1, 2, [3, 8], 4, 5, 6, 7]
-    #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7]
-    #merge_info = [[0, 9], [1, 5], 2, [3, 8], 4, 6, 7, 10, 11, 12, 13]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, 10]
-    #merge_info = [[0, 9, 12], [1, 5, 11], 2, [3, 8, 13], 4, 6, 7, [10, 16], 15, 17, 18]
-    #merge_info = [[0, 9, 12], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23]
-    #merge_info = [[0, 9, 12, 25], [1, 5, 11, 22], 2, [3, 8, 13], 4, 6, [7, 19, 21], [10, 16], 15, 17, 18, 20, 23, 24, 26, [27, 30], 28, 29]
     merge_info = [0, 2, 3, 4, 6, 7, 8, 9]
     print('how to merge clusters: ', merge_info)
     cluster_name_dict = {0: '0: ADP and ANP', 
@@ -114,7 +106,7 @@ if __name__=="__main__":
     #          "neon green", "bright pink", "crimson", "bright orange", "windows blue", "amber", "greyish",
     #          "yellow", "tomato", "navy", "turquoise", "azure"]
 
-    for which_split in ['train', 'test']:
+    for which_split in ['test']:
         print('computing evaluation metrics for {}'.format(which_split))
         embedding_name = which_split + '_embedding' + '.npy'
         label_name = which_split + '_label' + '.npy'
@@ -139,7 +131,7 @@ if __name__=="__main__":
         
         if which_algorithm == 'tsne':
             print('computing TSNE...')
-            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=1500, random_state=6)
+            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=1500, random_state=8)
             vis_embedding = tsne.fit_transform(embeddings)
             print('KL divergence after optimizaton: ', tsne.kl_divergence_)
         elif which_algorithm == 'umap':
