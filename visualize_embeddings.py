@@ -63,11 +63,12 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, colors):
     ax = sns.scatterplot(x=embedding_list[:,0], 
                          y=embedding_list[:,1], 
                          hue=cluster_id_list, 
-                         alpha = 0.7,
+                         alpha = 0.8,
                          markers='.', 
+                         s=20,
                          palette= cust_palette
                          )
-    plt.legend(bbox_to_anchor=(0.5, 1), loc=2, borderaxespad=0., frameon=False)
+    plt.legend(bbox_to_anchor=(0.6, 1), loc=2, borderaxespad=0., frameon=False)
     plt.tight_layout()
     plt.savefig(image_path)
 
@@ -96,11 +97,11 @@ if __name__=="__main__":
                          6: '6: chlorophyll',
                          7: '7: lipid',
                          8: '8: glucopyranose',
-                         9: '9: UMP and thymidine monophosphate'}
+                         9: '9: UMP and TMP'}
     cluster_ids = [cluster_name_dict[x] for x in merge_info] # use original cluster ids
 
     # 8 colors
-    colors = ["faded green", "dusty purple", "red", "yellow green", "midnight blue", "bright pink", "cyan", "bright orange"]
+    colors = ["green", "midnight blue", "red", "windows blue", "grey", "orchid", "amber", "bright orange"]
     
     # 13 colors
     # colors = ["faded green", "dusty purple", "red", "cyan", "yellow green", "midnight blue", 
@@ -136,7 +137,7 @@ if __name__=="__main__":
         
         if which_algorithm == 'tsne':
             print('computing TSNE...')
-            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=2000, random_state=6)
+            tsne = TSNE(n_components=2, perplexity=40, learning_rate=200, n_iter=1500, random_state=22479)
             vis_embedding = tsne.fit_transform(embeddings)
             print('KL divergence after optimizaton: ', tsne.kl_divergence_)
         elif which_algorithm == 'umap':
