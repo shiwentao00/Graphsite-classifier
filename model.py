@@ -512,7 +512,7 @@ class SelectiveContrastiveLoss(torch.nn.Module):
 
 class MoNet(torch.nn.Module):
     """Standard classifier to solve the problem.""" 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, deg=None):
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels=None, deg=None):
         """
         train_eps: for the GINMolecularConv module only when which_model in ['jk', 'residual', 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
@@ -532,7 +532,7 @@ class MoNet(torch.nn.Module):
                 num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
         elif which_model == 'jknmm':
             self.embedding_net = JKMCNMMEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers, num_channels=num_channels)
         else:
             self.embedding_net = EmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
@@ -685,18 +685,18 @@ class JKMCNMMEmbeddingNet(torch.nn.Module):
 
     The GNN layers are now MCNMMConv layer
     """
-    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, num_channels, layer_aggregate='max'):
         super(JKMCNMMEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        self.conv0 = MCNMMConv(in_dim=num_features, out_dim=dim, num_channels=3, num_edge_attr=num_edge_attr, train_eps=train_eps)
+        self.conv0 = MCNMMConv(in_dim=num_features, out_dim=dim, num_channels=num_channels, num_edge_attr=num_edge_attr, train_eps=train_eps)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
-            exec('self.conv{} = MCNMMConv(in_dim=dim, out_dim=dim, num_channels=2, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(i))
+            exec('self.conv{} = MCNMMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(i, num_channels))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
