@@ -691,7 +691,7 @@ class JKMCNMMEmbeddingNet(torch.nn.Module):
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        self.conv0 = MCNMMConv(in_dim=num_features, out_dim=dim, num_channels=2, num_edge_attr=num_edge_attr, train_eps=train_eps)
+        self.conv0 = MCNMMConv(in_dim=num_features, out_dim=dim, num_channels=3, num_edge_attr=num_edge_attr, train_eps=train_eps)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
