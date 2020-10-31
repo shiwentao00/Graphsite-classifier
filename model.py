@@ -529,6 +529,9 @@ class MoNet(torch.nn.Module):
         elif which_model == 'pna':
             self.embedding_net = PNAEmbeddingNet(
                 num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
+        elif which_model == 'jknmm':
+            self.embedding_net = JKMCNMMEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
         else:
             self.embedding_net = EmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
@@ -599,5 +602,58 @@ class FocalLoss(torch.nn.Module):
 
     def __repr__(self):
         return '{}(gamma={}, alpha={}, reduction={})'.format(self.__class__.__name__, self.gamma, self.alpha, self.reduction)
+
+
+"""
+The model that utilizes multi-channel neural message masking.
+"""
+from mcnmm import MCNMMConv
+
+
+class JKMCNMMEmbeddingNet(torch.nn.Module):
+    """
+    Jumping knowledge embedding net inspired by the paper "Representation Learning on 
+    Graphs with Jumping Knowledge Networks".
+
+    The GNN layers are now MCNMMConv layer
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
+        super(JKMCNMMEmbeddingNet, self).__init__()
+        self.num_layers = num_layers
+        self.layer_aggregate = layer_aggregate
+
+        # first layer
+        self.conv0 = MCNMMConv(in_dim=num_features, out_dim=dim, num_channels=2, num_edge_attr=num_edge_attr, train_eps=train_eps)
+        self.bn0 = torch.nn.BatchNorm1d(dim)
+
+        # rest of the layers
+        for i in range(1, self.num_layers):
+            exec('self.conv{} = MCNMMConv(in_dim=dim, out_dim=dim, num_channels=2, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(i))
+            exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
+
+        # read out function
+        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        # GNN layers
+        layer_x = [] # jumping knowledge
+        for i in range(0, self.num_layers):
+            conv = getattr(self, 'conv{}'.format(i))
+            bn = getattr(self, 'bn{}'.format(i))
+            x = F.leaky_relu(conv(x, edge_index, edge_attr))
+            x = bn(x)
+            layer_x.append(x)
+        
+        # layer aggregation
+        if self.layer_aggregate == 'max':
+                x = torch.stack(layer_x, dim=0)
+                x = torch.max(x, dim=0)[0]
+        elif self.layer_aggregate == 'mean':
+                x = torch.stack(layer_x, dim=0)
+                x = torch.mean(x, dim=0)[0]
+
+        # graph readout
+        x = self.set2set(x, batch)
+        return x
 
 

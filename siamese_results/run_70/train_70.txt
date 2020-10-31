@@ -1,0 +1,401 @@
+seed:  666
+save trained model at:  ../trained_models/trained_model_70.pt
+save loss at:  ./siamese_results/train_results_70.json
+how to merge clusters:  [[0, 9, 12, 25], 2, [3, 8, 13, 27], 4, 6, [7, 19, 21], [10, 16, 28], 15, 17, 18, [20, 23], 24, 26, 29]
+positive training pair sampling threshold:  9000
+negative training pair sampling threshold:  1500
+features to use:  ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']
+number of epochs to train: 35
+learning rate decay to half at epoch 20.
+number of workers to load data:  36
+device:  cuda
+number of classes after merging:  14
+number of pockets in training set:  16894
+number of pockets in test set:  4231
+first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):
+['4gi7C01', '6djqD00', '8icoC00', '1ofhB00', '2zceA00']
+first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):
+['3c4vB00', '3jbzA00', '5a6nA00', '2oxdA00', '1a9cC01']
+number of train positive pairs: 126000
+number of train negative pairs: 136500
+number of epochs to train for hard pairs:  80
+learning rate decay at epoch for hard pairs:  50
+begin to select hard pairs at epoch 1
+batch size for hard pairs:  128
+number of hardest positive pairs for each mini-batch:  192
+number of hardest negative pairs for each mini-batch:  256
+
+*******************************************************
+             train by random pairs
+*******************************************************
+model architecture:
+SiameseNet(
+  (embedding_net): JKEmbeddingNet(
+    (conv0): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=11, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn0): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv1): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn1): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn2): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv3): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn3): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv4): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn4): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv5): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn5): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv6): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn6): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (set2set): Set2Set(96, 192)
+  )
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.003
+    weight_decay: 0.0005
+)
+loss function:
+ContrastiveLoss(similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True)
+epoch: 1, train loss: 1.014310081263951, train acc: 0.5904463123002249, validation acc: 0.4497754667927204.
+epoch: 2, train loss: 0.970647618640718, train acc: 0.6157215579495678, validation acc: 0.46206570550697235.
+epoch: 3, train loss: 0.8764169383021764, train acc: 0.7566591689357168, validation acc: 0.645710233987237.
+epoch: 4, train loss: 0.7768344300478981, train acc: 0.7800994435894401, validation acc: 0.6617820846135666.
+epoch: 5, train loss: 0.7251552312360491, train acc: 0.7834142299041079, validation acc: 0.6613093831245569.
+epoch: 6, train loss: 0.69527814679827, train acc: 0.7746537232153428, validation acc: 0.6707634129047506.
+epoch: 7, train loss: 0.6685565032087054, train acc: 0.7789747839469634, validation acc: 0.6830536516190026.
+epoch: 8, train loss: 0.6419798558989025, train acc: 0.7801586362022019, validation acc: 0.674781375561333.
+epoch: 9, train loss: 0.6213444750395275, train acc: 0.7806913697170593, validation acc: 0.6721815173717797.
+epoch: 10, train loss: 0.6034664220900763, train acc: 0.7820527998105836, validation acc: 0.6705270621602458.
+epoch: 11, train loss: 0.5860306852213542, train acc: 0.790754113886587, validation acc: 0.6863625620420705.
+epoch: 12, train loss: 0.5728385194905599, train acc: 0.779329939623535, validation acc: 0.6686362562042071.
+epoch: 13, train loss: 0.558782341889881, train acc: 0.7951343672309695, validation acc: 0.6719451666272749.
+epoch: 14, train loss: 0.5497055072893415, train acc: 0.7986859239966853, validation acc: 0.680926494918459.
+epoch: 15, train loss: 0.5394973486618768, train acc: 0.8008760506688766, validation acc: 0.6839990545970219.
+epoch: 16, train loss: 0.5306689646984282, train acc: 0.794009707588493, validation acc: 0.6903805246986529.
+epoch: 17, train loss: 0.5244534553455171, train acc: 0.7952527524564934, validation acc: 0.6771448830063814.
+epoch: 18, train loss: 0.5194856996372768, train acc: 0.8059074227536404, validation acc: 0.6910895769321673.
+epoch: 19, train loss: 0.515716947631836, train acc: 0.8024150586006866, validation acc: 0.6865989127865753.
+epoch: 20, train loss: 0.4673039165387835, train acc: 0.8123002249319285, validation acc: 0.6870716142755849.
+epoch: 21, train loss: 0.45917664233979727, train acc: 0.8238427844205043, validation acc: 0.6941621366107303.
+epoch: 22, train loss: 0.45452256219773063, train acc: 0.8161477447614538, validation acc: 0.6910895769321673.
+epoch: 23, train loss: 0.4472588839576358, train acc: 0.828992541730792, validation acc: 0.696289293311274.
+epoch: 24, train loss: 0.44359253743489585, train acc: 0.8253225997395525, validation acc: 0.6894351217206334.
+epoch: 25, train loss: 0.4389330296107701, train acc: 0.8156742038593584, validation acc: 0.6922713306546916.
+epoch: 26, train loss: 0.44087669741675967, train acc: 0.8317745945306025, validation acc: 0.691562278421177.
+epoch: 27, train loss: 0.4399106581624349, train acc: 0.8243163253225997, validation acc: 0.6936894351217207.
+epoch: 28, train loss: 0.4318147588530041, train acc: 0.825796140641648, validation acc: 0.6913259276766722.
+epoch: 29, train loss: 0.42994156924293153, train acc: 0.8179827157570735, validation acc: 0.693216733632711.
+epoch: 30, train loss: 0.4285210425676618, train acc: 0.8239611696460282, validation acc: 0.6934530843772158.
+epoch: 31, train loss: 0.42558527951195124, train acc: 0.8269799928968865, validation acc: 0.6943984873552351.
+epoch: 32, train loss: 0.42364194309779574, train acc: 0.829051734343554, validation acc: 0.7010163082013708.
+epoch: 33, train loss: 0.4189435048421224, train acc: 0.8260921037054576, validation acc: 0.6882533679981092.
+epoch: 34, train loss: 0.42135565775553385, train acc: 0.8262696815437434, validation acc: 0.6951075395887497.
+epoch: 35, train loss: 0.4191426534016927, train acc: 0.8309458979519356, validation acc: 0.7031434649019145.
+best validation acc 0.7031434649019145 at epoch 35.
+
+
+*******************************************************
+             train by hard pairs
+*******************************************************
+model architecture:
+SelectiveSiameseNet(
+  (embedding_net): JKEmbeddingNet(
+    (conv0): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=11, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn0): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv1): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn1): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn2): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv3): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn3): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv4): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn4): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv5): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn5): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv6): GINMolecularConv(nn=Sequential(
+      (0): Linear(in_features=96, out_features=96, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=96, out_features=96, bias=True)
+    ))(edge_transformer=Sequential(
+      (0): Linear(in_features=1, out_features=8, bias=True)
+      (1): LeakyReLU(negative_slope=0.01)
+      (2): Linear(in_features=8, out_features=1, bias=True)
+      (3): ELU(alpha=1.0)
+    ))
+    (bn6): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (set2set): Set2Set(96, 192)
+  )
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.003
+    weight_decay: 0.0005
+)
+loss function:
+SelectiveContrastiveLoss(similar_margin=0.0, dissimilar_margin=2.0, num_pos_pair=192, num_neg_pair=256)
+epoch: 1, train loss: 1.5787694513230097, train acc: 0.6704747247543507, validation acc: 0.5265894587567951.
+epoch: 2, train loss: 1.4099686286562965, train acc: 0.6913105244465491, validation acc: 0.5584968092649492.
+epoch: 3, train loss: 1.3952747344970704, train acc: 0.6726056588137801, validation acc: 0.5365161900259986.
+epoch: 4, train loss: 1.3814616938999722, train acc: 0.6756836746774003, validation acc: 0.5490427794847553.
+epoch: 5, train loss: 1.3525742630731492, train acc: 0.6910145613827394, validation acc: 0.5726778539352398.
+epoch: 6, train loss: 1.3432208815075102, train acc: 0.6997158754587427, validation acc: 0.5566060033089104.
+epoch: 7, train loss: 1.3512454423450289, train acc: 0.688942819936072, validation acc: 0.5521153391633183.
+epoch: 8, train loss: 1.3654179890950522, train acc: 0.689771516514739, validation acc: 0.5554242495863861.
+epoch: 9, train loss: 1.3618306114560081, train acc: 0.6911921392210252, validation acc: 0.5537697943748523.
+epoch: 10, train loss: 1.3533821323939732, train acc: 0.6735527406179709, validation acc: 0.5391160482155519.
+epoch: 11, train loss: 1.3521538798014323, train acc: 0.6939149994080739, validation acc: 0.5558969510753959.
+epoch: 12, train loss: 1.3378288014729818, train acc: 0.6859239966852136, validation acc: 0.5577877570314347.
+epoch: 13, train loss: 1.340910795302618, train acc: 0.7010181129395051, validation acc: 0.5769321673363271.
+epoch: 14, train loss: 1.3545707212175642, train acc: 0.6943293476974074, validation acc: 0.5802410777593949.
+epoch: 15, train loss: 1.3471540305728005, train acc: 0.688942819936072, validation acc: 0.5563696525644056.
+epoch: 16, train loss: 1.3620816385178338, train acc: 0.6792944240558778, validation acc: 0.551169936185299.
+epoch: 17, train loss: 1.362026156470889, train acc: 0.6863975375873091, validation acc: 0.5589695107539588.
+epoch: 18, train loss: 1.3519945725940523, train acc: 0.6993607197821712, validation acc: 0.5788229732923659.
+epoch: 19, train loss: 1.3360122499011813, train acc: 0.6869894637149284, validation acc: 0.5627511226660364.
+epoch: 20, train loss: 1.338395236787342, train acc: 0.6785249200899728, validation acc: 0.5485700779957456.
+epoch: 21, train loss: 1.3518679900396438, train acc: 0.6727240440393039, validation acc: 0.5478610257622312.
+epoch: 22, train loss: 1.373575490315755, train acc: 0.6374452468331953, validation acc: 0.48499172772394233.
+epoch: 23, train loss: 1.3635872395833333, train acc: 0.6684621759204451, validation acc: 0.5310801229023872.
+epoch: 24, train loss: 1.3560907309395926, train acc: 0.6684621759204451, validation acc: 0.5322618766249114.
+epoch: 25, train loss: 1.35267027537028, train acc: 0.6633124186101574, validation acc: 0.5164263767430868.
+epoch: 26, train loss: 1.3628524907430013, train acc: 0.6746182076476855, validation acc: 0.5490427794847553.
+epoch: 27, train loss: 1.3405942299252465, train acc: 0.6629572629335859, validation acc: 0.5346253840699599.
+epoch: 28, train loss: 1.358093505132766, train acc: 0.6688765242097786, validation acc: 0.5308437721578823.
+epoch: 29, train loss: 1.3685564549763998, train acc: 0.6491061915472949, validation acc: 0.5180808319546206.
+epoch: 30, train loss: 1.3630926095871698, train acc: 0.651473896057772, validation acc: 0.5209170408886789.
+epoch: 31, train loss: 1.352463146391369, train acc: 0.6424174263051972, validation acc: 0.5048451902623493.
+epoch: 32, train loss: 1.3328890954880488, train acc: 0.6610630993252042, validation acc: 0.5244623020562514.
+epoch: 33, train loss: 1.3378953098115467, train acc: 0.6649698117674914, validation acc: 0.5376979437485228.
+epoch: 34, train loss: 1.3365336954025995, train acc: 0.6589913578785368, validation acc: 0.5157173245095722.
+epoch: 35, train loss: 1.330499676295689, train acc: 0.6627796850953, validation acc: 0.5242259513117467.
+epoch: 36, train loss: 1.3512518237885975, train acc: 0.6434828933349118, validation acc: 0.502245332072796.
+epoch: 37, train loss: 1.3478874878656297, train acc: 0.656386882917012, validation acc: 0.523753249822737.
+epoch: 38, train loss: 1.3485531289236887, train acc: 0.6536640227299633, validation acc: 0.5131174663200189.
+epoch: 39, train loss: 1.345790410723005, train acc: 0.6492837693855806, validation acc: 0.5135901678090286.
+epoch: 40, train loss: 1.352964132399786, train acc: 0.6356102758375755, validation acc: 0.508390451429922.
+epoch: 41, train loss: 1.3556866709391275, train acc: 0.6473304131644371, validation acc: 0.5029543843063106.
+epoch: 42, train loss: 1.353128683907645, train acc: 0.6308156742038593, validation acc: 0.48782793665800045.
+epoch: 43, train loss: 1.3634488587152391, train acc: 0.6496389250621523, validation acc: 0.5109903096194753.
+epoch: 44, train loss: 1.3479662177676246, train acc: 0.6430093524328164, validation acc: 0.5012999290947766.
+epoch: 45, train loss: 1.3513373311360677, train acc: 0.6373860542204333, validation acc: 0.4937367052706216.
+epoch: 46, train loss: 1.35032470703125, train acc: 0.641647922339292, validation acc: 0.5012999290947766.
+epoch: 47, train loss: 1.3408877436319988, train acc: 0.6380963655735764, validation acc: 0.5064996454738833.
+epoch: 48, train loss: 1.3314036578223818, train acc: 0.6423582336924352, validation acc: 0.5079177499409123.
+epoch: 49, train loss: 1.3334815724690756, train acc: 0.6528353261512964, validation acc: 0.510044906641456.
+epoch: 50, train loss: 1.3217226973034086, train acc: 0.641647922339292, validation acc: 0.5034270857953203.
+epoch: 51, train loss: 1.308968731108166, train acc: 0.6499348881259619, validation acc: 0.5133538170645238.
+epoch: 52, train loss: 1.3093253617059617, train acc: 0.6466201018112939, validation acc: 0.5076813991964074.
+epoch: 53, train loss: 1.3056379572550456, train acc: 0.6430093524328164, validation acc: 0.5003545261167572.
+epoch: 54, train loss: 1.3073194485618955, train acc: 0.6549662602107257, validation acc: 0.5173717797211062.
+epoch: 55, train loss: 1.3054414494832356, train acc: 0.6610039067124422, validation acc: 0.522098794611203.
+epoch: 56, train loss: 1.3046287173316593, train acc: 0.6440748194625311, validation acc: 0.5081541006854171.
+epoch: 57, train loss: 1.3061264964512416, train acc: 0.6472712205516752, validation acc: 0.5001181753722524.
+epoch: 58, train loss: 1.3054721414475214, train acc: 0.6542559488575825, validation acc: 0.5133538170645238.
+epoch: 59, train loss: 1.2995959763299851, train acc: 0.6402864922457677, validation acc: 0.511463011108485.
+epoch: 60, train loss: 1.306850327991304, train acc: 0.6377412098970049, validation acc: 0.5024816828173009.
+epoch: 61, train loss: 1.2996526300339473, train acc: 0.6484550728069137, validation acc: 0.5135901678090286.
+epoch: 62, train loss: 1.2987565630958193, train acc: 0.6502308511897715, validation acc: 0.5064996454738833.
+epoch: 63, train loss: 1.298124767485119, train acc: 0.6345448088078608, validation acc: 0.48286457102339875.
+epoch: 64, train loss: 1.3062160019647509, train acc: 0.632709837812241, validation acc: 0.49610021271567006.
+epoch: 65, train loss: 1.3013378125145323, train acc: 0.6515330886705339, validation acc: 0.506972346962893.
+epoch: 66, train loss: 1.2923177791777112, train acc: 0.6419438854031017, validation acc: 0.4996454738832427.
+epoch: 67, train loss: 1.2980972453526087, train acc: 0.6421806558541494, validation acc: 0.4972819664381943.
+epoch: 68, train loss: 1.300621090843564, train acc: 0.636853320705576, validation acc: 0.5031907350508155.
+epoch: 69, train loss: 1.3010349455333892, train acc: 0.6356694684503374, validation acc: 0.5055542424958639.
+epoch: 70, train loss: 1.3039667801629928, train acc: 0.645791405232627, validation acc: 0.5133538170645238.
+epoch: 71, train loss: 1.3003827848888578, train acc: 0.6562093050787262, validation acc: 0.5209170408886789.
+epoch: 72, train loss: 1.3070925303867884, train acc: 0.6614774476145378, validation acc: 0.5355707870479792.
+epoch: 73, train loss: 1.2994611358642578, train acc: 0.6523617852492009, validation acc: 0.5270621602458048.
+epoch: 74, train loss: 1.296949699038551, train acc: 0.6518290517343436, validation acc: 0.5235168990782321.
+epoch: 75, train loss: 1.299296778724307, train acc: 0.6455546347815793, validation acc: 0.5161900259985819.
+epoch: 76, train loss: 1.2935581915719168, train acc: 0.6478039540665325, validation acc: 0.5116993618529898.
+epoch: 77, train loss: 1.2993119412376768, train acc: 0.6298685923996685, validation acc: 0.5036634365398251.
+epoch: 78, train loss: 1.302232282729376, train acc: 0.6310524446549071, validation acc: 0.4920822500590877.
+epoch: 79, train loss: 1.3017995997837613, train acc: 0.6377412098970049, validation acc: 0.508390451429922.
+epoch: 80, train loss: 1.305482757205055, train acc: 0.6566236533680596, validation acc: 0.5185535334436303.
+best validation acc 0.7031434649019145 at epoch 35.
+
+*******************************************************
+             k-nearest neighbor for testing
+*******************************************************
+train accuracy: 0.8309458979519356, validation accuracy: 0.5185535334436303, test accuracy: 0.7031434649019145
+train report:
+              precision    recall  f1-score   support
+
+           0     0.8613    0.9010    0.8807      6100
+           1     0.8951    0.8942    0.8947       926
+           2     0.7336    0.8146    0.7720      2400
+           3     0.8118    0.8648    0.8374       843
+           4     0.8635    0.8992    0.8810       774
+           5     0.8964    0.8810    0.8886      1512
+           6     0.7347    0.5414    0.6234      1330
+           7     0.8423    0.8441    0.8432       481
+           8     0.7495    0.8231    0.7846       458
+           9     0.8405    0.9558    0.8944       452
+          10     0.8574    0.7713    0.8120       717
+          11     0.8344    0.7568    0.7937       333
+          12     0.7347    0.1204    0.2069       299
+          13     0.8760    0.8401    0.8577       269
+
+    accuracy                         0.8309     16894
+   macro avg     0.8237    0.7791    0.7836     16894
+weighted avg     0.8290    0.8309    0.8241     16894
+
+test report: 
+              precision    recall  f1-score   support
+
+           0     0.7587    0.8289    0.7922      1525
+           1     0.8488    0.7500    0.7963       232
+           2     0.6304    0.7038    0.6651       601
+           3     0.7091    0.7393    0.7239       211
+           4     0.7525    0.7835    0.7677       194
+           5     0.7668    0.7566    0.7617       378
+           6     0.4582    0.3784    0.4145       333
+           7     0.6417    0.6364    0.6390       121
+           8     0.5391    0.5391    0.5391       115
+           9     0.6512    0.7368    0.6914       114
+          10     0.7541    0.5111    0.6093       180
+          11     0.6212    0.4881    0.5467        84
+          12     0.1667    0.0267    0.0460        75
+          13     0.6545    0.5294    0.5854        68
+
+    accuracy                         0.7031      4231
+   macro avg     0.6395    0.6006    0.6127      4231
+weighted avg     0.6924    0.7031    0.6942      4231
+
+generating embeddings for train...
+embedding path:  ../embeddings/run_70/train_embedding.npy
+label path:  ../embeddings/run_70/train_label.npy
+shape of generated embedding: (16894, 192)
+shape of label: (16894,)
+generating embeddings for test...
+embedding path:  ../embeddings/run_70/test_embedding.npy
+label path:  ../embeddings/run_70/test_label.npy
+shape of generated embedding: (4231, 192)
+shape of label: (4231,)
+
+program finished.
