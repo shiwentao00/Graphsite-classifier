@@ -1,5 +1,5 @@
 ---
- run: 26 # id for the training
+ run: 27 # id for the training
  seed: 666 # random seed for the random module
 
  # directory configuration

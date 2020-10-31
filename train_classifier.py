@@ -247,7 +247,7 @@ if __name__=="__main__":
     model_size = config['model_size']
     num_layers = config['num_layers']
     which_loss = config['which_loss']
-    assert which_model in ['jk', 'residual', 'normal', 'pna']
+    assert which_model in ['jk', 'residual', 'normal', 'pna', 'jknmm']
     assert which_loss in ['CrossEntropy', 'Focal']
 
     # the degrees for the PNA model
