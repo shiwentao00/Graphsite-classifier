@@ -510,14 +510,14 @@ class SelectiveContrastiveLoss(torch.nn.Module):
             self.similar_margin, self.dissimilar_margin, self.num_pos_pair, self.num_neg_pair)
 
 
-class MoNet(torch.nn.Module):
+class DeepDruG(torch.nn.Module):
     """Standard classifier to solve the problem.""" 
     def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
         """
         train_eps: for the GINMolecularConv module only when which_model in ['jk', 'residual', 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
         """
-        super(MoNet, self).__init__()
+        super(DeepDruG, self).__init__()
         self.num_classes = num_classes
 
         # use one of the embedding net 
