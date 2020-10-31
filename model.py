@@ -512,7 +512,7 @@ class SelectiveContrastiveLoss(torch.nn.Module):
 
 class MoNet(torch.nn.Module):
     """Standard classifier to solve the problem.""" 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels=None, deg=None):
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels=1, deg=None):
         """
         train_eps: for the GINMolecularConv module only when which_model in ['jk', 'residual', 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
