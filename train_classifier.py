@@ -261,10 +261,7 @@ if __name__=="__main__":
         deg = None
 
     # the channel number for nmm model
-    if which_model == 'jknmmm':
-        num_channels = config['num_channels']
-    else:
-        num_channels = None
+    num_channels = config['num_channels']
 
     model = MoNet(num_classes=num_classes, num_features=num_features, dim=model_size, 
                   train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,

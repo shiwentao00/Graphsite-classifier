@@ -512,7 +512,7 @@ class SelectiveContrastiveLoss(torch.nn.Module):
 
 class MoNet(torch.nn.Module):
     """Standard classifier to solve the problem.""" 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels=1, deg=None):
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
         """
         train_eps: for the GINMolecularConv module only when which_model in ['jk', 'residual', 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
@@ -654,7 +654,7 @@ class MCNMMConv(torch.nn.Module):
     """
     Multi-channel neural message masking module.
     """
-    def __init__(self, in_dim, out_dim, num_channels=1, num_edge_attr=1, train_eps=True, eps=0):
+    def __init__(self, in_dim, out_dim, num_channels, num_edge_attr=1, train_eps=True, eps=0):
         super(MCNMMConv, self).__init__()
         self.nn = Sequential(Linear(in_dim * num_channels, out_dim), LeakyReLU(), Linear(out_dim, out_dim))
         self.NMMs = ModuleList()
@@ -685,7 +685,7 @@ class JKMCNMMEmbeddingNet(torch.nn.Module):
 
     The GNN layers are now MCNMMConv layer
     """
-    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, num_channels, layer_aggregate='max'):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, num_channels=1, layer_aggregate='max'):
         super(JKMCNMMEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
