@@ -5,13 +5,14 @@
 #PBS -A hpc_michal01
 #PBS -j oe
 
-run=53
+run=44
+seed=4
 
 module purge
 source activate graph
 cd /work/derick/siamese-monet-project/Siamese-MoNet
 
-singularity exec --nv -B /work,/project,/usr/lib64 /home/admin/singularity/pytorch-1.5.1-dockerhub-v4-python38 python train_classifier_final.py &> ./results/train_deepdrug_${run}.txt 2>&1
+singularity exec --nv -B /work,/project,/usr/lib64 /home/admin/singularity/pytorch-1.5.1-dockerhub-v4-python38 python train_classifier_final.py -run ${run} -seed ${seed} &> ./results/train_deepdrug_${run}.txt 2>&1
 
 
 

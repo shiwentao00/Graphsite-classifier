@@ -1,6 +1,7 @@
 """
 Solve the problem with traditional end-to-end multi-class model.
 """
+import argparse
 import yaml
 import random
 import os
@@ -17,6 +18,22 @@ import json
 import copy
 import matplotlib
 import matplotlib.pyplot as plt
+
+
+def get_args():
+    parser = argparse.ArgumentParser('python')
+
+    parser.add_argument('-run',
+                        required=True,
+                        type=int,
+                        help='which experiment.')     
+
+    parser.add_argument('-seed',
+                        required=True,
+                        type=int,
+                        help='random seed for splitting dataset.')     
+
+    return parser.parse_args()
 
 
 def train():
@@ -132,11 +149,12 @@ if __name__=="__main__":
     with open('./train_classifier.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)  
 
-    seed = config['seed']
+    args = get_args()
+    seed = int(args.seed)
     random.seed(seed) 
     print('seed: ', seed)
-
-    run = config['run']
+    run = int(args.run)
+    
     cluster_file_dir = config['cluster_file_dir']
     pocket_dir = config['pocket_dir']
     pop_dir = config['pop_dir']
