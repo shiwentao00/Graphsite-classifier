@@ -1,6 +1,6 @@
 ---
- run: 49 # id for the training
- seed: 9 # random seed for the random module
+ run: 50 # id for the training
+ seed: 10 # random seed for the random module
 
  # directory configuration
  cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
