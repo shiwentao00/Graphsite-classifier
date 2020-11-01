@@ -296,14 +296,14 @@ if __name__=="__main__":
     train_report, train_confusion_mat = gen_classification_report(train_loader)
     test_report, test_confusion_mat = gen_classification_report(test_loader)
     
-    font = {'size'   : 20}
+    font = {'size': 8}
     matplotlib.rc('font', **font)   
 
     print('train report:')
     print(train_report)
     #print('train confusion matrix:')
     #print(train_confusion_mat)
-    fig, ax = plt.subplots(figsize=(28, 24))
+    fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_train.png'.format(run)
     metrics.ConfusionMatrixDisplay(train_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)
@@ -313,7 +313,7 @@ if __name__=="__main__":
     print(test_report)
     #print('test confusion matrix:')
     #print(test_confusion_mat)
-    fig, ax = plt.subplots(figsize=(28, 24))
+    fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
     confusion_matrix_path = confusion_matrix_dir + 'confusion_matrix_{}_test.png'.format(run)
     metrics.ConfusionMatrixDisplay(test_confusion_mat, display_labels=None).plot(ax=ax)
     plt.savefig(confusion_matrix_path)

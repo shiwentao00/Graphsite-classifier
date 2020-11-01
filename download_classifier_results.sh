@@ -1,4 +1,4 @@
-run=32
+run=40
 
 mkdir ./results/classifier_run_${run}/
 

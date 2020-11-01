@@ -700,7 +700,7 @@ class JKMCNMMEmbeddingNet(torch.nn.Module):
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+        self.set2set = Set2Set(in_channels=dim, processing_steps=10, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
         # GNN layers
