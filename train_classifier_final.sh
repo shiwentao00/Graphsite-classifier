@@ -5,7 +5,7 @@
 #PBS -A hpc_michal01
 #PBS -j oe
 
-run=45
+run=46
 
 module purge
 source activate graph
