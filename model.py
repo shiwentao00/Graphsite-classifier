@@ -431,7 +431,7 @@ class JKEGINEmbeddingNet(torch.nn.Module):
         for i in range(0, self.num_layers):
             conv = getattr(self, 'conv{}'.format(i))
             bn = getattr(self, 'bn{}'.format(i))
-            x = F.leaky_relu(conv(x, edge_index, edge_attr))
+            x = F.leaky_relu(conv(x, edge_index))
             x = bn(x)
             layer_x.append(x)
         
