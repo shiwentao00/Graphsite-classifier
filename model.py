@@ -13,12 +13,16 @@ import numpy as np
 from torch_geometric.nn import MessagePassing
 
 
-class GINMolecularConv(GINConv):
+class SCNMMConv(GINConv):
+    """
+    This model implements single-channel neural message masking. It can be
+    done by inheriting the CINConv and adding the edge neural network. 
+    """
     def __init__(self, nn, train_eps, num_features, num_edge_attr):
         """
         num_features: number of features of input nodes.
         """
-        super(GINMolecularConv, self).__init__(nn=nn, train_eps=train_eps)
+        super(SCNMMConv, self).__init__(nn=nn, train_eps=train_eps)
         self.edge_transformer = Sequential(Linear(num_edge_attr, 8), 
                                            LeakyReLU(), 
                                            #Linear(8, num_features),
@@ -62,19 +66,19 @@ class EmbeddingNet(torch.nn.Module):
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
+        self.conv1 = SCNMMConv(nn1, train_eps, num_features, num_edge_attr)
         self.bn1 = torch.nn.BatchNorm1d(dim)
 
         nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv2 = GINMolecularConv(nn2, train_eps, dim, num_edge_attr)
+        self.conv2 = SCNMMConv(nn2, train_eps, dim, num_edge_attr)
         self.bn2 = torch.nn.BatchNorm1d(dim)
 
         nn3 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv3 = GINMolecularConv(nn3, train_eps, dim, num_edge_attr)
+        self.conv3 = SCNMMConv(nn3, train_eps, dim, num_edge_attr)
         self.bn3 = torch.nn.BatchNorm1d(dim)
 
         nn4 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv4 = GINMolecularConv(nn4, train_eps, dim, num_edge_attr)
+        self.conv4 = SCNMMConv(nn4, train_eps, dim, num_edge_attr)
         self.bn4 = torch.nn.BatchNorm1d(dim)
 
         #nn5 = Sequential(Linear(dim, dim), ReLU(), Linear(dim, dim))
@@ -116,7 +120,7 @@ class ResidualBlock(torch.nn.Module):
         
         self.bn1 = torch.nn.BatchNorm1d(dim)
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
+        self.conv1 = SCNMMConv(nn1, train_eps, num_features, num_edge_attr)
     
     def forward(self, x, edge_index, edge_attr):
         x_skip = x # store the input value
@@ -138,7 +142,7 @@ class ResidualEmbeddingNet(torch.nn.Module):
 
         # first graph convolution layer, increasing dimention
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv1 = GINMolecularConv(nn1, train_eps, num_features, num_edge_attr)
+        self.conv1 = SCNMMConv(nn1, train_eps, num_features, num_edge_attr)
 
         # residual blocks
         self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
@@ -185,13 +189,13 @@ class JKEmbeddingNet(torch.nn.Module):
 
         # first layer
         nn0 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv0 = GINMolecularConv(nn0, train_eps, num_features, num_edge_attr)
+        self.conv0 = SCNMMConv(nn0, train_eps, num_features, num_edge_attr)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
             exec('nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
-            exec('self.conv{} = GINMolecularConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
+            exec('self.conv{} = SCNMMConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
@@ -510,48 +514,6 @@ class SelectiveContrastiveLoss(torch.nn.Module):
             self.similar_margin, self.dissimilar_margin, self.num_pos_pair, self.num_neg_pair)
 
 
-class DeepDruG(torch.nn.Module):
-    """Standard classifier to solve the problem.""" 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
-        """
-        train_eps: for the GINMolecularConv module only when which_model in ['jk', 'residual', 'normal'].
-        deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
-        """
-        super(DeepDruG, self).__init__()
-        self.num_classes = num_classes
-
-        # use one of the embedding net 
-        if which_model == 'residual':
-            self.embedding_net = ResidualEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
-        elif which_model == 'jk':
-            self.embedding_net = JKEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
-        elif which_model == 'pna':
-            self.embedding_net = PNAEmbeddingNet(
-                num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
-        elif which_model == 'jknmm':
-            self.embedding_net = JKMCNMMEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers, num_channels=num_channels)
-        else:
-            self.embedding_net = EmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
-
-        # set2set doubles the size of embeddnig
-        self.fc1 = Linear(2 * dim, dim)
-        self.fc2 = Linear(dim, self.num_classes)
-
-    def forward(self, x, edge_index, edge_attr, batch):
-        x = self.embedding_net(x=x, edge_index=edge_index, edge_attr=edge_attr, batch=batch)
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = F.leaky_relu(self.fc1(x))
-        x = F.dropout(x, p=0.5, training=self.training)
-        x = self.fc2(x)
-        
-        # returned tensor should be processed by a softmax layer
-        return x 
-
-
 class FocalLoss(torch.nn.Module):
     """
     Implement the Focal Loss introduced in the paper "Focal Loss for Dense Object Detection"
@@ -605,9 +567,6 @@ class FocalLoss(torch.nn.Module):
         return '{}(gamma={}, alpha={}, reduction={})'.format(self.__class__.__name__, self.gamma, self.alpha, self.reduction)
 
 
-"""
-The model that utilizes multi-channel neural message masking.
-"""
 class NMMConv(MessagePassing):
     """
     Neural message masking (NMM) layer. output of multiple instances of this
@@ -725,3 +684,96 @@ class JKMCNMMEmbeddingNet(torch.nn.Module):
         return x
 
 
+class JKEGINEmbeddingNet(torch.nn.Module):
+    """
+    Jumping knowledge embedding net inspired by the paper "Representation Learning on 
+    Graphs with Jumping Knowledge Networks".
+
+    The layer model is GIN, which does not take edge attribute as input. This is used as
+    the baseline model in the paper.
+    """
+    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
+        super(JKEGINEmbeddingNet, self).__init__()
+        self.num_layers = num_layers
+        self.layer_aggregate = layer_aggregate
+
+        # first layer
+        nn0 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        self.conv0 = GINConv(nn=nn0, train_eps=train_eps)
+        self.bn0 = torch.nn.BatchNorm1d(dim)
+
+        # rest of the layers
+        for i in range(1, self.num_layers):
+            exec('nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
+            exec('self.conv{} = GINConv(nn=nn{}, train_eps=train_eps)'.format(i, i))
+            exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
+
+        # read out function
+        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        # GNN layers
+        layer_x = [] # jumping knowledge
+        for i in range(0, self.num_layers):
+            conv = getattr(self, 'conv{}'.format(i))
+            bn = getattr(self, 'bn{}'.format(i))
+            x = F.leaky_relu(conv(x, edge_index, edge_attr))
+            x = bn(x)
+            layer_x.append(x)
+        
+        # layer aggregation
+        if self.layer_aggregate == 'max':
+                x = torch.stack(layer_x, dim=0)
+                x = torch.max(x, dim=0)[0]
+        elif self.layer_aggregate == 'mean':
+                x = torch.stack(layer_x, dim=0)
+                x = torch.mean(x, dim=0)[0]
+
+        # graph readout
+        x = self.set2set(x, batch)
+        return x
+
+
+class DeepDruG(torch.nn.Module):
+    """Standard classifier to classify the binding sites.""" 
+    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
+        """
+        train_eps: for the SCNMMConv module only when which_model in ['jk', 'residual', 'jknmm', and 'normal'].
+        deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
+        """
+        super(DeepDruG, self).__init__()
+        self.num_classes = num_classes
+
+        # use one of the embedding net 
+        if which_model == 'residual':
+            self.embedding_net = ResidualEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+        elif which_model == 'jk':
+            self.embedding_net = JKEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
+        elif which_model == 'pna':
+            self.embedding_net = PNAEmbeddingNet(
+                num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
+        elif which_model == 'jknmm':
+            self.embedding_net = JKMCNMMEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers, num_channels=num_channels)
+        elif which_model == 'jkgin':
+            self.embedding_net = JKEGINEmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)            
+        else:
+            self.embedding_net = EmbeddingNet(
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+
+        # set2set doubles the size of embeddnig
+        self.fc1 = Linear(2 * dim, dim)
+        self.fc2 = Linear(dim, self.num_classes)
+
+    def forward(self, x, edge_index, edge_attr, batch):
+        x = self.embedding_net(x=x, edge_index=edge_index, edge_attr=edge_attr, batch=batch)
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = F.leaky_relu(self.fc1(x))
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = self.fc2(x)
+        
+        # returned tensor should be processed by a softmax layer
+        return x 
