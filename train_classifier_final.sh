@@ -1,12 +1,12 @@
 #!/bin/bash
 #PBS -q v100
 #PBS -l nodes=1:ppn=36
-#PBS -l walltime=72:00:00
+#PBS -l walltime=24:00:00
 #PBS -A hpc_michal01
 #PBS -j oe
 
-run=100
-seed=666
+run=118
+seed=18
 
 module purge
 source activate graph
