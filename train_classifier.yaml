@@ -13,7 +13,7 @@
  features_to_use: ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']   
 
  # model configuration 
- which_model: 'jkgin' # 'jk', 'residual', 'pna', 'jknmm', 'jkgin' or 'normal'
+ which_model: 'jknmm' # 'jk', 'residual', 'pna', 'jknmm', 'jkgin' or 'normal'
  model_size: 96 # size of the neural network
  num_layers: 6
  num_channels: 3 # number of neural message masking channels form jknmm
