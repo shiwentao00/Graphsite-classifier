@@ -13,16 +13,16 @@ import numpy as np
 from torch_geometric.nn import MessagePassing
 
 
-class SCNMMConv(GINConv):
+class SCNWMConv(GINConv):
     """
-    This model implements single-channel neural message masking. It can be
+    This model implements single-channel neural weighted message. It can be
     done by inheriting the CINConv and adding the edge neural network. 
     """
     def __init__(self, nn, train_eps, num_features, num_edge_attr):
         """
         num_features: number of features of input nodes.
         """
-        super(SCNMMConv, self).__init__(nn=nn, train_eps=train_eps)
+        super(SCNWMConv, self).__init__(nn=nn, train_eps=train_eps)
         self.edge_transformer = Sequential(Linear(num_edge_attr, 8), 
                                            LeakyReLU(), 
                                            #Linear(8, num_features),
@@ -66,19 +66,19 @@ class EmbeddingNet(torch.nn.Module):
         self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv1 = SCNMMConv(nn1, train_eps, num_features, num_edge_attr)
+        self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
         self.bn1 = torch.nn.BatchNorm1d(dim)
 
         nn2 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv2 = SCNMMConv(nn2, train_eps, dim, num_edge_attr)
+        self.conv2 = SCNWMConv(nn2, train_eps, dim, num_edge_attr)
         self.bn2 = torch.nn.BatchNorm1d(dim)
 
         nn3 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv3 = SCNMMConv(nn3, train_eps, dim, num_edge_attr)
+        self.conv3 = SCNWMConv(nn3, train_eps, dim, num_edge_attr)
         self.bn3 = torch.nn.BatchNorm1d(dim)
 
         nn4 = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv4 = SCNMMConv(nn4, train_eps, dim, num_edge_attr)
+        self.conv4 = SCNWMConv(nn4, train_eps, dim, num_edge_attr)
         self.bn4 = torch.nn.BatchNorm1d(dim)
 
         #nn5 = Sequential(Linear(dim, dim), ReLU(), Linear(dim, dim))
@@ -120,7 +120,7 @@ class ResidualBlock(torch.nn.Module):
         
         self.bn1 = torch.nn.BatchNorm1d(dim)
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv1 = SCNMMConv(nn1, train_eps, num_features, num_edge_attr)
+        self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
     
     def forward(self, x, edge_index, edge_attr):
         x_skip = x # store the input value
@@ -142,7 +142,7 @@ class ResidualEmbeddingNet(torch.nn.Module):
 
         # first graph convolution layer, increasing dimention
         nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv1 = SCNMMConv(nn1, train_eps, num_features, num_edge_attr)
+        self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
 
         # residual blocks
         self.rb_2 = ResidualBlock(dim, dim, train_eps, num_edge_attr)
@@ -182,7 +182,7 @@ class JKEmbeddingNet(torch.nn.Module):
     Jumping knowledge embedding net inspired by the paper "Representation Learning on 
     Graphs with Jumping Knowledge Networks".
 
-    This model uses single-channle neural message masking (SCNMMConv module).
+    This model uses single-channle neural message masking (SCNWMConv module).
     """
     def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
         super(JKEmbeddingNet, self).__init__()
@@ -191,13 +191,13 @@ class JKEmbeddingNet(torch.nn.Module):
 
         # first layer
         nn0 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
-        self.conv0 = SCNMMConv(nn0, train_eps, num_features, num_edge_attr)
+        self.conv0 = SCNWMConv(nn0, train_eps, num_features, num_edge_attr)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
             exec('nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
-            exec('self.conv{} = SCNMMConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
+            exec('self.conv{} = SCNWMConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
@@ -281,13 +281,13 @@ class PNAEmbeddingNet(torch.nn.Module):
         return x
 
 
-class NMMConv(MessagePassing):
+class NWMConv(MessagePassing):
     """
-    Neural message masking (NMM) layer. output of multiple instances of this
+    The neural weighted message (NWM) layer. output of multiple instances of this
     will produce multi-channel output. 
     """
     def __init__(self, num_edge_attr=1, train_eps=True, eps=0):
-        super(NMMConv, self).__init__(aggr='add')
+        super(NWMConv, self).__init__(aggr='add')
         self.edge_nn = Sequential(Linear(num_edge_attr, 8), 
                                            LeakyReLU(), 
                                            Linear(8, 1),
@@ -323,18 +323,18 @@ class NMMConv(MessagePassing):
         return '{}(edge_nn={})'.format(self.__class__.__name__, self.edge_nn)
 
 
-class MCNMMConv(torch.nn.Module):
+class MCNWMConv(torch.nn.Module):
     """
-    Multi-channel neural message masking module.
+    Multi-channel neural weighted message module.
     """
     def __init__(self, in_dim, out_dim, num_channels, num_edge_attr=1, train_eps=True, eps=0):
-        super(MCNMMConv, self).__init__()
+        super(MCNWMConv, self).__init__()
         self.nn = Sequential(Linear(in_dim * num_channels, out_dim), LeakyReLU(), Linear(out_dim, out_dim))
         self.NMMs = ModuleList()
         
         # add the message passing modules
         for _ in range(num_channels):
-            self.NMMs.append(NMMConv(num_edge_attr, train_eps, eps))
+            self.NMMs.append(NWMConv(num_edge_attr, train_eps, eps))
 
     def forward(self, x, edge_index, edge_attr):
         # compute the aggregated information for each channel
@@ -351,25 +351,25 @@ class MCNMMConv(torch.nn.Module):
         return x
 
 
-class JKMCNMMEmbeddingNet(torch.nn.Module):
+class JKMCNWMEmbeddingNet(torch.nn.Module):
     """
     Jumping knowledge embedding net inspired by the paper "Representation Learning on 
     Graphs with Jumping Knowledge Networks".
 
-    The GNN layers are now MCNMMConv layer
+    The GNN layers are now MCNWMConv layer
     """
     def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, num_channels=1, layer_aggregate='max'):
-        super(JKMCNMMEmbeddingNet, self).__init__()
+        super(JKMCNWMEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        self.conv0 = MCNMMConv(in_dim=num_features, out_dim=dim, num_channels=num_channels, num_edge_attr=num_edge_attr, train_eps=train_eps)
+        self.conv0 = MCNWMConv(in_dim=num_features, out_dim=dim, num_channels=num_channels, num_edge_attr=num_edge_attr, train_eps=train_eps)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
-            exec('self.conv{} = MCNMMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(i, num_channels))
+            exec('self.conv{} = MCNWMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(i, num_channels))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
@@ -452,7 +452,7 @@ class DeepDruG(torch.nn.Module):
     """Standard classifier to classify the binding sites.""" 
     def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
         """
-        train_eps: for the SCNMMConv module only when which_model in ['jk', 'residual', 'jknmm', and 'normal'].
+        train_eps: for the SCNWMConv module only when which_model in ['jk', 'residual', 'jknmm', and 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
         """
         super(DeepDruG, self).__init__()
@@ -468,8 +468,8 @@ class DeepDruG(torch.nn.Module):
         elif which_model == 'pna':
             self.embedding_net = PNAEmbeddingNet(
                 num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
-        elif which_model == 'jknmm':
-            self.embedding_net = JKMCNMMEmbeddingNet(
+        elif which_model == 'jknwm':
+            self.embedding_net = JKMCNWMEmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers, num_channels=num_channels)
         elif which_model == 'jkgin':
             self.embedding_net = JKEGINEmbeddingNet(
