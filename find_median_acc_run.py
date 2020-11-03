@@ -25,9 +25,13 @@ if __name__ == "__main__":
                      0.8123375088631529,
                      0.8158827700307256,
                      0.8095012999290948,
-                     0.8090285984400851] # 60 
+                     0.8090285984400851, # 60
+                     0.8170645237532498,
+                     0.7931930985582605,
+                     0.8128102103521626,
+                     0.8050106357835027]
     
-    deepdrug_median = statistics.median(deepdrug_accs) # run 51
+    deepdrug_median = statistics.median(deepdrug_accs) # run 63
     print(deepdrug_median)
 
     

@@ -1,0 +1,464 @@
+seed:  22
+save trained model at:  ../trained_models/trained_classifier_model_62.pt
+save loss at:  ./results/train_classifier_results_62.json
+how to merge clusters:  [[0, 9, 12, 25], 2, [3, 8, 13, 27], 4, 6, [7, 19, 21], [10, 16, 28], 15, 17, 18, [20, 23], 24, 26, 29]
+features to use:  ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']
+number of epochs:  200
+batch size:  256
+number of workers to load data:  36
+device:  cuda
+number of classes after merging:  14
+number of pockets in training set:  16894
+number of pockets in test set:  4231
+first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):
+['3a0tA00', '1nlyB00', '3c6tA00', '4ww7A00', '4cg8A00']
+first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):
+['3hd2A01', '2eklA00', '4i9bA00', '3ovbA00', '4unrB00']
+model architecture:
+DeepDruG(
+  (embedding_net): JKMCNWMEmbeddingNet(
+    (conv0): MCNWMConv(
+      (nn): Sequential(
+        (0): Linear(in_features=33, out_features=96, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=96, out_features=96, bias=True)
+      )
+      (NMMs): ModuleList(
+        (0): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (1): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (2): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+      )
+    )
+    (bn0): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv1): MCNWMConv(
+      (nn): Sequential(
+        (0): Linear(in_features=288, out_features=96, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=96, out_features=96, bias=True)
+      )
+      (NMMs): ModuleList(
+        (0): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (1): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (2): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+      )
+    )
+    (bn1): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): MCNWMConv(
+      (nn): Sequential(
+        (0): Linear(in_features=288, out_features=96, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=96, out_features=96, bias=True)
+      )
+      (NMMs): ModuleList(
+        (0): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (1): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (2): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+      )
+    )
+    (bn2): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv3): MCNWMConv(
+      (nn): Sequential(
+        (0): Linear(in_features=288, out_features=96, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=96, out_features=96, bias=True)
+      )
+      (NMMs): ModuleList(
+        (0): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (1): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (2): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+      )
+    )
+    (bn3): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv4): MCNWMConv(
+      (nn): Sequential(
+        (0): Linear(in_features=288, out_features=96, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=96, out_features=96, bias=True)
+      )
+      (NMMs): ModuleList(
+        (0): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (1): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (2): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+      )
+    )
+    (bn4): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv5): MCNWMConv(
+      (nn): Sequential(
+        (0): Linear(in_features=288, out_features=96, bias=True)
+        (1): LeakyReLU(negative_slope=0.01)
+        (2): Linear(in_features=96, out_features=96, bias=True)
+      )
+      (NMMs): ModuleList(
+        (0): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (1): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+        (2): NWMConv(edge_nn=Sequential(
+          (0): Linear(in_features=1, out_features=8, bias=True)
+          (1): LeakyReLU(negative_slope=0.01)
+          (2): Linear(in_features=8, out_features=1, bias=True)
+          (3): ELU(alpha=1.0)
+        ))
+      )
+    )
+    (bn5): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (set2set): Set2Set(96, 192)
+  )
+  (fc1): Linear(in_features=192, out_features=96, bias=True)
+  (fc2): Linear(in_features=96, out_features=14, bias=True)
+)
+optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.003
+    weight_decay: 0.0007
+)
+learning rate scheduler: 
+<torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x2ab83e610910>
+initial gamma of FocalLoss:  0
+increase gamma of FocalLoss at epochs:  [25, 100, 170]
+loss function:
+FocalLoss(gamma=0, alpha=tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.],
+       device='cuda:0'), reduction=mean)
+begin training...
+epoch: 1, train loss: 1.971886861305964, acc: 0.40979045815082277; test loss: 1.8124364710000638, acc: 0.4192862207515954
+epoch: 2, train loss: 1.6843132222772732, acc: 0.4790458150822777; test loss: 1.7786051182283686, acc: 0.4509572205152446
+epoch: 3, train loss: 1.5829332190828944, acc: 0.5145021901266722; test loss: 1.9635197395580763, acc: 0.4181044670290711
+epoch: 4, train loss: 1.4934474585450612, acc: 0.54883390552859; test loss: 1.5820793275488265, acc: 0.5135901678090286
+epoch: 5, train loss: 1.41260536340506, acc: 0.5735764176630757; test loss: 1.8191215787985398, acc: 0.46206570550697235
+epoch: 6, train loss: 1.365184084020226, acc: 0.5857700958920327; test loss: 1.442425185527905, acc: 0.56487827936658
+epoch: 7, train loss: 1.338463660597279, acc: 0.5927548241979401; test loss: 1.3129442120747936, acc: 0.5849680926494919
+epoch: 8, train loss: 1.278428320928736, acc: 0.61394577956671; test loss: 1.6446758390628144, acc: 0.5048451902623493
+epoch: 9, train loss: 1.2789331905881625, acc: 0.6169646028175684; test loss: 1.252696953493775, acc: 0.6097849208225006
+epoch: 10, train loss: 1.2062745121960048, acc: 0.6337753048419558; test loss: 1.3366681351162417, acc: 0.5771685180808319
+epoch: 11, train loss: 1.1782878389919638, acc: 0.6431869302711022; test loss: 1.3787853020185896, acc: 0.5764594658473174
+epoch: 12, train loss: 1.1462931889704138, acc: 0.6543151414703445; test loss: 1.2261381318343219, acc: 0.6116757267785393
+epoch: 13, train loss: 1.1072610989257092, acc: 0.6651473896057772; test loss: 1.2004406999904926, acc: 0.6348380997400142
+epoch: 14, train loss: 1.0851873248812007, acc: 0.6731975849413994; test loss: 1.123056288617521, acc: 0.6537461593004018
+epoch: 15, train loss: 1.070377008010611, acc: 0.6789392683793063; test loss: 1.0824019596723766, acc: 0.6721815173717797
+epoch: 16, train loss: 1.0243715314564796, acc: 0.6901858648040724; test loss: 1.1540122870659608, acc: 0.6338926967619948
+epoch: 17, train loss: 1.0322790456916138, acc: 0.6878181602935953; test loss: 1.0743788496818534, acc: 0.6650909950366344
+epoch: 18, train loss: 1.0076725851562272, acc: 0.6938558067953119; test loss: 1.213167937927228, acc: 0.618293547624675
+epoch: 19, train loss: 1.0014355317423214, acc: 0.6985912158162662; test loss: 1.0548645410941189, acc: 0.6738359725833136
+epoch: 20, train loss: 0.969146243380247, acc: 0.7049840179945542; test loss: 1.134204626365126, acc: 0.6494918458993146
+epoch: 21, train loss: 0.965016262974699, acc: 0.7068781816029359; test loss: 1.0326539173500386, acc: 0.6771448830063814
+epoch: 22, train loss: 0.9698081901190027, acc: 0.7051615958328401; test loss: 1.068286552127161, acc: 0.6752540770503427
+epoch: 23, train loss: 0.9420044666791902, acc: 0.7168817331597017; test loss: 1.0559525927649804, acc: 0.6802174426849444
+epoch: 24, train loss: 0.9252237954393172, acc: 0.7188350893808453; test loss: 1.000467831010487, acc: 0.6925076813991964
+epoch 25, gamma increased to 1.
+epoch: 25, train loss: 0.720323102684773, acc: 0.7277139812951343; test loss: 0.7854705786654301, acc: 0.6960529425667691
+epoch: 26, train loss: 0.699001091647405, acc: 0.7305552267077069; test loss: 0.884083343098784, acc: 0.6731269203497992
+epoch: 27, train loss: 0.7029050419679743, acc: 0.7278323665206582; test loss: 0.8656049795788644, acc: 0.664145592058615
+epoch: 28, train loss: 0.6802595567389947, acc: 0.7405587782644726; test loss: 0.7555976813917491, acc: 0.7057433230914677
+epoch: 29, train loss: 0.6661437884567616, acc: 0.7427489049366639; test loss: 0.714635339309577, acc: 0.7182699125502245
+epoch: 30, train loss: 0.6680165973798585, acc: 0.7431632532259974; test loss: 0.8986112400871787, acc: 0.6693453084377216
+epoch: 31, train loss: 0.6392087880515397, acc: 0.7505623298212383; test loss: 0.7629120917896153, acc: 0.7064523753249823
+epoch: 32, train loss: 0.6483469526062382, acc: 0.7465964247661891; test loss: 0.8769744101835182, acc: 0.6908532261876625
+epoch: 33, train loss: 0.6435873152744817, acc: 0.7490825145021901; test loss: 0.707923888991105, acc: 0.7255967856298747
+epoch: 34, train loss: 0.629090482805895, acc: 0.7519829525275246; test loss: 0.70772609522483, acc: 0.7227605766958166
+epoch: 35, train loss: 0.6245671452552423, acc: 0.7503255593701906; test loss: 0.9225350745432598, acc: 0.67170881588277
+epoch: 36, train loss: 0.6011366532147249, acc: 0.7656564460755297; test loss: 0.7312356264307774, acc: 0.7187426140392342
+epoch: 37, train loss: 0.601904294385534, acc: 0.7656564460755297; test loss: 0.71075880964212, acc: 0.723705979673836
+epoch: 38, train loss: 0.5905029216404849, acc: 0.7708653959985794; test loss: 0.6932806160624104, acc: 0.7286693453084377
+epoch: 39, train loss: 0.5779910989099527, acc: 0.7725227891559133; test loss: 0.7233467592299336, acc: 0.7199243677617585
+epoch: 40, train loss: 0.5771652505858432, acc: 0.7697999289688647; test loss: 0.7403742740183005, acc: 0.7244150319073505
+epoch: 41, train loss: 0.5642446784122436, acc: 0.777731739078963; test loss: 0.6797330930593081, acc: 0.7324509572205152
+epoch: 42, train loss: 0.5768331428230112, acc: 0.7734698709601042; test loss: 0.7443548180876092, acc: 0.7107066887260695
+epoch: 43, train loss: 0.5598137047116652, acc: 0.7816976441340121; test loss: 0.8123292777026074, acc: 0.6804537934294493
+epoch: 44, train loss: 0.5530395031652747, acc: 0.7814016810702025; test loss: 0.7180764390570817, acc: 0.7281966438194281
+epoch: 45, train loss: 0.5408432640958231, acc: 0.7828814963892506; test loss: 0.6848614932628029, acc: 0.7244150319073505
+epoch: 46, train loss: 0.5309646738638211, acc: 0.7911684621759204; test loss: 0.7761127047717952, acc: 0.7057433230914677
+epoch: 47, train loss: 0.5256167871790891, acc: 0.7902805729844915; test loss: 0.773591389810467, acc: 0.7043252186244386
+epoch: 48, train loss: 0.5579740268931215, acc: 0.7800994435894401; test loss: 0.7480010379997728, acc: 0.7040888678799339
+epoch: 49, train loss: 0.5301044687330617, acc: 0.7863146679294424; test loss: 0.871531240879799, acc: 0.6847081068305365
+epoch: 50, train loss: 0.5129504372336334, acc: 0.7964957973244939; test loss: 0.7354479258687635, acc: 0.7154337036161664
+epoch: 51, train loss: 0.5027542185632381, acc: 0.7995738131881142; test loss: 0.7118457860908337, acc: 0.7336327109430395
+epoch: 52, train loss: 0.5111294728038409, acc: 0.7976204569669705; test loss: 0.7621378914962224, acc: 0.7135428976601277
+epoch: 53, train loss: 0.4971474660554976, acc: 0.7989226944477329; test loss: 0.8029848897860028, acc: 0.6927440321437013
+epoch: 54, train loss: 0.5078265458024351, acc: 0.7982123830945898; test loss: 0.7776820269129119, acc: 0.7097612857480501
+epoch: 55, train loss: 0.5087637163427887, acc: 0.7969101456138274; test loss: 0.7069482642746062, acc: 0.7419049870007091
+epoch: 56, train loss: 0.48186606886373606, acc: 0.8107612170001184; test loss: 0.8414066054809181, acc: 0.6868352635310802
+epoch: 57, train loss: 0.4778080860743145, acc: 0.8078607789747839; test loss: 0.7488897885309272, acc: 0.726778539352399
+epoch: 58, train loss: 0.48385363668679654, acc: 0.8069136971705931; test loss: 0.6493792764347683, acc: 0.7608130465610967
+epoch: 59, train loss: 0.46594268706291686, acc: 0.8153782407955488; test loss: 0.952968864456696, acc: 0.6468919877097613
+epoch: 60, train loss: 0.47271154427000567, acc: 0.8097549425831656; test loss: 0.6710184102248875, acc: 0.7402505317891751
+epoch: 61, train loss: 0.45804303480885333, acc: 0.8173907896294542; test loss: 0.7040831859837016, acc: 0.7277239423304184
+epoch: 62, train loss: 0.46152307531869496, acc: 0.8157925890848822; test loss: 0.9220091484590953, acc: 0.6757267785393524
+epoch: 63, train loss: 0.4929639042178823, acc: 0.8039540665324968; test loss: 0.7167650972576858, acc: 0.7322146064760104
+epoch: 64, train loss: 0.46666279219587525, acc: 0.8116491061915473; test loss: 0.888576360662844, acc: 0.6773812337508863
+epoch: 65, train loss: 0.4691920148256588, acc: 0.8087486681662128; test loss: 0.7209078256358663, acc: 0.7338690616875443
+epoch: 66, train loss: 0.4461840481373972, acc: 0.8204096128803126; test loss: 0.7043718609847067, acc: 0.7442684944457575
+epoch: 67, train loss: 0.4494191331490548, acc: 0.8204688054930744; test loss: 0.7073752588201319, acc: 0.7248877333963601
+epoch: 68, train loss: 0.42917847869748177, acc: 0.8274535337989819; test loss: 0.6860385263988916, acc: 0.7411959347671945
+epoch: 69, train loss: 0.4140112891950254, acc: 0.8302355865987925; test loss: 0.7471555472829048, acc: 0.7234696289293311
+Epoch    69: reducing learning rate of group 0 to 1.5000e-03.
+epoch: 70, train loss: 0.35342893103558565, acc: 0.8560435657629928; test loss: 0.6746471641024808, acc: 0.754195225714961
+epoch: 71, train loss: 0.32997832782906134, acc: 0.8640937610986149; test loss: 0.6932025408243293, acc: 0.7586858898605531
+epoch: 72, train loss: 0.2973761376056556, acc: 0.8764058245530958; test loss: 0.6525291267564972, acc: 0.7783030016544552
+epoch: 73, train loss: 0.322623136104374, acc: 0.8690659405706168; test loss: 0.7109490065844001, acc: 0.7546679272039707
+epoch: 74, train loss: 0.3102132639539754, acc: 0.8726174973363324; test loss: 0.6290121572684295, acc: 0.7820846135665327
+epoch: 75, train loss: 0.2668143460260025, acc: 0.8870013022374807; test loss: 0.6912303780641603, acc: 0.7619948002836209
+epoch: 76, train loss: 0.2878822595449091, acc: 0.8813780040250977; test loss: 0.8110495323099106, acc: 0.7367052706216024
+epoch: 77, train loss: 0.2761942859272908, acc: 0.8849295607908133; test loss: 0.814338653990913, acc: 0.7426140392342235
+epoch: 78, train loss: 0.29641620417000825, acc: 0.8758138984254765; test loss: 0.714848570073082, acc: 0.7686126211297566
+epoch: 79, train loss: 0.26476455943900845, acc: 0.888421924943767; test loss: 0.714034716137981, acc: 0.7697943748522807
+epoch: 80, train loss: 0.27584590102471274, acc: 0.8859358352077661; test loss: 0.7421632088321063, acc: 0.7582131883715434
+epoch: 81, train loss: 0.27044771054947714, acc: 0.8820883153782408; test loss: 0.731738259735414, acc: 0.7627038525171355
+epoch: 82, train loss: 0.24841557652537916, acc: 0.8928613709009116; test loss: 0.8531348627809936, acc: 0.7376506735996219
+epoch: 83, train loss: 0.27158008076403145, acc: 0.8846927903397656; test loss: 0.7071486597956002, acc: 0.7638856062396596
+epoch: 84, train loss: 0.25008449869013627, acc: 0.8946963418965314; test loss: 0.7290199761186698, acc: 0.7714488300638147
+epoch: 85, train loss: 0.23561797598430895, acc: 0.8986622469515805; test loss: 0.7066904641978426, acc: 0.7608130465610967
+epoch: 86, train loss: 0.23438543790442656, acc: 0.8991949804664378; test loss: 0.7864721537030805, acc: 0.7539588749704561
+epoch: 87, train loss: 0.2369978670024217, acc: 0.896590505504913; test loss: 0.832807392579279, acc: 0.7329236587095249
+epoch: 88, train loss: 0.24135082948485873, acc: 0.8967680833431988; test loss: 0.7712822984336144, acc: 0.7593949420940675
+epoch: 89, train loss: 0.2693110566753402, acc: 0.8878891914289097; test loss: 0.7529067551940363, acc: 0.7669581659182226
+epoch: 90, train loss: 0.24735812387890374, acc: 0.8951106901858648; test loss: 0.6915008343300113, acc: 0.7825573150555424
+epoch: 91, train loss: 0.2221520479344695, acc: 0.9041079673256778; test loss: 0.737578689784368, acc: 0.7690853226187663
+epoch: 92, train loss: 0.22181964128930795, acc: 0.9025097667811057; test loss: 0.8405971999316034, acc: 0.7426140392342235
+epoch: 93, train loss: 0.27477846066810907, acc: 0.8824434710548124; test loss: 0.7528757429156735, acc: 0.7674308674072323
+epoch: 94, train loss: 0.23086381858236565, acc: 0.9003196401089144; test loss: 0.7408671325274715, acc: 0.769558024107776
+epoch: 95, train loss: 0.22462472914802656, acc: 0.9021546111045341; test loss: 0.8299995692056337, acc: 0.7452138974237769
+epoch: 96, train loss: 0.22279690687820392, acc: 0.9038120042618681; test loss: 0.8004162217448773, acc: 0.7546679272039707
+epoch: 97, train loss: 0.20614558828960894, acc: 0.912039777435776; test loss: 0.7735095353195274, acc: 0.7820846135665327
+epoch: 98, train loss: 0.22163323416108138, acc: 0.9045223156150113; test loss: 0.73955334523304, acc: 0.7735759867643583
+epoch: 99, train loss: 0.21758719875295443, acc: 0.9077779093169173; test loss: 0.7289054982066577, acc: 0.7683762703852517
+epoch 100, gamma increased to 2.
+epoch: 100, train loss: 0.14718296911161272, acc: 0.9163608381673967; test loss: 0.6387918292983039, acc: 0.7792484046324746
+epoch: 101, train loss: 0.1283312043106964, acc: 0.9236415295371138; test loss: 0.6302042129726676, acc: 0.781611912077523
+epoch: 102, train loss: 0.14205195304662133, acc: 0.9133420149165384; test loss: 0.652811835517108, acc: 0.7792484046324746
+epoch: 103, train loss: 0.1432591123294517, acc: 0.9139339410441577; test loss: 0.7088791955252738, acc: 0.7712124793193098
+epoch: 104, train loss: 0.1423649554092023, acc: 0.9157097194270155; test loss: 0.6687892746401295, acc: 0.7683762703852517
+epoch: 105, train loss: 0.15483477452181776, acc: 0.910441576891204; test loss: 0.6210022276384953, acc: 0.7697943748522807
+epoch: 106, train loss: 0.1362154177304371, acc: 0.917781460873683; test loss: 0.6545875211101253, acc: 0.7645946584731742
+epoch: 107, train loss: 0.13487602008423524, acc: 0.9186693500651119; test loss: 0.6180727425491632, acc: 0.7714488300638147
+epoch: 108, train loss: 0.1405389737759001, acc: 0.9141115188824435; test loss: 0.6978374577616722, acc: 0.7686126211297566
+epoch: 109, train loss: 0.14205810935896387, acc: 0.9131644370782527; test loss: 0.6781363763078903, acc: 0.7688489718742614
+epoch: 110, train loss: 0.15042747896042494, acc: 0.9082514502190127; test loss: 0.6834150212111413, acc: 0.7423776884897187
+epoch: 111, train loss: 0.13089503132479846, acc: 0.9179590387119687; test loss: 0.6358186186585576, acc: 0.7825573150555424
+epoch: 112, train loss: 0.12711381956862602, acc: 0.9216881733159702; test loss: 0.7070544011146006, acc: 0.7591585913495628
+epoch: 113, train loss: 0.14580661449698254, acc: 0.9109151177932994; test loss: 0.6838076012378549, acc: 0.7513590167809029
+epoch: 114, train loss: 0.13702898123348423, acc: 0.9156505268142536; test loss: 0.6486076432405931, acc: 0.7775939494209406
+epoch: 115, train loss: 0.14272050440445502, acc: 0.91369717059311; test loss: 0.6672923012395131, acc: 0.7671945166627275
+epoch: 116, train loss: 0.14599597492439728, acc: 0.9118030069847283; test loss: 0.6899309048441898, acc: 0.7563223824155046
+epoch: 117, train loss: 0.13841436096122312, acc: 0.9154137563632059; test loss: 0.6718184747641827, acc: 0.7676672181517372
+epoch: 118, train loss: 0.12151418211221046, acc: 0.9222800994435895; test loss: 0.6765115362226864, acc: 0.7653037107066887
+epoch: 119, train loss: 0.14708323468978665, acc: 0.9109151177932994; test loss: 0.6748872923811567, acc: 0.7688489718742614
+epoch: 120, train loss: 0.1201817002074668, acc: 0.9247661891795904; test loss: 0.7036496225865111, acc: 0.7584495391160482
+Epoch   120: reducing learning rate of group 0 to 7.5000e-04.
+epoch: 121, train loss: 0.08798728944568136, acc: 0.9428791286847401; test loss: 0.7052285515707003, acc: 0.7858662254786103
+epoch: 122, train loss: 0.06062744780748684, acc: 0.9589795193559844; test loss: 0.7205888896764973, acc: 0.7879933821791538
+epoch: 123, train loss: 0.06060772499075525, acc: 0.9607552977388422; test loss: 0.7586501816490586, acc: 0.7771212479319309
+epoch: 124, train loss: 0.05932137768438219, acc: 0.9583284006156032; test loss: 0.7972775167169032, acc: 0.7768848971874261
+epoch: 125, train loss: 0.0564293872996789, acc: 0.9606961051260803; test loss: 0.7627903384199889, acc: 0.7853935239896006
+epoch: 126, train loss: 0.07336436366507806, acc: 0.9504557831182668; test loss: 0.7501511324722697, acc: 0.767903568896242
+epoch: 127, train loss: 0.05584601006014497, acc: 0.9619391499940807; test loss: 0.7909983817467704, acc: 0.7778303001654455
+epoch: 128, train loss: 0.05939937555242731, acc: 0.9588611341304605; test loss: 0.7512615830361266, acc: 0.784684471756086
+epoch: 129, train loss: 0.05479413619443794, acc: 0.9606369125133183; test loss: 0.7988423217529103, acc: 0.7827936658000473
+epoch: 130, train loss: 0.058857264904153404, acc: 0.9582100153900793; test loss: 0.7613049327157908, acc: 0.7747577404868825
+epoch: 131, train loss: 0.07110459762973251, acc: 0.9507517461820765; test loss: 0.7207326472326814, acc: 0.7783030016544552
+epoch: 132, train loss: 0.056862314544927725, acc: 0.9604001420622706; test loss: 0.8337552641278264, acc: 0.7638856062396596
+epoch: 133, train loss: 0.05986069757334788, acc: 0.9587427489049367; test loss: 0.8332018361985332, acc: 0.7629402032616402
+epoch: 134, train loss: 0.06126666015491015, acc: 0.9576180892624601; test loss: 0.7739099239914222, acc: 0.7780666509099504
+epoch: 135, train loss: 0.057449856905545146, acc: 0.9584467858411271; test loss: 0.8163033553934694, acc: 0.7806665090995036
+epoch: 136, train loss: 0.04945403630403678, acc: 0.9639516988279863; test loss: 0.7520433527390407, acc: 0.7839754195225715
+epoch: 137, train loss: 0.056387099663107246, acc: 0.9590979045815082; test loss: 0.7441071795391659, acc: 0.7870479792011345
+epoch: 138, train loss: 0.059551747923519985, acc: 0.9585651710666508; test loss: 0.7681892539163877, acc: 0.7818482628220279
+epoch: 139, train loss: 0.07790335263283814, acc: 0.9489759677992187; test loss: 0.7228923770052073, acc: 0.7811392105885133
+epoch: 140, train loss: 0.06043098103535081, acc: 0.9582100153900793; test loss: 0.7611051578100227, acc: 0.7799574568659892
+epoch: 141, train loss: 0.06788418762940647, acc: 0.9536521842074109; test loss: 0.7447624184002806, acc: 0.7872843299456393
+epoch: 142, train loss: 0.06019238085551376, acc: 0.9605777199005564; test loss: 0.792519032518454, acc: 0.7714488300638147
+epoch: 143, train loss: 0.05286141382835737, acc: 0.9624718835089381; test loss: 0.8033200534515362, acc: 0.7754667927203971
+epoch: 144, train loss: 0.05550980642199784, acc: 0.9614064164792234; test loss: 0.8208094726806835, acc: 0.7745213897423777
+epoch: 145, train loss: 0.051809982704603984, acc: 0.9623534982834142; test loss: 0.7864256568395678, acc: 0.7820846135665327
+epoch: 146, train loss: 0.04884521965463585, acc: 0.9639516988279863; test loss: 0.8003795764542617, acc: 0.7714488300638147
+epoch: 147, train loss: 0.0899911686606953, acc: 0.9424055877826447; test loss: 0.7424769271944353, acc: 0.7733396360198534
+epoch: 148, train loss: 0.06750547013999555, acc: 0.9525867171776963; test loss: 0.78870213817857, acc: 0.7690853226187663
+epoch: 149, train loss: 0.06600599112550337, acc: 0.9539481472712206; test loss: 0.8158567132073017, acc: 0.7544315764594659
+epoch: 150, train loss: 0.07610656696267984, acc: 0.9489167751864568; test loss: 0.8215096122518101, acc: 0.7615220987946112
+epoch: 151, train loss: 0.0572231026377158, acc: 0.959334675032556; test loss: 0.7572187615522846, acc: 0.7898841881351927
+epoch: 152, train loss: 0.0431833739914075, acc: 0.9696933822658932; test loss: 0.7715222064667181, acc: 0.7775939494209406
+epoch: 153, train loss: 0.06084201901770067, acc: 0.9596306380963656; test loss: 0.7372932746263295, acc: 0.7851571732450957
+epoch: 154, train loss: 0.044786603006651035, acc: 0.9672072925298922; test loss: 0.8201154355770643, acc: 0.7823209643110376
+epoch: 155, train loss: 0.069307607233108, acc: 0.9543624955605541; test loss: 0.7891756038918222, acc: 0.7638856062396596
+epoch: 156, train loss: 0.06250382498007237, acc: 0.9574997040369362; test loss: 0.7293590228063394, acc: 0.7783030016544552
+epoch: 157, train loss: 0.053590120568852095, acc: 0.9619391499940807; test loss: 0.7496774205077317, acc: 0.7794847553769795
+epoch: 158, train loss: 0.04970852982301789, acc: 0.9635373505386527; test loss: 0.7736747448000889, acc: 0.7870479792011345
+epoch: 159, train loss: 0.04751327084479945, acc: 0.9651355510832248; test loss: 0.7958281987160268, acc: 0.7844481210115812
+epoch: 160, train loss: 0.04918582350804183, acc: 0.9664969811767491; test loss: 0.8441384840000327, acc: 0.774048688253368
+epoch: 161, train loss: 0.057597752251246984, acc: 0.9606961051260803; test loss: 0.8945778058060403, acc: 0.7518317182699126
+epoch: 162, train loss: 0.06828047007779207, acc: 0.9544808807860778; test loss: 0.7546828763475375, acc: 0.7761758449539116
+epoch: 163, train loss: 0.05396146405736547, acc: 0.9638925062152244; test loss: 0.7492291627835225, acc: 0.7773575986764358
+epoch: 164, train loss: 0.04235812100855588, acc: 0.970758849295608; test loss: 0.8264050133485823, acc: 0.7759394942094068
+epoch: 165, train loss: 0.061667423924214884, acc: 0.9616431869302711; test loss: 0.7450344361359559, acc: 0.7851571732450957
+epoch: 166, train loss: 0.053120217904249166, acc: 0.9622351130578903; test loss: 0.7922922229687955, acc: 0.770976128574805
+epoch: 167, train loss: 0.05108554447776498, acc: 0.9636557357641766; test loss: 0.7697344385853504, acc: 0.7837390687780666
+epoch: 168, train loss: 0.04710060555756452, acc: 0.9671480999171304; test loss: 0.7951135818796556, acc: 0.772630583786339
+epoch: 169, train loss: 0.06310774455257347, acc: 0.9564342370072215; test loss: 0.8003827798622941, acc: 0.7690853226187663
+epoch 170, gamma increased to 3.
+epoch: 170, train loss: 0.052077803039700374, acc: 0.9506333609565526; test loss: 0.6388959289864992, acc: 0.7849208225005909
+epoch: 171, train loss: 0.040435446390990844, acc: 0.9615248017047473; test loss: 0.6755299606494547, acc: 0.7882297329236587
+Epoch   171: reducing learning rate of group 0 to 3.7500e-04.
+epoch: 172, train loss: 0.02179375992532424, acc: 0.9783355037291346; test loss: 0.6558640519374089, acc: 0.7875206806901441
+epoch: 173, train loss: 0.016241186994909746, acc: 0.9830117201373268; test loss: 0.6796835337764855, acc: 0.7858662254786103
+epoch: 174, train loss: 0.014228606325803219, acc: 0.9855570024860897; test loss: 0.678801245538373, acc: 0.7884660836681635
+epoch: 175, train loss: 0.012777138133044319, acc: 0.9880430922220906; test loss: 0.6878820144659632, acc: 0.7898841881351927
+epoch: 176, train loss: 0.012529021585026097, acc: 0.9865040842902806; test loss: 0.7140494392037082, acc: 0.7837390687780666
+epoch: 177, train loss: 0.011408028893818393, acc: 0.9886350183497099; test loss: 0.7108589116069223, acc: 0.7891751359016781
+epoch: 178, train loss: 0.010050669503217972, acc: 0.989345329702853; test loss: 0.7009190476214003, acc: 0.7894114866461829
+epoch: 179, train loss: 0.010671037961513323, acc: 0.9892861370900912; test loss: 0.7122299806132324, acc: 0.7887024344126684
+epoch: 180, train loss: 0.011145410649994428, acc: 0.9888717888007577; test loss: 0.7231774855324969, acc: 0.7872843299456393
+epoch: 181, train loss: 0.010996125035280763, acc: 0.9886942109624719; test loss: 0.7142671150565006, acc: 0.7891751359016781
+epoch: 182, train loss: 0.009443330636059016, acc: 0.9906475671836155; test loss: 0.7315696314755582, acc: 0.7882297329236587
+epoch: 183, train loss: 0.011003928649206938, acc: 0.9898188706049486; test loss: 0.7369611095069176, acc: 0.7917749940912314
+epoch: 184, train loss: 0.010037872570121294, acc: 0.9889901740262815; test loss: 0.7286281415233373, acc: 0.7922476955802411
+epoch: 185, train loss: 0.012264381682012255, acc: 0.9894637149283769; test loss: 0.7468060719096274, acc: 0.7861025762231151
+epoch: 186, train loss: 0.012300368244512217, acc: 0.9879247069965669; test loss: 0.7580456109622837, acc: 0.7787757031434649
+epoch: 187, train loss: 0.013484579337555952, acc: 0.9862673138392328; test loss: 0.7423411453905694, acc: 0.7794847553769795
+epoch: 188, train loss: 0.014255675492402264, acc: 0.9846691132946608; test loss: 0.763461123569951, acc: 0.783266367289057
+epoch: 189, train loss: 0.01748628793616164, acc: 0.981235941754469; test loss: 0.7144298194232942, acc: 0.7851571732450957
+epoch: 190, train loss: 0.016000120907186638, acc: 0.9833668758138985; test loss: 0.7418622460046352, acc: 0.7837390687780666
+epoch: 191, train loss: 0.01990509910721341, acc: 0.9802296673375163; test loss: 0.7387413237850539, acc: 0.7811392105885133
+epoch: 192, train loss: 0.01780007298501272, acc: 0.9818278678820883; test loss: 0.7385890656570204, acc: 0.7783030016544552
+epoch: 193, train loss: 0.017065442481448773, acc: 0.9820646383331361; test loss: 0.7314014256183657, acc: 0.7931930985582605
+epoch: 194, train loss: 0.014451450896833626, acc: 0.9861489286137091; test loss: 0.7481463245115955, acc: 0.783266367289057
+epoch: 195, train loss: 0.017557642464182555, acc: 0.9823606013969457; test loss: 0.7785330627072199, acc: 0.7745213897423777
+epoch: 196, train loss: 0.02067398452575413, acc: 0.9785722741801823; test loss: 0.7022621357477576, acc: 0.7835027180335618
+epoch: 197, train loss: 0.019828525139763114, acc: 0.9794601633716112; test loss: 0.71977844547645, acc: 0.7839754195225715
+epoch: 198, train loss: 0.017188388881057136, acc: 0.982893334911803; test loss: 0.7426950068542564, acc: 0.7849208225005909
+epoch: 199, train loss: 0.020525300370118484, acc: 0.978868237243992; test loss: 0.7207772927880428, acc: 0.7915386433467265
+epoch: 200, train loss: 0.02123035536048094, acc: 0.9785722741801823; test loss: 0.7341604504960559, acc: 0.7913022926022217
+best test acc 0.7931930985582605 at epoch 193.
+****************************************************************
+train report:
+              precision    recall  f1-score   support
+
+           0     0.9943    0.9992    0.9967      6100
+           1     0.9913    0.9881    0.9897       926
+           2     0.9962    0.9900    0.9931      2400
+           3     1.0000    0.9964    0.9982       843
+           4     0.9858    0.9897    0.9877       774
+           5     0.9908    0.9980    0.9944      1512
+           6     0.9878    0.9729    0.9803      1330
+           7     0.9958    0.9917    0.9938       481
+           8     0.9870    0.9913    0.9891       458
+           9     0.9761    0.9934    0.9846       452
+          10     0.9986    0.9874    0.9930       717
+          11     0.9970    0.9970    0.9970       333
+          12     0.9327    0.9264    0.9295       299
+          13     0.9925    0.9888    0.9907       269
+
+    accuracy                         0.9919     16894
+   macro avg     0.9876    0.9865    0.9870     16894
+weighted avg     0.9920    0.9919    0.9919     16894
+
+---------------------------------------
+test report: 
+              precision    recall  f1-score   support
+
+           0     0.8531    0.8984    0.8751      1525
+           1     0.8750    0.7845    0.8273       232
+           2     0.8438    0.7820    0.8117       601
+           3     0.7905    0.7867    0.7886       211
+           4     0.8325    0.8454    0.8389       194
+           5     0.8207    0.8598    0.8398       378
+           6     0.5726    0.6036    0.5877       333
+           7     0.8313    0.5702    0.6765       121
+           8     0.6316    0.7304    0.6774       115
+           9     0.9032    0.7368    0.8116       114
+          10     0.8182    0.7000    0.7545       180
+          11     0.6790    0.6548    0.6667        84
+          12     0.1524    0.2133    0.1778        75
+          13     0.7719    0.6471    0.7040        68
+
+    accuracy                         0.7932      4231
+   macro avg     0.7411    0.7009    0.7170      4231
+weighted avg     0.8000    0.7932    0.7946      4231
+
+---------------------------------------
+program finished.
