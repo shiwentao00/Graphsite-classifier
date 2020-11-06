@@ -56,21 +56,21 @@ Current grouping of classes:
 | class | clusters | label |
 | --- | --- | --- |
 | 0 | 0, 9, 12, 25 | ATP |
-| 1 | 1, 5, 11, 22 | glycol and ether |
-| 2 | 2 | heme |
-| 3 | 3, 8, 13, 27 | carbonhydrate |
-| 4 | 4 | benzene ring |
-| 5 | 6 | chlorophyll |   
-| 6 | 7, 19, 21 | lipid |
-| 7 | 10, 16, 28 | essential amino/citric acids/ tartaric acid |   
-| 8 | 15 | S-adenosyl-L-homocysteine |
-| 9 | 17 | coenzymeA |
-| 10 | 18 | pyridoxal phosphate |   
-| 11 | 20, 23 | benzoic acid |
-| 12 | 24 | flavin mononucleotide |
-| 13 | 26 | morpholine ring |
-| 14 | 29 | phosphate |   
+| 1 | 2 | heme |
+| 2 | 3, 8, 13, 27 | carbonhydrate |
+| 3 | 4 | benzene ring |
+| 4 | 6 | chlorophyll |   
+| 5 | 7, 19, 21 | lipid |
+| 6 | 10, 16, 28 | essential amino/citric acids/ tartaric acid |   
+| 7 | 15 | S-adenosyl-L-homocysteine |
+| 8 | 17 | coenzymeA |
+| 9 | 18 | pyridoxal phosphate |   
+| 10 | 20, 23 | benzoic acid |
+| 11 | 24 | flavin mononucleotide |
+| 12 | 26 | morpholine ring |
+| 13 | 29 | phosphate |   
 
+<!--| 1 | 1, 5, 11, 22 | glycol and ether |-->
 <!--| 14 | 28 | Tartaric acid |-->   
 <!--| 15 | 27, 30 | glucopyranose |-->
 
