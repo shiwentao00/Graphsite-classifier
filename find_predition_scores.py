@@ -111,7 +111,7 @@ if __name__ == "__main__":
         pred_cpu = pred_cpu[0]
         pred_prob_cpu = pred_prob_cpu[0]
 
-        if label == 12: # morpholine rings
+        if label == 13: # morpholine rings
             print('{} {} {}'.format(name, pred_cpu, pred_prob_cpu))
         #print('name:', name)
         #print('label: ', label)
@@ -119,28 +119,4 @@ if __name__ == "__main__":
         #print('prob: ', pred_prob_cpu)
         #print('-----------------------------------')
 
-    """
-    morpholine_ring_as_atp = []
-    morpholine_ring_as_carbonhydrate = []
-    morpholine_ring_as_essential_amino_acid = []
-    for name, label, pred in zip(names, labels, preds):
-        if label == 12 and pred == 0:
-            morpholine_ring_as_atp.append(name)
-        elif label == 12 and pred == 2:
-            morpholine_ring_as_carbonhydrate.append(name)
-        elif label == 12 and pred == 6:
-            morpholine_ring_as_essential_amino_acid.append(name)
-
-    print('morpholine ring misclassified as ATP:')
-    for x in morpholine_ring_as_atp:
-        print(x)
-
-    print('morpholine ring misclassified as carbonhydrate:')
-    for x in morpholine_ring_as_carbonhydrate:
-        print(x)
-
-    print('morpholine ring misclassified as essential amino acid:')
-    for x in morpholine_ring_as_essential_amino_acid:
-        print(x)
-    """
             
