@@ -15,6 +15,13 @@ The dataset has 51677 pockets clustered into 1301 clusters.
 | number of classes | 1060 | 193 | 42 | 6 |   
 | number of pockets | 6951 | 11457 | 18580 | 11457 |   
 
+The statistics of the dataset(mean diameter is inf because there are unconnected graphs):   
+
+|  | number of nodes | number of edges | density | diameter | average degree |   
+| --- | ---             | ---             | ---     | ---      | ---            |   
+| mean | 142.77 | 765.83 | 0.082 | inf | 10.64 |   
+| median | 137 | 730 | 0.078 | 10 | 10.64 |   
+
 Manually identified clusters:   
 
 | cluster | description |   
