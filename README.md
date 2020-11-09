@@ -2,7 +2,7 @@
 Ligand-binding sites are transformed to graphs for deep learning.   
 
 <p align="center">
-<img width="1000" height="900" src="graph_forming_figure/atoms.png">
+<img width="1000" height="950" src="graph_forming_figure/atoms.png">
 </p>   
 
 
