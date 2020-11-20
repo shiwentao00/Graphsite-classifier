@@ -17,10 +17,17 @@ def pocket_match(pocket, pocket_cf, label_pocket, label_pocket_cf):
                         shell=True,
                         stdout=subprocess.PIPE,
                         text=True,
-                        check=True,
+                        #check=True,
                         cwd='/home/wentao/Desktop/local-workspace/siamese-monet-project/glosa/glosa_v2.2/')
-    result = p.stdout
-    return parse_result(result)
+    
+    # when there is no error
+    if p.returncode == 0: 
+        result = p.stdout
+        return parse_result(result)
+    else:
+        global error_cnt
+        error_cnt += 1
+        return 0
 
 def parse_result(result):
     """parse the results and return the score as a float"""
@@ -59,6 +66,8 @@ if __name__ == "__main__":
         13: '4ymzB00' # phosphate
     }   
 
+    global error_cnt
+    error_cnt = 0
 
     pocket_dir = './all_pockets/'
     target = [] # target labels of all data points
@@ -90,3 +99,6 @@ if __name__ == "__main__":
     report = metrics.classification_report(np.array(target), np.array(prediction), digits=4)
     print('classification report:')
     print(report)
+
+    # report number of error cases
+    print('number of pairs that error occurs: ', error_cnt)
