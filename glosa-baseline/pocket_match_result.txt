@@ -1,5 +1,18 @@
 nohup: ignoring input
 Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
+Segmentation fault (core dumped)
 computing class 0...
 computing class 1...
 computing class 2...
@@ -10,11 +23,30 @@ computing class 6...
 computing class 7...
 computing class 8...
 computing class 9...
-Traceback (most recent call last):
-  File "pocket_match.py", line 80, in <module>
-    scores.append(pocket_match(in_pocket, in_pocket_cf, label_pocket, label_pocket_cf))
-  File "pocket_match.py", line 16, in pocket_match
-    p = subprocess.run('./glosa -s1 {} -s1cf {} -s2 {} -s2cf {} -o 0'.format(pocket, pocket_cf, label_pocket, label_pocket_cf),
-  File "/home/wentao/miniconda3/envs/pytorch-1/lib/python3.8/subprocess.py", line 512, in run
-    raise CalledProcessError(retcode, process.args,
-subprocess.CalledProcessError: Command './glosa -s1 ./all_pockets/3pdbA00.pdb -s1cf ./all_pockets/3pdbA00-cf.pdb -s2 ./label_pockets/2ddoA00.pdb -s2cf ./label_pockets/2ddoA00-cf.pdb -o 0' returned non-zero exit status 139.
+computing class 10...
+computing class 11...
+computing class 12...
+computing class 13...
+classification report:
+              precision    recall  f1-score   support
+
+           0     0.5213    0.1252    0.2020      7625
+           1     0.1277    0.0622    0.0836      1158
+           2     0.6107    0.0993    0.1708      3001
+           3     0.0651    0.0626    0.0638      1054
+           4     0.3092    0.0661    0.1089       968
+           5     0.2783    0.3958    0.3268      1890
+           6     0.1327    0.0806    0.1003      1663
+           7     0.0791    0.7143    0.1424       602
+           8     0.0792    0.0366    0.0501       573
+           9     0.0506    0.1802    0.0790       566
+          10     0.0332    0.0111    0.0167       897
+          11     0.0340    0.2638    0.0602       417
+          12     0.0185    0.0455    0.0263       374
+          13     0.0796    0.2700    0.1230       337
+
+    accuracy                         0.1476     21125
+   macro avg     0.1728    0.1724    0.1110     21125
+weighted avg     0.3441    0.1476    0.1589     21125
+
+number of pairs that error occurs:  14

@@ -76,7 +76,7 @@ if __name__ == "__main__":
         print('computing class {}...'.format(label))
         for pocket in cluster:
             scores = []
-            for out in range(13):
+            for out in range(14):
                 label_pocket = label_dir + label_to_pocket[out] + '.pdb'
                 label_pocket_cf = label_dir + label_to_pocket[out] + '-cf.pdb' # chemical feature file
                 in_pocket = pocket_dir + pocket + '.pdb'
