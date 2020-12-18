@@ -1,11 +1,9 @@
-# MoNet   
-Ligand-binding sites are transformed to graphs for deep learning.   
+# DeepDruGR   
+DeepDruGR is a software to classify ligand-binding sites on proteins. It transforms the binding sites to graphs containing both spacial and chemical properties. A customized graph neural network (GNN) with a novel message passing algorithm is then trained on the graph representations of the binding pockets.
 
 <p align="center">
 <img width="1000" height="950" src="graph_forming_figure/atoms.png">
 </p>   
-
-
 
 ## Dataset
 The dataset has 51677 pockets clustered into 1301 clusters.    

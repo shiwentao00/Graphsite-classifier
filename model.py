@@ -19,20 +19,21 @@ class SCNWMConv(GINConv):
     This model implements single-channel neural weighted message. It can be
     done by inheriting the CINConv and adding the edge neural network. 
     """
+
     def __init__(self, nn, train_eps, num_features, num_edge_attr):
         """
         num_features: number of features of input nodes.
         """
         super(SCNWMConv, self).__init__(nn=nn, train_eps=train_eps)
-        self.edge_transformer = Sequential(Linear(num_edge_attr, 8), 
-                                           LeakyReLU(), 
+        self.edge_transformer = Sequential(Linear(num_edge_attr, 8),
+                                           LeakyReLU(),
                                            #Linear(8, num_features),
                                            Linear(8, 1),
-                                           ELU()) # make it possible to reach -1
+                                           ELU())  # make it possible to reach -1
 
-    def forward(self, x, edge_index, edge_attr, size = None):
+    def forward(self, x, edge_index, edge_attr, size=None):
         if isinstance(x, Tensor):
-            x = (x, x) # x: OptPairTensor
+            x = (x, x)  # x: OptPairTensor
 
         # propagate_type: (x: OptPairTensor)
         out = self.propagate(edge_index, x=x, edge_attr=edge_attr, size=size)
@@ -45,7 +46,7 @@ class SCNWMConv(GINConv):
 
     def message(self, x_j, edge_attr):
         weight = self.edge_transformer(edge_attr)
-        
+
         # message size: num_features or dim
         # weight size: 1
         # all the dimensions in a node share one weight generated from edge attribute
@@ -58,15 +59,12 @@ class SCNWMConv(GINConv):
 class EmbeddingNet(torch.nn.Module):
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(EmbeddingNet, self).__init__()
-        # neural network to compute self-attention for output layer
-        #gate_nn = Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, 1), LeakyReLU())
-        # neural netowrk to compute embedding before masking
-        #out_nn =  Sequential(Linear(dim+num_features, dim+num_features), LeakyReLU(), Linear(dim+num_features, dim+num_features)) # followed by softmax
-        # global attention pooling layer
-        #self.global_att = GlobalAttention(gate_nn=gate_nn, nn=out_nn)
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
 
-        nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        self.set2set = Set2Set(
+            in_channels=dim, processing_steps=5, num_layers=2)
+
+        nn1 = Sequential(Linear(num_features, dim),
+                         LeakyReLU(), Linear(dim, dim))
         self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
         self.bn1 = torch.nn.BatchNorm1d(dim)
 
@@ -91,12 +89,10 @@ class EmbeddingNet(torch.nn.Module):
         #self.bn6 = torch.nn.BatchNorm1d(dim)
 
         #self.fc1 = Linear(dim, dim)
-        #self.fc2 = Linear(dim, dim) # generate embedding here
+        # self.fc2 = Linear(dim, dim) # generate embedding here
 
     def forward(self, x, edge_index, edge_attr, batch):
-        #x_in = x 
         x = F.leaky_relu(self.conv1(x, edge_index, edge_attr))
-        print(x.shape)
         x = self.bn1(x)
         x = F.leaky_relu(self.conv2(x, edge_index, edge_attr))
         x = self.bn2(x)
@@ -105,32 +101,32 @@ class EmbeddingNet(torch.nn.Module):
         x = F.leaky_relu(self.conv4(x, edge_index, edge_attr))
         x = self.bn4(x)
 
-        #x = global_add_pool(x, batch)
-        #x = self.global_att(torch.cat((x, x_in), 1), batch)
         x = self.set2set(x, batch)
         return x
-        
+
 
 class ResidualBlock(torch.nn.Module):
     """
     A residual block which has two graph neural network layers. The output and input are summed 
     so that the module can learn identity function.
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualBlock, self).__init__()
-        
+
         self.bn1 = torch.nn.BatchNorm1d(dim)
-        nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        nn1 = Sequential(Linear(num_features, dim),
+                         LeakyReLU(), Linear(dim, dim))
         self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
-    
+
     def forward(self, x, edge_index, edge_attr):
-        x_skip = x # store the input value
-        
+        x_skip = x  # store the input value
+
         x = self.bn1(x)
         x = F.leaky_relu(x)
         x = self.conv1(x, edge_index, edge_attr)
-        
-        x = x + x_skip # add before activation
+
+        x = x + x_skip  # add before activation
         return x
 
 
@@ -138,11 +134,13 @@ class ResidualEmbeddingNet(torch.nn.Module):
     """
     Embedding network with residual connections.
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualEmbeddingNet, self).__init__()
 
         # first graph convolution layer, increasing dimention
-        nn1 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        nn1 = Sequential(Linear(num_features, dim),
+                         LeakyReLU(), Linear(dim, dim))
         self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
 
         # residual blocks
@@ -158,7 +156,8 @@ class ResidualEmbeddingNet(torch.nn.Module):
         self.bn_8 = torch.nn.BatchNorm1d(dim)
 
         # read out function
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+        self.set2set = Set2Set(
+            in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
         x = self.conv1(x, edge_index, edge_attr)
@@ -170,9 +169,9 @@ class ResidualEmbeddingNet(torch.nn.Module):
         x = self.rb_6(x, edge_index, edge_attr)
         x = self.rb_7(x, edge_index, edge_attr)
         x = self.rb_8(x, edge_index, edge_attr)
-        
+
         x = F.leaky_relu(x)
-        x = self.bn_8(x) # batch norm after activation
+        x = self.bn_8(x)  # batch norm after activation
 
         x = self.set2set(x, batch)
         return x
@@ -185,42 +184,47 @@ class JKEmbeddingNet(torch.nn.Module):
 
     This model uses single-channle neural message masking (SCNWMConv module).
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
         super(JKEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        nn0 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        nn0 = Sequential(Linear(num_features, dim),
+                         LeakyReLU(), Linear(dim, dim))
         self.conv0 = SCNWMConv(nn0, train_eps, num_features, num_edge_attr)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
-            exec('nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
-            exec('self.conv{} = SCNWMConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
+            exec(
+                'nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
+            exec(
+                'self.conv{} = SCNWMConv(nn{}, train_eps, dim, num_edge_attr)'.format(i, i))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+        self.set2set = Set2Set(
+            in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
         # GNN layers
-        layer_x = [] # jumping knowledge
+        layer_x = []  # jumping knowledge
         for i in range(0, self.num_layers):
             conv = getattr(self, 'conv{}'.format(i))
             bn = getattr(self, 'bn{}'.format(i))
             x = F.leaky_relu(conv(x, edge_index, edge_attr))
             x = bn(x)
             layer_x.append(x)
-        
+
         # layer aggregation
         if self.layer_aggregate == 'max':
-                x = torch.stack(layer_x, dim=0)
-                x = torch.max(x, dim=0)[0]
+            x = torch.stack(layer_x, dim=0)
+            x = torch.max(x, dim=0)[0]
         elif self.layer_aggregate == 'mean':
-                x = torch.stack(layer_x, dim=0)
-                x = torch.mean(x, dim=0)[0]
+            x = torch.stack(layer_x, dim=0)
+            x = torch.mean(x, dim=0)[0]
 
         # graph readout
         x = self.set2set(x, batch)
@@ -232,6 +236,7 @@ class PNAEmbeddingNet(torch.nn.Module):
     EmbeddingNet with PNAConv layers from the paper "Principal 
     Neighbourhood Aggregation for Graph Nets".
     """
+
     def __init__(self, num_features, dim, num_edge_attr, num_layers, deg):
         super(PNAEmbeddingNet, self).__init__()
 
@@ -239,7 +244,7 @@ class PNAEmbeddingNet(torch.nn.Module):
         #aggregators = ['mean', 'min', 'max', 'std']
         #scalers = ['identity', 'amplification', 'attenuation']
         aggregators = ['mean', 'min', 'max']
-        scalers = ['identity']        
+        scalers = ['identity']
 
         self.convs = ModuleList()
         self.batch_norms = ModuleList()
@@ -263,11 +268,12 @@ class PNAEmbeddingNet(torch.nn.Module):
             self.batch_norms.append(BatchNorm(dim))
 
         # read out function
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+        self.set2set = Set2Set(
+            in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
 
-        layer_x = [] # jumping knowledge
+        layer_x = []  # jumping knowledge
         for conv, batch_norm in zip(self.convs, self.batch_norms):
             x = F.leaky_relu(batch_norm(conv(x, edge_index, edge_attr)))
             layer_x.append(x)
@@ -287,21 +293,22 @@ class NWMConv(MessagePassing):
     The neural weighted message (NWM) layer. output of multiple instances of this
     will produce multi-channel output. 
     """
+
     def __init__(self, num_edge_attr=1, train_eps=True, eps=0):
         super(NWMConv, self).__init__(aggr='add')
-        self.edge_nn = Sequential(Linear(num_edge_attr, 8), 
-                                           LeakyReLU(), 
-                                           Linear(8, 1),
-                                           ELU())
+        self.edge_nn = Sequential(Linear(num_edge_attr, 8),
+                                  LeakyReLU(),
+                                  Linear(8, 1),
+                                  ELU())
         if train_eps:
             self.eps = torch.nn.Parameter(torch.Tensor([eps]))
         else:
             self.register_buffer('eps', torch.Tensor([eps]))
-        #self.reset_parameters() 
+        # self.reset_parameters()
 
-    def forward(self, x, edge_index, edge_attr, size = None):
+    def forward(self, x, edge_index, edge_attr, size=None):
         if isinstance(x, Tensor):
-            x = (x, x) # x: OptPairTensor
+            x = (x, x)  # x: OptPairTensor
 
         # propagate_type: (x: OptPairTensor)
         out = self.propagate(edge_index, x=x, edge_attr=edge_attr, size=size)
@@ -314,7 +321,7 @@ class NWMConv(MessagePassing):
 
     def message(self, x_j, edge_attr):
         weight = self.edge_nn(edge_attr)
-        
+
         # message size: num_features or dim
         # weight size: 1
         # all the dimensions in a node masked by one weight generated from edge attribute
@@ -328,11 +335,13 @@ class MCNWMConv(torch.nn.Module):
     """
     Multi-channel neural weighted message module.
     """
+
     def __init__(self, in_dim, out_dim, num_channels, num_edge_attr=1, train_eps=True, eps=0):
         super(MCNWMConv, self).__init__()
-        self.nn = Sequential(Linear(in_dim * num_channels, out_dim), LeakyReLU(), Linear(out_dim, out_dim))
+        self.nn = Sequential(Linear(in_dim * num_channels,
+                                    out_dim), LeakyReLU(), Linear(out_dim, out_dim))
         self.NMMs = ModuleList()
-        
+
         # add the message passing modules
         for _ in range(num_channels):
             self.NMMs.append(NWMConv(num_edge_attr, train_eps, eps))
@@ -341,8 +350,9 @@ class MCNWMConv(torch.nn.Module):
         # compute the aggregated information for each channel
         channels = []
         for nmm in self.NMMs:
-            channels.append(nmm(x=x, edge_index=edge_index, edge_attr=edge_attr))
-        
+            channels.append(
+                nmm(x=x, edge_index=edge_index, edge_attr=edge_attr))
+
         # concatenate output of each channel
         x = torch.cat(channels, dim=1)
 
@@ -359,40 +369,44 @@ class JKMCNWMEmbeddingNet(torch.nn.Module):
 
     The GNN layers are now MCNWMConv layer
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, num_channels=1, layer_aggregate='max'):
         super(JKMCNWMEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        self.conv0 = MCNWMConv(in_dim=num_features, out_dim=dim, num_channels=num_channels, num_edge_attr=num_edge_attr, train_eps=train_eps)
+        self.conv0 = MCNWMConv(in_dim=num_features, out_dim=dim, num_channels=num_channels,
+                               num_edge_attr=num_edge_attr, train_eps=train_eps)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
-            exec('self.conv{} = MCNWMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(i, num_channels))
+            exec('self.conv{} = MCNWMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(
+                i, num_channels))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+        self.set2set = Set2Set(
+            in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
         # GNN layers
-        layer_x = [] # jumping knowledge
+        layer_x = []  # jumping knowledge
         for i in range(0, self.num_layers):
             conv = getattr(self, 'conv{}'.format(i))
             bn = getattr(self, 'bn{}'.format(i))
             x = F.leaky_relu(conv(x, edge_index, edge_attr))
             x = bn(x)
             layer_x.append(x)
-        
+
         # layer aggregation
         if self.layer_aggregate == 'max':
-                x = torch.stack(layer_x, dim=0)
-                x = torch.max(x, dim=0)[0]
+            x = torch.stack(layer_x, dim=0)
+            x = torch.max(x, dim=0)[0]
         elif self.layer_aggregate == 'mean':
-                x = torch.stack(layer_x, dim=0)
-                x = torch.mean(x, dim=0)[0]
+            x = torch.stack(layer_x, dim=0)
+            x = torch.mean(x, dim=0)[0]
 
         # graph readout
         x = self.set2set(x, batch)
@@ -407,42 +421,46 @@ class JKEGINEmbeddingNet(torch.nn.Module):
     The layer model is GIN, which does not take edge attribute as input. This is used as
     the baseline model in the paper.
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, layer_aggregate='max'):
         super(JKEGINEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        nn0 = Sequential(Linear(num_features, dim), LeakyReLU(), Linear(dim, dim))
+        nn0 = Sequential(Linear(num_features, dim),
+                         LeakyReLU(), Linear(dim, dim))
         self.conv0 = GINConv(nn=nn0, train_eps=train_eps)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
         # rest of the layers
         for i in range(1, self.num_layers):
-            exec('nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
+            exec(
+                'nn{} = Sequential(Linear(dim, dim), LeakyReLU(), Linear(dim, dim))'.format(i))
             exec('self.conv{} = GINConv(nn=nn{}, train_eps=train_eps)'.format(i, i))
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
-        self.set2set = Set2Set(in_channels=dim, processing_steps=5, num_layers=2)
+        self.set2set = Set2Set(
+            in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
         # GNN layers
-        layer_x = [] # jumping knowledge
+        layer_x = []  # jumping knowledge
         for i in range(0, self.num_layers):
             conv = getattr(self, 'conv{}'.format(i))
             bn = getattr(self, 'bn{}'.format(i))
             x = F.leaky_relu(conv(x, edge_index))
             x = bn(x)
             layer_x.append(x)
-        
+
         # layer aggregation
         if self.layer_aggregate == 'max':
-                x = torch.stack(layer_x, dim=0)
-                x = torch.max(x, dim=0)[0]
+            x = torch.stack(layer_x, dim=0)
+            x = torch.max(x, dim=0)[0]
         elif self.layer_aggregate == 'mean':
-                x = torch.stack(layer_x, dim=0)
-                x = torch.mean(x, dim=0)[0]
+            x = torch.stack(layer_x, dim=0)
+            x = torch.mean(x, dim=0)[0]
 
         # graph readout
         x = self.set2set(x, batch)
@@ -450,16 +468,18 @@ class JKEGINEmbeddingNet(torch.nn.Module):
 
 
 class DeepDruG(torch.nn.Module):
-    """Standard classifier to classify the binding sites.""" 
+    """Standard classifier to classify the binding sites."""
+
     def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
         """
-        train_eps: for the SCNWMConv module only when which_model in ['jk', 'residual', 'jknmm', and 'normal'].
+        train_eps: for the SCNWMConv module only when which_model in 
+        ['jk', 'residual', 'jknmm', and 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
         """
         super(DeepDruG, self).__init__()
         self.num_classes = num_classes
 
-        # use one of the embedding net 
+        # use one of the embedding net
         if which_model == 'residual':
             self.embedding_net = ResidualEmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
@@ -474,7 +494,7 @@ class DeepDruG(torch.nn.Module):
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers, num_channels=num_channels)
         elif which_model == 'jkgin':
             self.embedding_net = JKEGINEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)            
+                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
         else:
             self.embedding_net = EmbeddingNet(
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
@@ -484,21 +504,23 @@ class DeepDruG(torch.nn.Module):
         self.fc2 = Linear(dim, self.num_classes)
 
     def forward(self, x, edge_index, edge_attr, batch):
-        x = self.embedding_net(x=x, edge_index=edge_index, edge_attr=edge_attr, batch=batch)
+        x = self.embedding_net(x=x, edge_index=edge_index,
+                               edge_attr=edge_attr, batch=batch)
         x = F.dropout(x, p=0.5, training=self.training)
         x = F.leaky_relu(self.fc1(x))
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.fc2(x)
-        
+
         # returned tensor should be processed by a softmax layer
-        return x 
+        return x
 
 
 class FocalLoss(torch.nn.Module):
     """
     Implement the Focal Loss introduced in the paper "Focal Loss for Dense Object Detection"
     """
-    def __init__(self, gamma = 2, alpha = 1, reduction='mean'):
+
+    def __init__(self, gamma=2, alpha=1, reduction='mean'):
         """
         gamma: the modulation factor in the paper.
         alpha: class weights, default is scalar 1 which means equal weights for all instances.
@@ -510,12 +532,12 @@ class FocalLoss(torch.nn.Module):
         self.alpha = alpha
         assert reduction in ['mean', 'sum']
         self.reduction = reduction
-    
+
     def forward(self, logits, labels):
         """
         logits: output by model, size: [batch_size, num_class].
         labels: groud truth of classification label, size: [batch_size].
-        """        
+        """
         # probablities of all classes generated by softmax
         softmax_pt = F.softmax(logits, dim=-1)
 
@@ -551,6 +573,7 @@ class SiameseNet(torch.nn.Module):
     """
     SiameseNet with 3 choices of architectures
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, deg=None):
         super(SiameseNet, self).__init__()
         if which_model == 'residual':
@@ -564,8 +587,10 @@ class SiameseNet(torch.nn.Module):
                 num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
 
     def forward(self, pairdata):
-        embedding_a = self.embedding_net(x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
-        embedding_b = self.embedding_net(x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
+        embedding_a = self.embedding_net(
+            x=pairdata.x_a, edge_index=pairdata.edge_index_a, edge_attr=pairdata.edge_attr_a, batch=pairdata.x_a_batch)
+        embedding_b = self.embedding_net(
+            x=pairdata.x_b, edge_index=pairdata.edge_index_b, edge_attr=pairdata.edge_attr_b, batch=pairdata.x_b_batch)
         return embedding_a, embedding_b
 
     def get_embedding(self, data, normalize):
@@ -573,13 +598,14 @@ class SiameseNet(torch.nn.Module):
         Used to get the embedding of a pocket after training.
         data: standard PyG graph data.
         """
-        embedding = self.embedding_net(x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-        
+        embedding = self.embedding_net(
+            x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
+
         # normalize the embedding if the embeddings are normalized during training
         # see ContrastiveLoss.__init__()
         if normalize == True:
             embedding = F.normalize(embedding)
-        
+
         return embedding
 
 
@@ -592,12 +618,14 @@ class ContrastiveLoss(torch.nn.Module):
     The loss can be relaxed by setting the margins. The intuition is that similar pockets do not need 
     to have identical embeddings. 
     """
+
     def __init__(self, similar_margin=0.0, dissimilar_margin=2.0, normalize=True, mean=True):
         super(ContrastiveLoss, self).__init__()
         self.similar_margin = similar_margin
-        self.dissimilar_margin = dissimilar_margin # the margin in original paper for dissimilar pairs
-        self.normalize = normalize # whether to normalize input embeddings
-        self.mean = mean # mean over batch or sum over batch
+        # the margin in original paper for dissimilar pairs
+        self.dissimilar_margin = dissimilar_margin
+        self.normalize = normalize  # whether to normalize input embeddings
+        self.mean = mean  # mean over batch or sum over batch
 
     def forward(self, embedding_a, embedding_b, label):
         """
@@ -612,12 +640,15 @@ class ContrastiveLoss(torch.nn.Module):
 
         # loss for similar pairs
         #ls = label * torch.pow(euclidean_dist, 2)
-        ls = label * torch.pow(torch.clamp(euclidean_dist - self.similar_margin, min=0), 2)
-        
-        # loss for dissimilar pairs 
-        ld = (1 - label) * torch.pow(torch.clamp(self.dissimilar_margin - euclidean_dist, min=0), 2) 
+        ls = label * \
+            torch.pow(torch.clamp(euclidean_dist -
+                                  self.similar_margin, min=0), 2)
 
-        loss = ls + ld 
+        # loss for dissimilar pairs
+        ld = (1 - label) * torch.pow(torch.clamp(self.dissimilar_margin -
+                                                 euclidean_dist, min=0), 2)
+
+        loss = ls + ld
 
         if self.mean == True:
             return loss.mean()
@@ -636,6 +667,7 @@ class SelectiveSiameseNet(torch.nn.Module):
     For this model, only the hardest pairs in a mini-batch are selected dynamically 
     for training and validation.
     """
+
     def __init__(self, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, deg=None):
         super(SelectiveSiameseNet, self).__init__()
         if which_model == 'residual':
@@ -651,8 +683,8 @@ class SelectiveSiameseNet(torch.nn.Module):
     def forward(self, data):
         embedding = self.embedding_net(
             x=data.x, edge_index=data.edge_index, edge_attr=data.edge_attr, batch=data.batch)
-        
-        # normalize the embedding to force them to sit on a hyper-sphere. 
+
+        # normalize the embedding to force them to sit on a hyper-sphere.
         embedding = F.normalize(embedding)
 
         return embedding
@@ -701,18 +733,21 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         #pos_pairs = self.__select_pos_pair(embedding, label)
         #neg_pairs = self.__select_neg_pair(embedding, label)
         label = label.cpu().detach().numpy()
-        pairs = np.array(list(itertools.combinations(range(len(label)), 2))) # all possible pairs of index
-        #print(pairs)
-        #print(label)
-        #print(label[pairs[:, 0]])
-        #print(label[pairs[:, 1]])
-        pos_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] == label[pairs[:, 1]])[0], :]
-        neg_pair_idx = pairs[np.nonzero(label[pairs[:, 0]] != label[pairs[:, 1]])[0], :]
+
+        # all possible pairs of index
+        pairs = np.array(list(itertools.combinations(range(len(label)), 2)))
+
+        pos_pair_idx = pairs[np.nonzero(
+            label[pairs[:, 0]] == label[pairs[:, 1]])[0], :]
+        neg_pair_idx = pairs[np.nonzero(
+            label[pairs[:, 0]] != label[pairs[:, 1]])[0], :]
 
         # compute loss for similar (positive) and dissimilar (negative) pairs separately
-        similar_loss = self.__compute_similar_loss(embedding, label, pos_pair_idx, self.num_pos_pair)
-        dissimilar_loss = self.__compute_dissimilar_loss(embedding, label, neg_pair_idx, self.num_neg_pair)
-        
+        similar_loss = self.__compute_similar_loss(
+            embedding, label, pos_pair_idx, self.num_pos_pair)
+        dissimilar_loss = self.__compute_dissimilar_loss(
+            embedding, label, neg_pair_idx, self.num_neg_pair)
+
         # the program is guaranteed to generate positive pairs, or error will be raised
         if dissimilar_loss is None:
             loss = similar_loss
@@ -737,10 +772,11 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # select embedding of positive pairs
         embedding_a = embedding[pos_pair_idx[:, 0]]
         embedding_b = embedding[pos_pair_idx[:, 1]]
-        
+
         # compute the loss
         euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
-        loss = torch.pow(torch.clamp(euclidean_dist - self.similar_margin, min=0), 2)
+        loss = torch.pow(torch.clamp(euclidean_dist -
+                                     self.similar_margin, min=0), 2)
         if self.select_hard_pairs == True:
             loss, _ = torch.sort(loss, descending=True)
         loss = loss[0: num_pairs]  # select top num_pairs loss
@@ -762,10 +798,11 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         # select embedding of negative pairs
         embedding_a = embedding[neg_pair_idx[:, 0]]
         embedding_b = embedding[neg_pair_idx[:, 1]]
-        
+
         # compute the loss
         euclidean_dist = F.pairwise_distance(embedding_a, embedding_b)
-        loss = torch.pow(torch.clamp(self.dissimilar_margin - euclidean_dist, min=0), 2)
+        loss = torch.pow(torch.clamp(
+            self.dissimilar_margin - euclidean_dist, min=0), 2)
         if self.select_hard_pairs == True:
             loss, _ = torch.sort(loss, descending=True)
         loss = loss[0: num_pairs]  # select top num_pairs loss
