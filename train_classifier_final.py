@@ -1,3 +1,4 @@
+# Copyright: Wentao Shi, 2020
 """
 Solve the problem with traditional end-to-end multi-class model.
 """

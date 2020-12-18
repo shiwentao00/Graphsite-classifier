@@ -1,3 +1,4 @@
+# Copyright: Wentao Shi, 2020
 import random
 import itertools
 import numpy as np

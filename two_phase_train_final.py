@@ -1,3 +1,4 @@
+# Copyright: Wentao Shi, 2020
 """
 Train the siamese-architectured model in two phases. Paris are sampled
 Uniformly from the combinations of classes in phase 1. In phase 2, only 

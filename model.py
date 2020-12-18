@@ -1,3 +1,4 @@
+# Copyright: Wentao Shi, 2020
 import torch
 import torch.nn.functional as F
 from torch import Tensor
