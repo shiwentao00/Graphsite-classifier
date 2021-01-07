@@ -155,7 +155,7 @@ if __name__ == "__main__":
     print('number of search space configuration files: ', len(search_config_files))
 
     # directory of proteins for docking
-    protein_dir = '/home/wentao/Desktop/local-workspace/siamese-monet-project/vina/data/proteins/'
+    protein_dir = '../../vina/data/proteins/'
 
     # directory to store output files
     out_dir = '../../vina/vina-output/'
