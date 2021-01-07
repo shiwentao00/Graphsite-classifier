@@ -194,7 +194,7 @@ if __name__ == "__main__":
     cluster = clusters[label]
     print('computing class {}...'.format(label))
 
-    for pocket in tqdm(cluster):
+    for pocket in tqdm(cluster[start:end + 1]):
         # there are several missing search configuration files
         if pocket + '.out' in search_config_files:
             # add true lable to target list
