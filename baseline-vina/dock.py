@@ -226,6 +226,7 @@ if __name__ == "__main__":
             # compute predicted class
             print(scores)
             pred = np.argmin(np.array(scores))
+            pred = pred.item()
             print(pred)
 
             # append results
