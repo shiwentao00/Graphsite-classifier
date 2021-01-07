@@ -88,7 +88,7 @@ def parse_search_config(path):
     return out
 
 
-def dock(vina_path, protein_path, ligand_path, config, out_path, exhaustiveness=8, num_modes=3, energy_range=3):
+def dock(vina_path, protein_path, ligand_path, config, out_path, exhaustiveness=8, num_modes=3, energy_range=99):
     """
     Call Autodock VINA program to perform docking.
     Arguments:
