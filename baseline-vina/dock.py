@@ -19,6 +19,18 @@ def get_args():
                         default=0,
                         required=True,
                         help='Which class of pockets to process, integer from 0 to 13.')
+
+    parser.add_argument('-start',
+                        type=int,
+                        default=0,
+                        required=True,
+                        help='Start index of selected pockets in this class')
+
+    parser.add_argument('-end',
+                        type=int,
+                        default=1000,
+                        required=True,
+                        help='Start index of selected pockets in this class')
     return parser.parse_args()
 
 
@@ -106,6 +118,7 @@ def dock(vina_path, protein_path, ligand_path, config, out_path, exhaustiveness=
     # when there is no error
     if p.returncode == 0:
         result = p.stdout
+        print(result)
         return float(result.split()[-15])
     else:
         global error_cnt
@@ -136,6 +149,8 @@ if __name__ == "__main__":
     # which class of pockets to process
     args = get_args()
     which_class = args.which_class
+    start = args.start
+    end = args.end
 
     # path of autodock vina's executable
     vina_path = '../../vina/software/autodock_vina_1_1_2_linux_x86/bin/vina'
