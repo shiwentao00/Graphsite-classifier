@@ -6,6 +6,7 @@ import yaml
 from os import listdir
 from os.path import isfile, join
 import subprocess
+import numpy as np
 import sklearn.metrics as metrics
 
 
@@ -63,7 +64,7 @@ def parse_search_config(path):
     return out
 
 
-def dock(vina_path, protein_path, ligand_path, config, out_path):
+def dock(vina_path, protein_path, ligand_path, config, out_path, exhaustiveness=8, num_modes=3, energy_range=3):
     """
     Call Autodock VINA program to perform docking.
     Arguments:
@@ -76,10 +77,14 @@ def dock(vina_path, protein_path, ligand_path, config, out_path):
         docking_score: free energy left, the lower the more robust the docking.
     """
     p = subprocess.run(vina_path + ' --receptor {} --ligand {}'.format(protein_path, ligand_path) +
-                                   ' --center_x {} --center_y {} --center_z {}'.format(config[0], config[1], config[2]) +
+                                   ' --center_x {} --center_y {} --center_z {}'.format(
+                                       config[0], config[1], config[2]) +
                                    ' --size_x {} --size_y {} --size_z {}'.format(
                                        config[3], config[4], config[5]) +
-                                   ' --out {}'.format(),
+                                   ' --out {}'.format(out_path) +
+                                   ' --exhaustiveness {}'.format(exhaustiveness) +
+                                   ' --num_modes {}'.format(num_modes) +
+                                   ' --energy_range {}'.format(energy_range),
                        shell=True,
                        stdout=subprocess.PIPE,
                        text=True)
@@ -87,7 +92,7 @@ def dock(vina_path, protein_path, ligand_path, config, out_path):
     # cwd='/home/wentao/Desktop/local-workspace/siamese-monet-project/glosa/glosa_v2.2/')  # working directory
 
     def parse_result(result):
-        return float(result.split()[-1])
+        return float(result.split()[-15])
 
     # when there is no error
     if p.returncode == 0:
@@ -152,6 +157,9 @@ if __name__ == "__main__":
     # directory of proteins for docking
     protein_dir = '/home/wentao/Desktop/local-workspace/siamese-monet-project/vina/data/proteins/'
 
+    # directory to store output files
+    out_dir = '../../vina/vina-output/'
+
     # target labels and prediction of all data points
     target, prediction = [], []
     # for each class
@@ -161,16 +169,19 @@ if __name__ == "__main__":
         for pocket in cluster:
             # there are several missing search configuration files
             if pocket + '.out' in search_config_files:
-                # add true lable to prediction list
-                prediction.append(label)
+                # add true lable to target list
+                target.append(label)
 
                 # find its center and dimensions
                 search_config = parse_search_config(
                     search_config_dir + pocket + '.out')
 
+                # path to store output file
+                out_path = out_dir + pocket + '.out'
+
                 # defer the protein path
                 protein_path = protein_dir + pocket[0:-2] + '.pdbqt'
-                print(protein_path)
+
                 scores = []  # docking scores for each class
                 # for each label ligands
                 for ligand in range(14):
@@ -179,15 +190,22 @@ if __name__ == "__main__":
 
                     # compute docking score (the lower the better)
                     score = dock(vina_path, protein_path,
-                                 ligand_path, search_config)
+                                 ligand_path, search_config, out_path)
+                    scores.append(score)
 
-                    # compute predicted class
+                # compute predicted class
+                print(scores)
+                pred = np.argmin(np.array(scores))
+                print(pred)
+                # append results
+                prediction.append(pred)
 
-                    # append results
-
-                    # compute classification report
-                    break
             break
         break
 
+    # compute classification report
+    report = metrics.classification_report(
+        np.array(target), np.array(prediction), digits=4)
+
+    # number of erroneous dockings
     print('total number of errors during docking: ', error_cnt)
