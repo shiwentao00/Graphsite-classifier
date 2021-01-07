@@ -232,12 +232,16 @@ if __name__ == "__main__":
             prediction.append(pred)
 
     # save the target and predicitons in a yaml file
+    prediction_path = '../../vina/vina-classification-result/predictions'
+    prediction_path += (str(label) + str(start) + str(end) + '.yaml')
+    with open(prediction_path, 'w') as file:
+        yaml.dump(prediction, file)
 
     # compute classification report
-    report = metrics.classification_report(
-        np.array(target), np.array(prediction), digits=4)
-    print('classification report')
-    print(report)
+    # report = metrics.classification_report(
+    #    np.array(target), np.array(prediction), digits=4)
+    #print('classification report')
+    # print(report)
 
     # number of erroneous dockings
     print('total number of errors during docking: ', error_cnt)
