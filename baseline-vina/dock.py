@@ -118,7 +118,6 @@ def dock(vina_path, protein_path, ligand_path, config, out_path, exhaustiveness=
     # when there is no error
     if p.returncode == 0:
         result = p.stdout
-        print(result)
         return float(result.split()[-15])
     else:
         global error_cnt
@@ -224,10 +223,8 @@ if __name__ == "__main__":
                 scores.append(score)
 
             # compute predicted class
-            print(scores)
             pred = np.argmin(np.array(scores))
             pred = pred.item()
-            print(pred)
 
             # append results
             prediction.append(pred)
