@@ -2,12 +2,24 @@
 Dock each pocket with the 14 chosen ligands. The predicted class is the class
 with highest docking score.
 """
+import argparse
 import yaml
 from os import listdir
 from os.path import isfile, join
 import subprocess
 import numpy as np
 import sklearn.metrics as metrics
+from tqdm import tqdm
+
+
+def get_args():
+    parser = argparse.ArgumentParser('python')
+    parser.add_argument('-which_class',
+                        type=int,
+                        default=0,
+                        required=True,
+                        help='Which class of pockets to process, integer from 0 to 13.')
+    return parser.parse_args()
 
 
 def read_cluster_file_from_yaml(cluster_file_dir):
@@ -91,14 +103,10 @@ def dock(vina_path, protein_path, ligand_path, config, out_path, exhaustiveness=
     # check=True,
     # cwd='/home/wentao/Desktop/local-workspace/siamese-monet-project/glosa/glosa_v2.2/')  # working directory
 
-    def parse_result(result):
-        return float(result.split()[-15])
-
     # when there is no error
     if p.returncode == 0:
         result = p.stdout
-        print(result)
-        return parse_result(result)
+        return float(result.split()[-15])
     else:
         global error_cnt
         error_cnt += 1
@@ -125,6 +133,10 @@ label_to_ligand = {
 
 
 if __name__ == "__main__":
+    # which class of pockets to process
+    args = get_args()
+    which_class = args.which_class
+
     # path of autodock vina's executable
     vina_path = '../../vina/software/autodock_vina_1_1_2_linux_x86/bin/vina'
 
@@ -162,50 +174,51 @@ if __name__ == "__main__":
 
     # target labels and prediction of all data points
     target, prediction = [], []
-    # for each class
-    for label, cluster in enumerate(clusters):
-        print('computing class {}...'.format(label))
-        # for each pocket
-        for pocket in cluster:
-            # there are several missing search configuration files
-            if pocket + '.out' in search_config_files:
-                # add true lable to target list
-                target.append(label)
 
-                # find its center and dimensions
-                search_config = parse_search_config(
-                    search_config_dir + pocket + '.out')
+    label = which_class
+    cluster = clusters[label]
+    print('computing class {}...'.format(label))
 
-                # path to store output file
-                out_path = out_dir + pocket + '.out'
+    for pocket in tqdm(cluster):
+        # there are several missing search configuration files
+        if pocket + '.out' in search_config_files:
+            # add true lable to target list
+            target.append(label)
 
-                # defer the protein path
-                protein_path = protein_dir + pocket[0:-2] + '.pdbqt'
+            # find its center and dimensions
+            search_config = parse_search_config(
+                search_config_dir + pocket + '.out')
 
-                scores = []  # docking scores for each class
-                # for each label ligands
-                for ligand in range(14):
-                    # current ligand path
-                    ligand_path = label_ligands_paths[ligand]
+            # path to store output file
+            out_path = out_dir + pocket + '.out'
 
-                    # compute docking score (the lower the better)
-                    score = dock(vina_path, protein_path,
-                                 ligand_path, search_config, out_path)
-                    scores.append(score)
+            # deduce the protein path
+            protein_path = protein_dir + pocket[0:-2] + '.pdbqt'
+            scores = []  # docking scores for each class
 
-                # compute predicted class
-                print(scores)
-                pred = np.argmin(np.array(scores))
-                print(pred)
-                # append results
-                prediction.append(pred)
+            # for each label ligands
+            for ligand in range(14):
+                # current ligand path
+                ligand_path = label_ligands_paths[ligand]
 
-            break
-        break
+                # compute docking score (the lower the better)
+                score = dock(vina_path, protein_path,
+                             ligand_path, search_config, out_path)
+                scores.append(score)
+
+            # compute predicted class
+            print(scores)
+            pred = np.argmin(np.array(scores))
+            print(pred)
+
+            # append results
+            prediction.append(pred)
 
     # compute classification report
     report = metrics.classification_report(
         np.array(target), np.array(prediction), digits=4)
+    print('classification report')
+    print(report)
 
     # number of erroneous dockings
     print('total number of errors during docking: ', error_cnt)
