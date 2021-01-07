@@ -194,6 +194,8 @@ if __name__ == "__main__":
     cluster = clusters[label]
     print('computing class {}...'.format(label))
 
+    if end > len(cluster):
+        end = len(cluster)
     for pocket in tqdm(cluster[start:end + 1]):
         # there are several missing search configuration files
         if pocket + '.out' in search_config_files:
@@ -228,6 +230,8 @@ if __name__ == "__main__":
 
             # append results
             prediction.append(pred)
+
+    # save the target and predicitons in a yaml file
 
     # compute classification report
     report = metrics.classification_report(
