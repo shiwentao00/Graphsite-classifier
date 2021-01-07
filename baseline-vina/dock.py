@@ -232,8 +232,10 @@ if __name__ == "__main__":
             prediction.append(pred)
 
     # save the target and predicitons in a yaml file
-    prediction_path = '../../vina/vina-classification-result/predictions'
-    prediction_path += (str(label) + str(start) + str(end) + '.yaml')
+    prediction_path = '../../vina/vina-classification-result/predictions-'
+    prediction_path += (str(label) + '-' + str(start) +
+                        '-' + str(end) + '.yaml')
+    print(prediction)
     with open(prediction_path, 'w') as file:
         yaml.dump(prediction, file)
 

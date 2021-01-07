@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -q single
+#PBS -l nodes=1:ppn=8
+#PBS -l walltime=72:00:00
+#PBS -A hpc_michal01
+#PBS -j oe
+
+source activate graph
+cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
+
+python dock.py -which_class 0 -start 0 -end 400
+
+
+
