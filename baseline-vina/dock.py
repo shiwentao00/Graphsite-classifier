@@ -233,7 +233,7 @@ if __name__ == "__main__":
     prediction_path = '../../vina/vina-classification-result/predictions-'
     prediction_path += (str(label) + '-' + str(start) +
                         '-' + str(end) + '.yaml')
-    print(prediction)
+    # print(prediction)
     with open(prediction_path, 'w') as file:
         yaml.dump(prediction, file)
 
