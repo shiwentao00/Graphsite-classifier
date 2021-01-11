@@ -9,7 +9,7 @@ from os.path import isfile, join
 import subprocess
 import numpy as np
 import sklearn.metrics as metrics
-from tqdm import tqdm
+#from tqdm import tqdm
 
 
 def get_args():
@@ -196,7 +196,7 @@ if __name__ == "__main__":
 
     if end > len(cluster):
         end = len(cluster)
-    for pocket in tqdm(cluster[start:end + 1]):
+    for pocket in cluster[start:end + 1]:
         # there are several missing search configuration files
         if pocket + '.out' in search_config_files:
             # add true lable to target list
