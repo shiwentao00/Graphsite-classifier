@@ -150,6 +150,7 @@ if __name__ == "__main__":
     which_class = args.which_class
     start = args.start
     end = args.end
+    print('class: {}, start: {}, end: {}.'.format(which_class, start, end))
 
     # path of autodock vina's executable
     vina_path = '../../vina/software/autodock_vina_1_1_2_linux_x86/bin/vina'

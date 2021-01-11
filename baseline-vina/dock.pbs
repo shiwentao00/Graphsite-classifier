@@ -8,7 +8,9 @@
 source activate graph
 cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
 
-python dock.py -which_class 0 -start 0 -end 400
+log_path="../../vina/vina-logs/vina-log-${LABEL}-${START}-${END}"
+
+python dock.py -which_class ${LABEL} -start ${START} -end ${END} > ${log_path} 2>&1
 
 
 
