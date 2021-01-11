@@ -1,8 +1,8 @@
 #!/bin/bash
 
-start=401
+start=751
 label=0
-label_size=751
+label_size=7625
 
 while (($start < $label_size))
 do
@@ -14,7 +14,7 @@ do
     job_name="dock_${label}_${start}_${end}"
     #echo $job_name
     qsub -N ${job_name} -v LABEL=${label},START=${start},END=${end} dock.pbs
-    echo "------------------"
+    #echo "------------------"
     start=$((end + 1))
 done
 
