@@ -5,7 +5,8 @@
 #PBS -A loni_omics02
 #PBS -j oe
 
-source activate graph
+#source activate graph
+source activate sci-comp
 #cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
 /work/wshi6/projects/siamese-monet-project/Siamese-MoNet/baseline-vina/
 
