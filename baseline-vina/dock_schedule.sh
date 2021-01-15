@@ -1,8 +1,8 @@
 #!/bin/bash
 
 start=0
-label=2
-label_size=3001
+label=1
+label_size=1158
 
 while (($start < $label_size))
 do

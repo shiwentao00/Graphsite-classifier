@@ -7,7 +7,7 @@
 
 source activate graph
 #cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
-/work/wshi6/siamese-monet-project/Siamese-MoNet/baseline-vina/
+/work/wshi6/projects/siamese-monet-project/Siamese-MoNet/baseline-vina/
 
 log_path="../../vina/vina-logs/vina-log-${LABEL}-${START}-${END}"
 
