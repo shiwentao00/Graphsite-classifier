@@ -1,12 +1,13 @@
 #!/bin/bash
-#PBS -q single
-#PBS -l nodes=1:ppn=8
+#PBS -q workq
+#PBS -l nodes=1:ppn=20
 #PBS -l walltime=72:00:00
-#PBS -A hpc_michal01
+#PBS -A loni_omics02
 #PBS -j oe
 
 source activate graph
-cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
+#cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
+/work/wshi6/siamese-monet-project/Siamese-MoNet/baseline-vina/
 
 log_path="../../vina/vina-logs/vina-log-${LABEL}-${START}-${END}"
 
