@@ -8,7 +8,7 @@
 #source activate graph
 source activate sci-comp
 #cd /work/derick/siamese-monet-project/Siamese-MoNet/baseline-vina/
-/work/wshi6/projects/siamese-monet-project/Siamese-MoNet/baseline-vina/
+cd /work/wshi6/projects/siamese-monet-project/Siamese-MoNet/baseline-vina/
 
 log_path="../../vina/vina-logs/vina-log-${LABEL}-${START}-${END}"
 
