@@ -62,7 +62,7 @@ Current grouping of classes:
 | --- | --- | --- |
 | 0 | 0, 9, 12, 25 | ATP |
 | 1 | 2 | heme |
-| 2 | 3, 8, 13, 27 | carbonhydrate |
+| 2 | 3, 8, 13, 27 | carbohydrate |
 | 3 | 4 | benzene ring |
 | 4 | 6 | chlorophyll |   
 | 5 | 7, 19, 21 | lipid |
