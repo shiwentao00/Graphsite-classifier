@@ -1,11 +1,14 @@
 """
 Load a trained model and inference on unseen data.
 """
+import os
 import torch
 import yaml
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 from dataloader import read_pocket
+from model import DeepDruG
+import sklearn.metrics as metrics
 
 
 def pocket_loader_gen(pocket_dir, clusters, features_to_use, batch_size, shuffle=False, num_workers=1):
@@ -64,7 +67,7 @@ class PocketDataset(Dataset):
         pocket = self.pockets[idx]
         label = self.class_labels[idx]
         pocket_dir = self.pocket_dir + pocket + '.mol2'
-        profile_dir = self.pocket_dir + pocket + '.profile'
+        profile_dir = self.pocket_dir + pocket[0:-2] + '.profile'
         pop_dir = self.pocket_dir + pocket[0:-2] + '.pops'
 
         x, edge_index, edge_attr = read_pocket(
@@ -75,15 +78,89 @@ class PocketDataset(Dataset):
 
 
 if __name__ == "__main__":
+    # set of further filtered unseen data
+    unseen_data_dir = '../unseen-data/unseen_pdb/'
+    pockets = []
+    for f in os.listdir(unseen_data_dir):
+        if f.endswith(".mol2"):
+            pockets.append(f[0:7])
+    pockets = set(pockets)
+
     # list of unseen data
     with open('../unseen-data/unseen-pocket-list_new.yaml') as f:
         clusters = yaml.load(f, Loader=yaml.FullLoader)
+    filtered_clusters = []
+    for cluster in clusters:
+        filtered_clusters.append([])
+        for x in cluster:
+            if x in pockets:
+                filtered_clusters[-1].append(x)
+
+    for i in range(3, 14):
+        filtered_clusters[i] = []
 
     # dataloader for unseen data
-    unseen_data_dir = '../unseen-data/unseen_pdb/'
+    features_to_use = ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa',
+                       'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']
+
+    pocket_loader, _, _ = pocket_loader_gen(pocket_dir=unseen_data_dir,
+                                            clusters=filtered_clusters,
+                                            features_to_use=features_to_use,
+                                            batch_size=1, shuffle=False, num_workers=1)
 
     # load model in cpu mode
+    with open('./train_classifier.yaml') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    device = torch.device('cuda' if torch.cuda.is_available()
+                          else 'cpu')  # detect cpu or gpu
+    print('device: ', device)
+    which_model = config['which_model']
+    model_size = config['model_size']
+    num_layers = config['num_layers']
+    num_channels = config['num_channels']
+    num_features = len(features_to_use)
+    num_classes = len(clusters)
+    model = DeepDruG(num_classes=num_classes, num_features=num_features, dim=model_size,
+                     train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
+                     num_channels=num_channels, deg=None).to(device)
+    model.load_state_dict(torch.load('../trained_models/trained_classifier_model_63.pt',
+                                     map_location=torch.device('cpu')))
+
+    model.eval()
 
     # inference
+    targets = []
+    predictions = []
+    for data in pocket_loader:
+        output = model(data.x, data.edge_index, data.edge_attr, data.batch)
+        pred = output.max(dim=1)[1]
 
-    # compute metrics
+        pred_cpu = list(pred.cpu().detach().numpy())
+        label = list(data.y.cpu().detach().numpy())
+
+        predictions.extend(pred_cpu)
+        targets.extend(label)
+
+    # classification report
+    report = metrics.classification_report(targets, predictions, digits=4)
+    print(report)
+
+    """
+                precision    recall  f1-score   support
+
+           0     0.9286    0.6842    0.7879        19
+           1     1.0000    1.0000    1.0000         9
+           2     0.6250    0.8333    0.7143         6
+           3     0.0000    0.0000    0.0000         0
+           5     0.5000    0.3333    0.4000         3
+           6     0.2000    0.5000    0.2857         2
+           7     0.0000    0.0000    0.0000         1
+           8     1.0000    1.0000    1.0000         1
+           9     0.0000    0.0000    0.0000         0
+          10     0.0000    0.0000    0.0000         2
+          12     0.3333    0.5000    0.4000         2
+
+    accuracy                         0.6889        45
+   macro avg     0.4170    0.4410    0.4171        45
+weighted avg     0.7547    0.6889    0.7073        45
+    """
