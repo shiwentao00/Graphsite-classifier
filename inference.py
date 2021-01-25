@@ -74,7 +74,7 @@ class PocketDataset(Dataset):
             pocket_dir, profile_dir, pop_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
         data = Data(x=x, edge_index=edge_index,
                     edge_attr=edge_attr, y=torch.tensor([label]))
-        return data
+        return data, pocket
 
 
 if __name__ == "__main__":
@@ -96,8 +96,8 @@ if __name__ == "__main__":
             if x in pockets:
                 filtered_clusters[-1].append(x)
 
-    for i in range(3, 14):
-        filtered_clusters[i] = []
+    # for i in range(3, 14):
+    #    filtered_clusters[i] = []
 
     # dataloader for unseen data
     features_to_use = ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa',
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         config = yaml.load(f, Loader=yaml.FullLoader)
     device = torch.device('cuda' if torch.cuda.is_available()
                           else 'cpu')  # detect cpu or gpu
-    print('device: ', device)
+    #print('device: ', device)
     which_model = config['which_model']
     model_size = config['model_size']
     num_layers = config['num_layers']
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     # inference
     targets = []
     predictions = []
-    for data in pocket_loader:
+    for data, pocket_name in pocket_loader:
         output = model(data.x, data.edge_index, data.edge_attr, data.batch)
         pred = output.max(dim=1)[1]
 
@@ -140,9 +140,11 @@ if __name__ == "__main__":
 
         predictions.extend(pred_cpu)
         targets.extend(label)
+        print(pocket_name[0], label[0], pred_cpu[0])
 
     # classification report
     report = metrics.classification_report(targets, predictions, digits=4)
+    print('---------------classification report----------------')
     print(report)
 
     """
