@@ -7,30 +7,37 @@ from biopandas.mol2 import PandasMol2
 from scipy.spatial import distance
 import torch
 from torch_geometric.data import Data, Dataset
-from torch_geometric.data import DataLoader, DataListLoader
+from torch_geometric.data import DataLoader
 import statistics
 import yaml
 
 
-def dataloader_gen(pocket_dir, pop_dir, pos_pairs, neg_pairs, features_to_use, batch_size, shuffle=True, num_workers=1):
+def dataloader_gen(pocket_dir, pop_dir, pos_pairs, neg_pairs, features_to_use,
+                   batch_size, shuffle=True, num_workers=1):
     """Dataloader used to wrap PairDataset. Used for training and validation """
     dataset = PairDataset(pocket_dir=pocket_dir, pop_dir=pop_dir,
-                          pos_pairs=pos_pairs, neg_pairs=neg_pairs, features_to_use=features_to_use)
-    #val_set = PairDataset(pocket_dir=pocket_dir, pop_dir=pop_dir, pos_pairs=val_pos_pairs, neg_pairs=val_neg_pairs, features_to_use=features_to_use)
+                          pos_pairs=pos_pairs, neg_pairs=neg_pairs,
+                          features_to_use=features_to_use
+                          )
 
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle,
-                            num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
-    #val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, follow_batch=['x_a', 'x_b'], drop_last=True)
+                            num_workers=num_workers, follow_batch=[
+                                'x_a', 'x_b'],
+                            drop_last=True
+                            )
 
     return dataloader
 
 
-def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size, shuffle=True, num_workers=1):
+def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size,
+                      shuffle=True, num_workers=1):
     """Dataloader used to wrap PocketDataset."""
     pocketset = PocketDataset(pocket_dir=pocket_dir, pop_dir=pop_dir,
                               clusters=clusters, features_to_use=features_to_use)
+
     pocketloader = DataLoader(pocketset, batch_size=batch_size,
                               shuffle=shuffle, num_workers=num_workers, drop_last=False)
+
     return pocketloader, len(pocketset), pocketset
 
 
@@ -41,7 +48,9 @@ class PocketDataset(Dataset):
         self.pocket_dir = pocket_dir
         self.pop_dir = pop_dir
         self.clusters = clusters
-        self.threshold = 4.5  # distance threshold to form an undirected edge between two atoms
+
+        # distance threshold to form an undirected edge between two atoms
+        self.threshold = 4.5
 
         # hard coded info to generate 2 node features
         self.hydrophobicity = {'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
@@ -65,7 +74,8 @@ class PocketDataset(Dataset):
         self.class_labels = []
         self.pockets = []
         for label, cluster in enumerate(self.clusters):
-            self.pockets.extend(cluster)  # flatten the clusters list
+            # flatten the clusters list
+            self.pockets.extend(cluster)
             for pocket in cluster:
                 # class labels for all the pockets
                 self.class_labels.append(label)
@@ -82,8 +92,11 @@ class PocketDataset(Dataset):
             '/' + pocket[0:-2] + '.profile'
         pop_dir = self.pop_dir + pocket[0:-2] + '.pops'
 
-        x, edge_index, edge_attr = read_pocket(
-            pocket_dir, profile_dir, pop_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
+        x, edge_index, edge_attr = read_pocket(pocket_dir, profile_dir,
+                                               pop_dir, self.hydrophobicity,
+                                               self.binding_probability, self.features_to_use,
+                                               self.threshold
+                                               )
         data = Data(x=x, edge_index=edge_index,
                     edge_attr=edge_attr, y=torch.tensor([label]))
         return data
@@ -101,12 +114,14 @@ class PairDataset(Dataset):
         self.num_neg_pairs = len(neg_pairs)
         self.threshold = 4.5  # distance threshold to form an undirected edge between two atoms
 
-        # hard coded info to generate 2 node features
+        # hydrophobicities are hardcoded
         self.hydrophobicity = {'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
                                'CYS': 2.5, 'GLN': -3.5, 'GLU': -3.5, 'GLY': -0.4,
                                'HIS': -3.2, 'ILE': 4.5, 'LEU': 3.8, 'LYS': -3.9,
                                'MET': 1.9, 'PHE': 2.8, 'PRO': -1.6, 'SER': -0.8,
                                'THR': -0.7, 'TRP': -0.9, 'TYR': -1.3, 'VAL': 4.2}
+
+        # binding probabilities are hardcoded
         self.binding_probability = {'ALA': 0.701, 'ARG': 0.916, 'ASN': 0.811, 'ASP': 1.015,
                                     'CYS': 1.650, 'GLN': 0.669, 'GLU': 0.956, 'GLY': 0.788,
                                     'HIS': 2.286, 'ILE': 1.006, 'LEU': 1.045, 'LYS': 0.468,
@@ -129,10 +144,14 @@ class PairDataset(Dataset):
         if idx >= self.num_pos_pairs:
             idx = idx - self.num_pos_pairs
             pair = self.neg_pairs[idx]
-            y = torch.tensor([0])  # pair label
+
+            # pair label
+            y = torch.tensor([0])
         else:
             pair = self.pos_pairs[idx]
-            y = torch.tensor([1], dtype=torch.long)  # pair label
+
+            # pair label
+            y = torch.tensor([1], dtype=torch.long)
 
         # pocket a location
         pocket_a_dir = self.pocket_dir + pair[0] + '/' + pair[0] + '.mol2'
@@ -146,20 +165,26 @@ class PairDataset(Dataset):
             pair[1] + '/' + pair[1][0:-2] + '.profile'
         pop_b_dir = self.pop_dir + pair[1][0:-2] + '.pops'
 
-        x_a, edge_index_a, edge_attr_a = read_pocket(
-            pocket_a_dir, profile_a_dir, pop_a_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
-        x_b, edge_index_b, edge_attr_b = read_pocket(
-            pocket_b_dir, profile_b_dir, pop_b_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
+        x_a, edge_index_a, edge_attr_a = read_pocket(pocket_a_dir, profile_a_dir,
+                                                     pop_a_dir, self.hydrophobicity,
+                                                     self.binding_probability, self.features_to_use,
+                                                     self.threshold
+                                                     )
+
+        x_b, edge_index_b, edge_attr_b = read_pocket(pocket_b_dir, profile_b_dir,
+                                                     pop_b_dir, self.hydrophobicity,
+                                                     self.binding_probability,
+                                                     self.features_to_use, self.threshold
+                                                     )
 
         data = PairData(x_a=x_a, edge_index_a=edge_index_a, edge_attr_a=edge_attr_a,
                         x_b=x_b, edge_index_b=edge_index_b, edge_attr_b=edge_attr_b, y=y)
+
         return data
 
 
 def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probability, features_to_use, threshold):
-    """
-    Read the mol2 file as a dataframe.
-    """
+    """Read the mol2 file as a dataframe."""
     atoms = PandasMol2().read_mol2(mol_path)
     atoms = atoms.df[['atom_id', 'subst_name',
                       'atom_type', 'atom_name', 'x', 'y', 'z', 'charge']]
@@ -197,6 +222,7 @@ def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probab
     bonds = bond_parser(mol_path)
     node_features, edge_index, edge_attr = form_graph(
         atoms, bonds, features_to_use, threshold)
+
     return node_features, edge_index, edge_attr
 
 
@@ -213,18 +239,21 @@ def bond_parser(pocket_path):
     df_bonds = df_bonds.replace('un', '1')  # unknown
     df_bonds = df_bonds.replace('nc', '0')  # not connected
     df_bonds = df_bonds.replace('\n', ' ')
+
+    # convert the the elements to integer
     df_bonds = np.array([np.float(x) for x in df_bonds.split()]).reshape(
-        (-1, 4))  # convert the the elements to integer
+        (-1, 4))
+
     df_bonds = pd.DataFrame(
         df_bonds, columns=['bond_id', 'atom1', 'atom2', 'bond_type'])
+
     df_bonds.set_index(['bond_id'], inplace=True)
+
     return df_bonds
 
 
 def compute_edge_attr(edge_index, bonds):
-    """
-    Compute the edge attributes according to the chemical bonds. 
-    """
+    """Compute the edge attributes according to the chemical bonds."""
     sources = edge_index[0, :]
     targets = edge_index[1, :]
     edge_attr = np.zeros((edge_index.shape[1], 1))
@@ -249,9 +278,9 @@ def compute_edge_attr(edge_index, bonds):
 def form_graph(atoms, bonds, features_to_use, threshold):
     """
     Form a graph data structure (Pytorch geometric) according to the input data frame.
-    Rule: Each atom represents a node. If the distance between two atoms are less than or 
-    equal to 4.5 Angstrom (may become a tunable hyper-parameter in the future), then an 
-    undirected edge is formed between these two atoms. 
+    Rule: Each atom represents a node. If the distance between two atoms are less than or
+    equal to 4.5 Angstrom (may become a tunable hyper-parameter in the future), then an
+    undirected edge is formed between these two atoms.
 
     Input:
     atoms: dataframe containing the 3-d coordinates of atoms.
@@ -269,7 +298,7 @@ def form_graph(atoms, bonds, features_to_use, threshold):
     Forming the final output graph:
         data = Data(x=x, edge_index=edge_index)
     """
-    A = atoms.loc[:, 'x':'z']  # sample matrix
+    A = atoms.loc[:, 'x':'z']
     A_dist = distance.cdist(A, A, 'euclidean')  # the distance matrix
 
     # set the element whose value is larger than threshold to 0
@@ -295,25 +324,26 @@ def form_graph(atoms, bonds, features_to_use, threshold):
 
 
 def compute_spherical_coord(data):
-    """
-    Shift the geometric center of the pocket to origin, then compute its spherical coordinates.             
-    """
+    """Shift the geometric center of the pocket to origin,
+    then compute its spherical coordinates."""
+    # center the data around origin
     center = np.mean(data, axis=0)
-    shifted_data = data - center  # center the data around origin
+    shifted_data = data - center
 
     r, theta, phi = cartesian_to_spherical(shifted_data)
     return r, theta, phi
 
 
 def cartesian_to_spherical(data):
-    """Convert cartesian coordinates to spherical coordinates.
+    """
+    Convert cartesian coordinates to spherical coordinates.
 
-    Arguments:   
-    data - numpy array with shape (n, 3) which is the 
+    Arguments:
+    data - numpy array with shape (n, 3) which is the
     cartesian coordinates (x, y, z) of n points.
 
-    Returns:   
-    numpy array with shape (n, 3) which is the spherical 
+    Returns:
+    numpy array with shape (n, 3) which is the spherical
     coordinates (r, theta, phi) of n points.
     """
     x = data[:, 0]
@@ -329,8 +359,8 @@ def cartesian_to_spherical(data):
     # angle on x-y plane
     phi = np.arctan2(y, x)/np.pi
 
-    #spherical_coord = np.vstack([r, theta, phi])
-    #spherical_coord = np.transpose(spherical_coord)
+    # spherical_coord = np.vstack([r, theta, phi])
+    # spherical_coord = np.transpose(spherical_coord)
     return r, theta, phi
 
 
@@ -341,15 +371,20 @@ def extract_sasa_data(siteresidue_list, pop):
     # Extracting sasa data from .out file
     residue_list = []
     qsasa_list = []
-    with open(pop) as popsa:  # opening .out file
+
+    # opening .out file
+    with open(pop) as popsa:
         for line in popsa:
             line_list = line.split()
-            if len(line_list) == 12:  # extracting relevant information
+
+            # extracting relevant information
+            if len(line_list) == 12:
                 residue_type = line_list[2] + line_list[4]
                 if residue_type in siteresidue_list:
                     qsasa = line_list[7]
                     residue_list.append(residue_type)
                     qsasa_list.append(qsasa)
+
     qsasa_list = [float(x) for x in qsasa_list]
     median = statistics.median(qsasa_list)
     qsasa_new = [median if x == '-nan' else x for x in qsasa_list]
@@ -360,11 +395,12 @@ def extract_sasa_data(siteresidue_list, pop):
     for i in range(len(fullprotein_data)):
         if fullprotein_data[i][0] in siteresidue_list:
             qsasa_data.append(float(fullprotein_data[i][1]))
+
     return qsasa_data
 
 
 def extract_seq_entropy_data(siteresidue_list, profile):
-    '''extracts sequence entropy data from .profile'''
+    """extracts sequence entropy data from .profile"""
     # Opening and formatting lists of the probabilities and residues
     with open(profile) as profile:
         ressingle_list = []
@@ -381,7 +417,8 @@ def extract_seq_entropy_data(siteresidue_list, profile):
     ressingle_list = ressingle_list[1:]
     probdata_list = probdata_list[1:]
 
-    # Changing single letter amino acid to triple letter with its corresponding number
+    # Changing single letter amino acid to triple letter
+    # with its corresponding number
     count = 0
     restriple_list = []
     for res in ressingle_list:
@@ -390,7 +427,8 @@ def extract_seq_entropy_data(siteresidue_list, profile):
         restriple_list.append(newres + str(count))
 
     # Calculating information entropy
-    with np.errstate(divide='ignore'):      # suppress warning
+    # suppress warning
+    with np.errstate(divide='ignore'):
         prob_array = np.asarray(probdata_list)
         log_array = np.log2(prob_array)
 
@@ -408,9 +446,8 @@ def extract_seq_entropy_data(siteresidue_list, profile):
 
 
 def amino_single_to_triple(single):
-    """
-    converts the single letter amino acid abbreviation to the triple letter abbreviation
-    """
+    """Converts the single letter amino acid abbreviation to 
+    the triple letter abbreviation."""
 
     single_to_triple_dict = {'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS',
                              'G': 'GLY', 'Q': 'GLN', 'E': 'GLU', 'H': 'HIS', 'I': 'ILE',
@@ -420,13 +457,12 @@ def amino_single_to_triple(single):
     for i in single_to_triple_dict.keys():
         if i == single:
             triple = single_to_triple_dict[i]
+
     return triple
 
 
 class PairData(Data):
-    """
-    Paired data type. Each object has 2 graphs.
-    """
+    """Paired data type. Each object has 2 graphs."""
 
     def __init__(self, x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b, y):
         super(PairData, self).__init__(y=y)
@@ -447,9 +483,11 @@ class PairData(Data):
             return super(PairData, self).__inc__(key, value)
 
 
-def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster_th, train_pos_th, train_neg_th, val_pos_th, val_neg_th):
+def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster_th,
+                         train_pos_th, train_neg_th, val_pos_th, val_neg_th):
     """
-    Divide the dataset and generate pairs of pockets for train, validation, and test.
+    Divide the dataset and generate pairs of pockets for train, 
+    validation, and test.
 
     Arguments:
         cluster_file_dir: directory of the cluster file.
@@ -500,7 +538,6 @@ def read_cluster_file(cluster_file_dir):
         cluster = x.split()[3:]
         cluster = [x.split(',')[0] for x in cluster]
         clusters.append(cluster)
-        # cluster_sizes.append(len(cluster))
 
     return clusters
 
@@ -525,8 +562,6 @@ def select_classes(clusters, num_classes, th):
     for i in range(num_classes):
         selected_classes.append(sample_from_list(clusters[i], th))
 
-    #select_classe_lengths = [len(x) for x in selected_classes]
-
     return selected_classes
 
 
@@ -549,20 +584,20 @@ def divide_clusters(clusters):
 
     # sizes of the clusters
     cluster_sizes = [len(x) for x in clusters]
-    #print('total pockets:{}'.format(sum(cluster_sizes)))
+    # print('total pockets:{}'.format(sum(cluster_sizes)))
 
     # train
     train_sizes = [int(0.7 * x) for x in cluster_sizes]
-    #print('train pockets:{}'.format(sum(train_sizes)))
+    # print('train pockets:{}'.format(sum(train_sizes)))
 
     # validation
     val_sizes = [int(0.15 * x) for x in cluster_sizes]
-    #print('val pockets:{}'.format(sum(val_sizes)))
+    # print('val pockets:{}'.format(sum(val_sizes)))
 
     # test
     train_val_sizes = [sum(x) for x in zip(train_sizes, val_sizes)]
     test_sizes = [a - b for a, b in zip(cluster_sizes, train_val_sizes)]
-    #print('test pockets:{}'.format(sum(test_sizes)))
+    # print('test pockets:{}'.format(sum(test_sizes)))
 
     train_clusters = []
     val_clusters = []
@@ -576,21 +611,16 @@ def divide_clusters(clusters):
 
 
 def divide_clusters_train_test(clusters):
-    """
-    Shuffle and divide the clusters into train, validation and test
-    """
-    # shuffle the pockets in each cluster
-    [random.shuffle(x) for x in clusters]  # random.shuffle happens inplace
+    """Shuffle and divide the clusters into train, validation and test"""
+    # shuffle (inplace) the pockets in each cluster
+    [random.shuffle(x) for x in clusters]
 
     # sizes of the clusters
     cluster_sizes = [len(x) for x in clusters]
-    #print('total pockets:{}'.format(sum(cluster_sizes)))
+    # print('total pockets:{}'.format(sum(cluster_sizes)))
 
-    # train
+    # train cluster sizes
     train_sizes = [int(0.8 * x) for x in cluster_sizes]
-
-    # test
-    #test_sizes = [a - b for a, b in zip(cluster_sizes, train_sizes)]
 
     train_clusters = []
     test_clusters = []
@@ -601,9 +631,7 @@ def divide_clusters_train_test(clusters):
 
 
 def gen_pairs(clusters, pos_pair_th=1000, neg_pair_th=20):
-    """
-    Generate pairs of pockets from input clusters.
-    """
+    """Generate pairs of pockets from input clusters."""
     # generate pairs of pockets in the same cluster
     pos_pairs = []
     for cluster in clusters:
