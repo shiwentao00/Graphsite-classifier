@@ -66,5 +66,5 @@ fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
 colors = "cividis"
 ax = sns.heatmap(cm, annot=True, linewidths=.5, cmap=colors)
 ax.set(xlabel='Predicted label', ylabel='True label')
-plt.savefig('./confusion_matrix.png')
-plt.savefig('./confusion_matrix.tif')
+plt.savefig('./confusion_matrix.png', bbox_inches='tight')
+plt.savefig('./confusion_matrix.tif', bbox_inches='tight')
