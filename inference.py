@@ -9,7 +9,8 @@ from model import GraphSite
 import sklearn.metrics as metrics
 
 
-def pocket_loader_gen(pocket_dir, clusters, features_to_use, batch_size, shuffle=False, num_workers=1):
+def pocket_loader_gen(pocket_dir, clusters, features_to_use,
+                      batch_size, shuffle=False, num_workers=1):
     """Dataloader used to wrap PocketDataset."""
     pocketset = PocketDataset(pocket_dir=pocket_dir,
                               clusters=clusters,
@@ -141,11 +142,11 @@ if __name__ == "__main__":
     num_channels = config['num_channels']
     num_features = len(features_to_use)
     num_classes = len(clusters)
-    
+
     model = GraphSite(num_classes=num_classes, num_features=num_features, dim=model_size,
                       train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
                       num_channels=num_channels, deg=None).to(device)
-    
+
     model.load_state_dict(torch.load('../trained_models/trained_classifier_model_63.pt',
                                      map_location=torch.device('cpu')))
 

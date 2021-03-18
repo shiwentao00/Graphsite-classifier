@@ -1,6 +1,5 @@
 # GraphSite   
-GraphSite is a deep learning-based software to classify ligand-binding sites on proteins. It is implemented with Pytorch and Pytorch-geometric. During training, the binding sites are transformed on-the-fly to graphs that contain both spacial and chemical features. A customized graph neural network (GNN) classifier is then trained on the graph representations of the binding pockets.   
-The following figure illustrates the convertion from a binding pocket (A) to a graph (B):
+GraphSite is a deep learning-based software to classify ligand-binding sites on proteins. It is implemented with Pytorch and Pytorch-geometric. During training, the binding sites are transformed on-the-fly to graphs that contain both spacial and chemical features. A customized graph neural network (GNN) classifier is then trained on the graph representations of the binding pockets. The following figure illustrates the convertion from a binding pocket (A) to a graph (B):
 <p align="center">
 <img width="900" height="450" src="legacy/graph_forming_figure/combined.png">
 </p>
