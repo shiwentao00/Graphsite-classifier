@@ -1,5 +1,5 @@
 ## GraphSite Classifier Dataset
-The dataset has 51677 pockets clustered into 1301 clusters.    
+The original dataset has 51677 pockets clustered into 1301 clusters.   
 
 |  | small (1-29) | middle (30-199) | large (200-999)| super-large (1000-)|   
 | --- | --- | --- | --- | --- |      
@@ -13,7 +13,7 @@ The statistics of the dataset(mean diameter is inf because there are unconnected
 | mean | 142.77 | 765.83 | 0.082 | inf | 10.64 |   
 | median | 137 | 730 | 0.078 | 10 | 10.64 |   
 
-Manually identified clusters:   
+We select a subset of the original dataset (the largest 30 clusters) to form a new dataset that contains 21,125 binding pockets:   
 
 | cluster | description |   
 | --- | --- |
@@ -49,7 +49,7 @@ Manually identified clusters:
 | 29 | glycerol-1-phosphate, dihydroxyacetone phosphate, glycerolaldehyde 3 phosphate etc. |
 <!--| 30 | octyl beta-D-glucopyranose, 2 aceto amido-2-deoxy beta-D glucopyranose |-->
 
-Current grouping of classes:   
+The 30 clusters are then grouped into 14 classes:   
 
 | class | clusters | label |
 | --- | --- | --- |
