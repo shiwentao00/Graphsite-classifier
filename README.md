@@ -56,5 +56,5 @@ The inference script requires 3 input arguments:
 3. ```trained_model```: the path to the trained model.
 After the inference data are prepared, run the following script to test the model:
 ```
-python inference.py -unseen_data_dir ../unseen-data/unseen_pdb/ -unseen_data_classes '../unseen-data/unseen-pocket-list_new.yaml' -trained_model '../trained_models/trained_classifier_model_63.pt'
+python inference.py -unseen_data_dir ../unseen-data/unseen_pdb/ -unseen_data_classes ../unseen-data/unseen-pocket-list_new.yaml -trained_model ../trained_models/trained_classifier_model_63.pt
 ```
