@@ -3,7 +3,7 @@ GraphSite is a deep learning-based software to classify ligand-binding sites on 
 The following figure illustrates the convertion from a binding pocket (A) to a graph (B):
 
 <p align="center">
-<img width="900" height="800" src="legacy/graph_forming_figure/atoms.png">
+<img width="900" height="450" src="legacy/graph_forming_figure/combined.png">
 </p>
 
 If you use this repo in your work please cite our paper :)
