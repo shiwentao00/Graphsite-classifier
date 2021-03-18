@@ -24,12 +24,14 @@ def get_args():
     parser = argparse.ArgumentParser('python')
 
     parser.add_argument('-run',
-                        required=True,
+                        required=False,
+                        default=0,
                         type=int,
                         help='which experiment.')
 
     parser.add_argument('-seed',
-                        required=True,
+                        required=False,
+                        default=23,
                         type=int,
                         help='random seed for splitting dataset.')
 

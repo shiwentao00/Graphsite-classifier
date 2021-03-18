@@ -1,4 +1,4 @@
-## Dataset
+## GraphSite Classifier Dataset
 The dataset has 51677 pockets clustered into 1301 clusters.    
 
 |  | small (1-29) | middle (30-199) | large (200-999)| super-large (1000-)|   
