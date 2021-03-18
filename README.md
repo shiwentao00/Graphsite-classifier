@@ -12,9 +12,11 @@ Currently under peer review
 
 ## Dataset
 The dataset consists of 21,125 binding pockets which are grouped into 14 classes. The details of the classes are described [here](docs/data.md). There are three files needed for training:
-1. ```clusters.yaml```: contains information about the initial clustering information of the binding sites. Multiple clusters will be merged into one class before training. 
-2. ```dataset.tar.gz```: contains all binding site data in this project.
-3. ```pops.tar.gz```: contains popsa files describing the accessable surface area property which is used as a node feature.
+1. ```clusters.yaml```: training data, contains information about the initial clustering information of the binding sites. Multiple clusters will be merged into one class before training. 
+2. ```dataset.tar.gz```: training data, contains all binding site data in this project.
+3. ```pops.tar.gz```: training data, contains popsa files describing the accessable surface area property which is used as a node feature.
+4. ```unseen.tar.gz```: unseen data for inference.
+5. ```unseen-pocket-lists.yaml```: a yaml file containing lists of binding pockets, each list is a class.
 
 ## Usage
 ### Dependency
@@ -43,3 +45,16 @@ python train_classifier.py
 ```
 
 ### Inference
+The inference script requires 3 input arguments:
+1. ```unseen_data_dir```: directory of unseen data. For each pocket, there should be 3 associated files: ```.mol2```, ```.pops```, and ```.profile```. For example, a pocket on protein ```6af2A``` needs the following 3 files:
+```
+6af2A.pops
+6af2A.profile
+6ag5A00.mol2
+```
+2. ```unseen_data_classes```: a yaml file containing 14 lists which represent the classes of data. If there is no data in a class, it should correspond to an empty list. See ```unseen-pocket-lists.yaml``` as an example.
+3. ```trained_model```: the path to the trained model.
+After the inference data are prepared, run the following script to test the model:
+```
+python inference.py -unseen_data_dir ../unseen-data/unseen_pdb/ -unseen_data_classes '../unseen-data/unseen-pocket-list_new.yaml' -trained_model '../trained_models/trained_classifier_model_63.pt'
+```

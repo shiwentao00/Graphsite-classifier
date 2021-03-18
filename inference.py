@@ -1,4 +1,5 @@
 """Load a trained model and inference on unseen data."""
+import argparse
 import os
 import torch
 import yaml
@@ -7,6 +8,27 @@ from torch_geometric.data import DataLoader
 from dataloader import read_pocket
 from model import GraphSite
 import sklearn.metrics as metrics
+
+
+def get_args():
+    parser = argparse.ArgumentParser('python')
+
+    parser.add_argument('-unseen_data_dir',
+                        required=False,
+                        default='../unseen-data/unseen_pdb/',
+                        help='directory of unseen data to inference.')
+
+    parser.add_argument('-unseen_data_classes',
+                        required=False,
+                        default='../unseen-data/unseen-pocket-list_new.yaml',
+                        help='a yaml file containing classes as lists.')
+
+    parser.add_argument('-trained_model',
+                        required=False,
+                        default='../trained_models/trained_classifier_model_63.pt',
+                        help='path to the file of trained model')
+
+    return parser.parse_args()
 
 
 def pocket_loader_gen(pocket_dir, clusters, features_to_use,
@@ -57,7 +79,7 @@ class PocketDataset(Dataset):
         self.pockets = []
         for label, cluster in enumerate(self.clusters):
             self.pockets.extend(cluster)  # flatten the clusters list
-            for pocket in cluster:
+            for _ in cluster:
 
                 # class labels for all the pockets
                 self.class_labels.append(label)
@@ -100,17 +122,21 @@ def find_second_prediction(prob):
 
 
 if __name__ == "__main__":
+    args = get_args()
+
     # set of further filtered unseen data
-    unseen_data_dir = '../unseen-data/unseen_pdb/'
+    unseen_data_dir = args.unseen_data_dir
     pockets = []
     for f in os.listdir(unseen_data_dir):
         if f.endswith(".mol2"):
             pockets.append(f[0:7])
     pockets = set(pockets)
 
-    # list of unseen data
-    with open('../unseen-data/unseen-pocket-list_new.yaml') as f:
+    # classes of unseen data in yaml lists
+    unseen_data_classes = args.unseen_data_classes
+    with open(unseen_data_classes) as f:
         clusters = yaml.load(f, Loader=yaml.FullLoader)
+
     filtered_clusters = []
     for cluster in clusters:
         filtered_clusters.append([])
@@ -120,12 +146,15 @@ if __name__ == "__main__":
 
     # dataloader for unseen data
     features_to_use = ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa',
-                       'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']
+                       'charge', 'hydrophobicity', 'binding_probability',
+                       'sequence_entropy']
 
     pocket_loader, _, _ = pocket_loader_gen(pocket_dir=unseen_data_dir,
                                             clusters=filtered_clusters,
                                             features_to_use=features_to_use,
-                                            batch_size=1, shuffle=False, num_workers=1)
+                                            batch_size=1, shuffle=False,
+                                            num_workers=1
+                                            )
 
     # load model in cpu mode
     with open('./train_classifier.yaml') as f:
@@ -143,14 +172,20 @@ if __name__ == "__main__":
     num_features = len(features_to_use)
     num_classes = len(clusters)
 
-    model = GraphSite(num_classes=num_classes, num_features=num_features, dim=model_size,
-                      train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
-                      num_channels=num_channels, deg=None).to(device)
+    model = GraphSite(
+        num_classes=num_classes, num_features=num_features,
+        dim=model_size, train_eps=True, num_edge_attr=1,
+        which_model=which_model, num_layers=num_layers,
+        num_channels=num_channels, deg=None
+    ).to(device)
 
-    model.load_state_dict(torch.load('../trained_models/trained_classifier_model_63.pt',
+    model.load_state_dict(torch.load(args.trained_model,
                                      map_location=torch.device('cpu')))
 
     model.eval()
+
+    print('pocket', 'label', 'predict', 'probability',
+          'second-predict', 'second-probability')
 
     # inference
     targets = []
@@ -170,7 +205,8 @@ if __name__ == "__main__":
         probabilities.append(confidence)
         second_pred = find_second_prediction(prob)
 
-        # print pocket-name, true-label, prediction, probability, second-prediction, second-probability
+        # print pocket-name, label, prediction, probability,
+        # second-prediction, second-probability
         print(pocket_name[0], label[0], pred_cpu[0],
               confidence, second_pred[1], second_pred[0])
 
