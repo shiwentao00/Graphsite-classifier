@@ -163,7 +163,7 @@ def test_by_knn():
 
 
 if __name__ == "__main__":
-    with open('./two_phase_train.yaml') as f:
+    with open('./train_siamese.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
     seed = config['seed']

@@ -1,7 +1,4 @@
 # Copyright: Wentao Shi, 2020
-"""
-Solve the problem with traditional end-to-end multi-class model.
-"""
 import argparse
 import yaml
 import random
@@ -59,8 +56,13 @@ def train():
             loss_function.set_gamma(gamma)
 
     loss_total = 0
-    epoch_pred = []  # all the predictions for the epoch
-    epoch_label = []  # all the labels for the epoch
+
+    # all the predictions for the epoch
+    epoch_pred = []
+
+    # all the labels for the epoch
+    epoch_label = []
+
     for data in train_loader:
         data = data.to(device)
         optimizer.zero_grad()
@@ -74,15 +76,18 @@ def train():
         # convert prediction and label to list
         # used to compute evaluation metrics
         pred_cpu = list(pred.cpu().detach().numpy())
-        # used to compute evaluation metrics
         label = list(data.y.cpu().detach().numpy())
 
         epoch_pred.extend(pred_cpu)
         epoch_label.extend(label)
 
+    # accuracy of entire epoch
     train_acc = metrics.accuracy_score(
-        epoch_label, epoch_pred)  # accuracy of entire epoch
-    train_loss = loss_total / train_size  # averaged training loss
+        epoch_label, epoch_pred)
+
+    # averaged training loss
+    train_loss = loss_total / train_size
+
     return train_loss, train_acc
 
 
@@ -94,8 +99,13 @@ def test():
     model.eval()
 
     loss_total = 0
-    epoch_pred = []  # all the predictions for the epoch
-    epoch_label = []  # all the labels for the epoch
+
+    # all the predictions for the epoch
+    epoch_pred = []
+
+    # all the labels for the epoch
+    epoch_label = []
+
     for data in test_loader:
         data = data.to(device)
         output = model(data.x, data.edge_index, data.edge_attr, data.batch)
@@ -105,22 +115,30 @@ def test():
 
         # used to compute evaluation metrics
         pred_cpu = list(pred.cpu().detach().numpy())
+
         # used to compute evaluation metrics
         label = list(data.y.cpu().detach().numpy())
 
         epoch_pred.extend(pred_cpu)
         epoch_label.extend(label)
 
+    # accuracy of entire epoch
     test_acc = metrics.accuracy_score(
-        epoch_label, epoch_pred)  # accuracy of entire epoch
-    test_loss = loss_total / test_size  # averaged training loss
+        epoch_label, epoch_pred)
+
+    # averaged training loss
+    test_loss = loss_total / test_size
+
     return test_loss, test_acc
 
 
 def compute_class_weights(clusters):
-    """Compute the weights of each class/cluster according to number of data.   
+    """Compute the weights of each class/cluster 
+    according to number of data.   
 
-    clusters: list of lists of pockets."""
+    Arguments:
+    clusters - list of lists of pockets.
+    """
     cluster_lengths = [len(x) for x in clusters]
     cluster_weights = np.array([1/x for x in cluster_lengths])
     # normalize the weights with mean
@@ -135,8 +153,12 @@ def gen_classification_report(dataloader):
     """
     model.eval()
 
-    epoch_pred = []  # all the predictions for the epoch
-    epoch_label = []  # all the labels for the epoch
+    # all the predictions for the epoch
+    epoch_pred = []
+
+    # all the labels for the epoch
+    epoch_label = []
+
     for data in dataloader:
         data = data.to(device)
         output = model(data.x, data.edge_index, data.edge_attr, data.batch)
@@ -144,6 +166,7 @@ def gen_classification_report(dataloader):
 
         # used to compute evaluation metrics
         pred_cpu = list(pred.cpu().detach().numpy())
+
         # used to compute evaluation metrics
         label = list(data.y.cpu().detach().numpy())
 
@@ -184,20 +207,21 @@ if __name__ == "__main__":
     print('features to use: ', features_to_use)
 
     num_epoch = config['num_epoch']
-    #lr_decay_epoch = config['lr_decay_epoch']
+    print('number of epochs: ', num_epoch)
+
     batch_size = config['batch_size']
+    print('batch size: ', batch_size)
+
     learning_rate = config['learning_rate']
     weight_decay = config['weight_decay']
-    print('number of epochs: ', num_epoch)
-    #print('learning rate decay at epoch: ', lr_decay_epoch)
-    print('batch size: ', batch_size)
 
     num_workers = os.cpu_count()
     num_workers = int(min(batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
+    # detect cpu or gpu
     device = torch.device('cuda' if torch.cuda.is_available()
-                          else 'cpu')  # detect cpu or gpu
+                          else 'cpu')
     print('device: ', device)
 
     # read the original clustered pockets
@@ -256,20 +280,25 @@ if __name__ == "__main__":
     # the channel number for nmm model
     num_channels = config['num_channels']
 
-    model = DeepDruG(num_classes=num_classes, num_features=num_features, dim=model_size,
-                     train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
-                     num_channels=num_channels, deg=deg).to(device)
+    model = DeepDruG(num_classes=num_classes, num_features=num_features,
+                     dim=model_size, train_eps=True, num_edge_attr=1,
+                     which_model=which_model, num_layers=num_layers,
+                     num_channels=num_channels, deg=deg
+                     ).to(device)
     print('model architecture:')
     print(model)
 
-    optimizer = torch.optim.Adam(
-        model.parameters(), lr=learning_rate, weight_decay=weight_decay, amsgrad=False)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate,
+                                 weight_decay=weight_decay, amsgrad=False
+                                 )
     print('optimizer:')
     print(optimizer)
 
     # decay learning rate when validation accuracy stops increasing.
-    scheduler = ReduceLROnPlateau(
-        optimizer, mode='max', factor=0.5, patience=10, cooldown=40, min_lr=0.0001, verbose=True)
+    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5,
+                                  patience=10, cooldown=40,
+                                  min_lr=0.0001, verbose=True
+                                  )
     print('learning rate scheduler: ')
     print(scheduler)
 
@@ -330,8 +359,8 @@ if __name__ == "__main__":
     with open(loss_dir, 'w') as fp:
         json.dump(results, fp)
 
-    # load the best model to generate a detailed classification report
     print('****************************************************************')
+    # load the best model to generate a detailed classification report
     model.load_state_dict(best_model)
     train_report, train_confusion_mat = gen_classification_report(train_loader)
     test_report, test_confusion_mat = gen_classification_report(test_loader)
