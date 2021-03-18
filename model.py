@@ -2,12 +2,10 @@
 import torch
 import torch.nn.functional as F
 from torch import Tensor
-from torch.nn import Sequential, Linear, ReLU, LeakyReLU, ELU
+from torch.nn import Sequential, Linear, LeakyReLU, ELU
 from torch.nn import ModuleList
 from torch_geometric.nn import GINConv
 from torch_geometric.nn import PNAConv, BatchNorm
-from torch_geometric.nn import global_add_pool
-from torch_geometric.nn import GlobalAttention
 from torch_geometric.nn import Set2Set
 import itertools
 import numpy as np
@@ -27,13 +25,14 @@ class SCNWMConv(GINConv):
         super(SCNWMConv, self).__init__(nn=nn, train_eps=train_eps)
         self.edge_transformer = Sequential(Linear(num_edge_attr, 8),
                                            LeakyReLU(),
-                                           #Linear(8, num_features),
                                            Linear(8, 1),
-                                           ELU())  # make it possible to reach -1
+                                           ELU()
+                                           )
 
     def forward(self, x, edge_index, edge_attr, size=None):
+        # x: OptPairTensor
         if isinstance(x, Tensor):
-            x = (x, x)  # x: OptPairTensor
+            x = (x, x)
 
         # propagate_type: (x: OptPairTensor)
         out = self.propagate(edge_index, x=x, edge_attr=edge_attr, size=size)
@@ -53,7 +52,10 @@ class SCNWMConv(GINConv):
         return x_j * weight
 
     def __repr__(self):
-        return '{}(nn={})(edge_transformer={})'.format(self.__class__.__name__, self.nn, self.edge_transformer)
+        return '{}(nn={})(edge_transformer={})'.format(self.__class__.__name__,
+                                                       self.nn,
+                                                       self.edge_transformer
+                                                       )
 
 
 class EmbeddingNet(torch.nn.Module):
@@ -120,13 +122,16 @@ class ResidualBlock(torch.nn.Module):
         self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
 
     def forward(self, x, edge_index, edge_attr):
-        x_skip = x  # store the input value
+        # store the input value
+        x_skip = x
 
         x = self.bn1(x)
         x = F.leaky_relu(x)
         x = self.conv1(x, edge_index, edge_attr)
 
-        x = x + x_skip  # add before activation
+        # add before activation
+        x = x + x_skip
+
         return x
 
 
@@ -170,10 +175,12 @@ class ResidualEmbeddingNet(torch.nn.Module):
         x = self.rb_7(x, edge_index, edge_attr)
         x = self.rb_8(x, edge_index, edge_attr)
 
+        # batch norm after activation
         x = F.leaky_relu(x)
-        x = self.bn_8(x)  # batch norm after activation
+        x = self.bn_8(x)
 
         x = self.set2set(x, batch)
+
         return x
 
 
@@ -272,8 +279,8 @@ class PNAEmbeddingNet(torch.nn.Module):
             in_channels=dim, processing_steps=5, num_layers=2)
 
     def forward(self, x, edge_index, edge_attr, batch):
-
-        layer_x = []  # jumping knowledge
+        # jumping knowledge
+        layer_x = []
         for conv, batch_norm in zip(self.convs, self.batch_norms):
             x = F.leaky_relu(batch_norm(conv(x, edge_index, edge_attr)))
             layer_x.append(x)
@@ -304,11 +311,11 @@ class NWMConv(MessagePassing):
             self.eps = torch.nn.Parameter(torch.Tensor([eps]))
         else:
             self.register_buffer('eps', torch.Tensor([eps]))
-        # self.reset_parameters()
 
     def forward(self, x, edge_index, edge_attr, size=None):
+        # x: OptPairTensor
         if isinstance(x, Tensor):
-            x = (x, x)  # x: OptPairTensor
+            x = (x, x)
 
         # propagate_type: (x: OptPairTensor)
         out = self.propagate(edge_index, x=x, edge_attr=edge_attr, size=size)
@@ -370,7 +377,8 @@ class JKMCNWMEmbeddingNet(torch.nn.Module):
     The GNN layers are now MCNWMConv layer
     """
 
-    def __init__(self, num_features, dim, train_eps, num_edge_attr, num_layers, num_channels=1, layer_aggregate='max'):
+    def __init__(self, num_features, dim, train_eps, num_edge_attr,
+                 num_layers, num_channels=1, layer_aggregate='max'):
         super(JKMCNWMEmbeddingNet, self).__init__()
         self.num_layers = num_layers
         self.layer_aggregate = layer_aggregate
@@ -382,8 +390,10 @@ class JKMCNWMEmbeddingNet(torch.nn.Module):
 
         # rest of the layers
         for i in range(1, self.num_layers):
-            exec('self.conv{} = MCNWMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(
-                i, num_channels))
+            exec(
+                'self.conv{} = MCNWMConv(in_dim=dim, out_dim=dim, num_channels={}, num_edge_attr=num_edge_attr, train_eps=train_eps)'.format(
+                    i, num_channels)
+            )
             exec('self.bn{} = torch.nn.BatchNorm1d(dim)'.format(i))
 
         # read out function
@@ -410,6 +420,7 @@ class JKMCNWMEmbeddingNet(torch.nn.Module):
 
         # graph readout
         x = self.set2set(x, batch)
+
         return x
 
 
@@ -467,37 +478,60 @@ class JKEGINEmbeddingNet(torch.nn.Module):
         return x
 
 
-class DeepDruG(torch.nn.Module):
+class GraphSite(torch.nn.Module):
     """Standard classifier to classify the binding sites."""
 
-    def __init__(self, num_classes, num_features, dim, train_eps, num_edge_attr, which_model, num_layers, num_channels, deg=None):
+    def __init__(self, num_classes, num_features, dim, train_eps,
+                 num_edge_attr, which_model, num_layers, num_channels,
+                 deg=None):
         """
         train_eps: for the SCNWMConv module only when which_model in 
         ['jk', 'residual', 'jknmm', and 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
         """
-        super(DeepDruG, self).__init__()
+        super(GraphSite, self).__init__()
         self.num_classes = num_classes
 
         # use one of the embedding net
         if which_model == 'residual':
             self.embedding_net = ResidualEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+                num_features=num_features,
+                dim=dim, train_eps=train_eps,
+                num_edge_attr=num_edge_attr
+            )
         elif which_model == 'jk':
             self.embedding_net = JKEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
+                num_features=num_features,
+                dim=dim, train_eps=train_eps,
+                num_edge_attr=num_edge_attr,
+                num_layers=num_layers
+            )
         elif which_model == 'pna':
             self.embedding_net = PNAEmbeddingNet(
-                num_features=num_features, dim=dim, num_edge_attr=num_edge_attr, num_layers=num_layers, deg=deg)
+                num_features=num_features,
+                dim=dim, num_edge_attr=num_edge_attr,
+                num_layers=num_layers, deg=deg
+            )
         elif which_model == 'jknwm':
             self.embedding_net = JKMCNWMEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers, num_channels=num_channels)
+                num_features=num_features,
+                dim=dim, train_eps=train_eps,
+                num_edge_attr=num_edge_attr,
+                num_layers=num_layers,
+                num_channels=num_channels
+            )
         elif which_model == 'jkgin':
             self.embedding_net = JKEGINEmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr, num_layers=num_layers)
+                num_features=num_features,
+                dim=dim, train_eps=train_eps,
+                num_edge_attr=num_edge_attr,
+                num_layers=num_layers
+            )
         else:
             self.embedding_net = EmbeddingNet(
-                num_features=num_features, dim=dim, train_eps=train_eps, num_edge_attr=num_edge_attr)
+                num_features=num_features,
+                dim=dim, train_eps=train_eps,
+                num_edge_attr=num_edge_attr)
 
         # set2set doubles the size of embeddnig
         self.fc1 = Linear(2 * dim, dim)
@@ -566,7 +600,10 @@ class FocalLoss(torch.nn.Module):
         self.gamma = gamma
 
     def __repr__(self):
-        return '{}(gamma={}, alpha={}, reduction={})'.format(self.__class__.__name__, self.gamma, self.alpha, self.reduction)
+        return '{}(gamma={}, alpha={}, reduction={})'.format(self.__class__.__name__,
+                                                             self.gamma, self.alpha,
+                                                             self.reduction
+                                                             )
 
 
 class SiameseNet(torch.nn.Module):
@@ -656,7 +693,11 @@ class ContrastiveLoss(torch.nn.Module):
             return loss.sum()
 
     def __repr__(self):
-        return 'ContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin, self.dissimilar_margin, self.normalize, self.mean)
+        return 'ContrastiveLoss(similar_margin={}, dissimilar_margin={}, normalize={}, mean={})'.format(self.similar_margin,
+                                                                                                        self.dissimilar_margin,
+                                                                                                        self.normalize,
+                                                                                                        self.mean
+                                                                                                        )
 
 
 class SelectiveSiameseNet(torch.nn.Module):

@@ -195,6 +195,7 @@ if __name__ == "__main__":
     pair_batch_size = config['pair_batch_size']
     pair_learning_rate = config['pair_learning_rate']
     pair_weight_decay = config['pair_weight_decay']
+
     # whether to normalize the embeddings in constrastive loss
     normalize = config['normalize']
     print('number of epochs to train:', pair_num_epoch)
@@ -208,8 +209,9 @@ if __name__ == "__main__":
     num_workers = int(min(pair_batch_size, num_workers))
     print('number of workers to load data: ', num_workers)
 
+    # detect cpu or gpu
     device = torch.device('cuda' if torch.cuda.is_available()
-                          else 'cpu')  # detect cpu or gpu
+                          else 'cpu')
     print('device: ', device)
 
     # read all the original clusters
@@ -253,8 +255,10 @@ if __name__ == "__main__":
     selective_lr_decay_epoch = config['selective_lr_decay_epoch']
     select_hard_pair_epoch = config['select_hard_pair_epoch']
     selective_batch_size = config['selective_batch_size']
+
     # number of hardest similar pairs sampled from a mini-batch
     num_hard_pos_pairs = config['num_hard_pos_pairs']
+
     # number of hardest dissimilar pairs sampled from a mini-batch
     num_hard_neg_pairs = config['num_hard_neg_pairs']
     selective_learning_rate = config['selective_learning_rate']
