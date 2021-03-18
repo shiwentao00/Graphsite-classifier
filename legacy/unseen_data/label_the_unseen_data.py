@@ -1,7 +1,5 @@
-"""
-Label the unseen data, and save pocket names in a list of list. 
-The order of the classes is exactly the same as the old data. 
-"""
+"""Label the unseen data, and save pocket names in a list of list. 
+The order of the classes is exactly the same as the old data. """
 import yaml
 from dataloader import read_cluster_file_from_yaml
 from dataloader import merge_clusters
@@ -9,9 +7,9 @@ import pandas as pd
 
 
 if __name__ == "__main__":
-    
+
     with open('./train_classifier.yaml') as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)  
+        config = yaml.load(f, Loader=yaml.FullLoader)
 
     cluster_file_dir = config['cluster_file_dir']
     pocket_dir = config['pocket_dir']
@@ -21,7 +19,7 @@ if __name__ == "__main__":
     clusters = read_cluster_file_from_yaml(cluster_file_dir)
     clusters = merge_clusters(clusters, merge_info)
     num_classes = len(clusters)
-    print('number of classes after merging: ', num_classes)   
+    print('number of classes after merging: ', num_classes)
 
     # convert seen data into list of sets
     cluster_sets = [set(x) for x in clusters]
@@ -44,4 +42,3 @@ if __name__ == "__main__":
 
     with open('../unseen-data/unseen-pocket-list.yaml', 'w') as file:
         yaml.dump(unseen_data, file)
-                

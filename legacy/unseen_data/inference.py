@@ -1,13 +1,11 @@
-"""
-Load a trained model and inference on unseen data.
-"""
+"""Load a trained model and inference on unseen data."""
 import os
 import torch
 import yaml
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 from dataloader import read_pocket
-from model import DeepDruG
+from model import GraphSite
 import sklearn.metrics as metrics
 
 
@@ -30,7 +28,9 @@ class PocketDataset(Dataset):
     def __init__(self, pocket_dir, clusters, features_to_use):
         self.pocket_dir = pocket_dir
         self.clusters = clusters
-        self.threshold = 4.5  # distance threshold to form an undirected edge between two atoms
+
+        # distance threshold to form an undirected edge between two atoms
+        self.threshold = 4.5
 
         # hard coded info to generate 2 node features
         self.hydrophobicity = {'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
@@ -38,6 +38,7 @@ class PocketDataset(Dataset):
                                'HIS': -3.2, 'ILE': 4.5, 'LEU': 3.8, 'LYS': -3.9,
                                'MET': 1.9, 'PHE': 2.8, 'PRO': -1.6, 'SER': -0.8,
                                'THR': -0.7, 'TRP': -0.9, 'TYR': -1.3, 'VAL': 4.2}
+
         self.binding_probability = {'ALA': 0.701, 'ARG': 0.916, 'ASN': 0.811, 'ASP': 1.015,
                                     'CYS': 1.650, 'GLN': 0.669, 'GLU': 0.956, 'GLY': 0.788,
                                     'HIS': 2.286, 'ILE': 1.006, 'LEU': 1.045, 'LYS': 0.468,
@@ -56,6 +57,7 @@ class PocketDataset(Dataset):
         for label, cluster in enumerate(self.clusters):
             self.pockets.extend(cluster)  # flatten the clusters list
             for pocket in cluster:
+
                 # class labels for all the pockets
                 self.class_labels.append(label)
 
@@ -71,7 +73,12 @@ class PocketDataset(Dataset):
         pop_dir = self.pocket_dir + pocket[0:-2] + '.pops'
 
         x, edge_index, edge_attr = read_pocket(
-            pocket_dir, profile_dir, pop_dir, self.hydrophobicity, self.binding_probability, self.features_to_use, self.threshold)
+            pocket_dir, profile_dir, pop_dir,
+            self.hydrophobicity,
+            self.binding_probability,
+            self.features_to_use,
+            self.threshold
+        )
         data = Data(x=x, edge_index=edge_index,
                     edge_attr=edge_attr, y=torch.tensor([label]))
         return data, pocket
@@ -110,9 +117,6 @@ if __name__ == "__main__":
             if x in pockets:
                 filtered_clusters[-1].append(x)
 
-    # for i in range(3, 14):
-    #    filtered_clusters[i] = []
-
     # dataloader for unseen data
     features_to_use = ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa',
                        'charge', 'hydrophobicity', 'binding_probability', 'sequence_entropy']
@@ -125,18 +129,23 @@ if __name__ == "__main__":
     # load model in cpu mode
     with open('./train_classifier.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
+
+    # detect cpu or gpu
     device = torch.device('cuda' if torch.cuda.is_available()
-                          else 'cpu')  # detect cpu or gpu
-    #print('device: ', device)
+                          else 'cpu')
+    print('device: ', device)
+
     which_model = config['which_model']
     model_size = config['model_size']
     num_layers = config['num_layers']
     num_channels = config['num_channels']
     num_features = len(features_to_use)
     num_classes = len(clusters)
-    model = DeepDruG(num_classes=num_classes, num_features=num_features, dim=model_size,
-                     train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
-                     num_channels=num_channels, deg=None).to(device)
+    
+    model = GraphSite(num_classes=num_classes, num_features=num_features, dim=model_size,
+                      train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
+                      num_channels=num_channels, deg=None).to(device)
+    
     model.load_state_dict(torch.load('../trained_models/trained_classifier_model_63.pt',
                                      map_location=torch.device('cpu')))
 
@@ -159,8 +168,10 @@ if __name__ == "__main__":
         targets.extend(label)
         probabilities.append(confidence)
         second_pred = find_second_prediction(prob)
+
         # print pocket-name, true-label, prediction, probability, second-prediction, second-probability
-        print(pocket_name[0], label[0], pred_cpu[0], confidence, second_pred[1], second_pred[0])
+        print(pocket_name[0], label[0], pred_cpu[0],
+              confidence, second_pred[1], second_pred[0])
 
     # classification report
     report = metrics.classification_report(targets, predictions, digits=4)

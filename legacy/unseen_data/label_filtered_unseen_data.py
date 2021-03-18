@@ -1,13 +1,11 @@
-"""
-Label the filtered unseen data that filtered by Manali
-"""
+"""Label the filtered unseen data that are filtered"""
 import yaml
 import pandas as pd
 
 
 if __name__ == "__main__":
     with open('../unseen-data/unseen-pocket-list_new.yaml') as f:
-        clusters = yaml.load(f, Loader=yaml.FullLoader)  
+        clusters = yaml.load(f, Loader=yaml.FullLoader)
     cluster_sets = [set(x) for x in clusters]
     num_classes = len(cluster_sets)
 
