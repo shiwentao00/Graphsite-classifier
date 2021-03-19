@@ -1,3 +1,4 @@
+# Copyright: Wentao Shi, 2021
 """Load a trained model and inference on unseen data."""
 import argparse
 import os
