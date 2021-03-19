@@ -4,7 +4,7 @@ GraphSite is a deep learning-based software to classify ligand-binding sites on 
 <img width="900" height="450" src="legacy/graph_forming_figure/combined.png">
 </p>
 
-If you use this repo in your work please cite our paper :)
+If you find this repo useful in your work please cite our paper :)
 ```
 Currently under peer review
 ```
@@ -32,7 +32,7 @@ There are several dependencies for the train and inference Python script:
 9. SciPy
 
 ### Training
-The configuration of training is in the ```train_classifier.yaml```. To use the default hyper-paramters for training, the user only have to make the following modifications:
+The configuration of training is in the ```train_classifier.yaml```. To use the default architecture and hyper-paramters for training, which we recommend, the user only have to make the following modifications:
 1. set ```cluster_file_dir``` to the path of ```clusters.yaml``` you downloaded.
 2. set ```pocket_dir``` to the path of uncompressed ```dataset.tar.gz``` you downloaded.
 3. set ```pop_dir``` to the path of uncompressed ```pops.tar.gz``` you downloaded.
