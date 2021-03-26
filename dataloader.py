@@ -15,28 +15,41 @@ import yaml
 def dataloader_gen(pocket_dir, pop_dir, pos_pairs, neg_pairs, features_to_use,
                    batch_size, shuffle=True, num_workers=1):
     """Dataloader used to wrap PairDataset. Used for training and validation """
-    dataset = PairDataset(pocket_dir=pocket_dir, pop_dir=pop_dir,
-                          pos_pairs=pos_pairs, neg_pairs=neg_pairs,
-                          features_to_use=features_to_use
-                          )
+    dataset = PairDataset(
+        pocket_dir=pocket_dir, pop_dir=pop_dir,
+        pos_pairs=pos_pairs, neg_pairs=neg_pairs,
+        features_to_use=features_to_use
+    )
 
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle,
-                            num_workers=num_workers, follow_batch=[
-                                'x_a', 'x_b'],
-                            drop_last=True
-                            )
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        num_workers=num_workers, follow_batch=['x_a', 'x_b'],
+        drop_last=True
+    )
 
     return dataloader
 
 
-def pocket_loader_gen(pocket_dir, pop_dir, clusters, features_to_use, batch_size,
+def pocket_loader_gen(pocket_dir, pop_dir, clusters,
+                      features_to_use, batch_size,
                       shuffle=True, num_workers=1):
     """Dataloader used to wrap PocketDataset."""
-    pocketset = PocketDataset(pocket_dir=pocket_dir, pop_dir=pop_dir,
-                              clusters=clusters, features_to_use=features_to_use)
+    pocketset = PocketDataset(
+        pocket_dir=pocket_dir,
+        pop_dir=pop_dir,
+        clusters=clusters,
+        features_to_use=features_to_use
+    )
 
-    pocketloader = DataLoader(pocketset, batch_size=batch_size,
-                              shuffle=shuffle, num_workers=num_workers, drop_last=False)
+    pocketloader = DataLoader(
+        pocketset,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        num_workers=num_workers,
+        drop_last=False
+    )
 
     return pocketloader, len(pocketset), pocketset
 
@@ -52,20 +65,32 @@ class PocketDataset(Dataset):
         # distance threshold to form an undirected edge between two atoms
         self.threshold = 4.5
 
-        # hard coded info to generate 2 node features
-        self.hydrophobicity = {'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
-                               'CYS': 2.5, 'GLN': -3.5, 'GLU': -3.5, 'GLY': -0.4,
-                               'HIS': -3.2, 'ILE': 4.5, 'LEU': 3.8, 'LYS': -3.9,
-                               'MET': 1.9, 'PHE': 2.8, 'PRO': -1.6, 'SER': -0.8,
-                               'THR': -0.7, 'TRP': -0.9, 'TYR': -1.3, 'VAL': 4.2}
-        self.binding_probability = {'ALA': 0.701, 'ARG': 0.916, 'ASN': 0.811, 'ASP': 1.015,
-                                    'CYS': 1.650, 'GLN': 0.669, 'GLU': 0.956, 'GLY': 0.788,
-                                    'HIS': 2.286, 'ILE': 1.006, 'LEU': 1.045, 'LYS': 0.468,
-                                    'MET': 1.894, 'PHE': 1.952, 'PRO': 0.212, 'SER': 0.883,
-                                    'THR': 0.730, 'TRP': 3.084, 'TYR': 1.672, 'VAL': 0.884}
+        # hard coded hydrophobicity node feature
+        self.hydrophobicity = {
+            'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
+            'CYS': 2.5, 'GLN': -3.5, 'GLU': -3.5, 'GLY': -0.4,
+            'HIS': -3.2, 'ILE': 4.5, 'LEU': 3.8, 'LYS': -3.9,
+            'MET': 1.9, 'PHE': 2.8, 'PRO': -1.6, 'SER': -0.8,
+            'THR': -0.7, 'TRP': -0.9, 'TYR': -1.3, 'VAL': 4.2
+        }
 
-        total_features = ['x', 'y', 'z', 'r', 'theta', 'phi', 'sasa', 'charge',
-                          'hydrophobicity', 'binding_probability', 'sequence_entropy']
+        # hard coded binding probability node feature
+        self.binding_probability = {
+            'ALA': 0.701, 'ARG': 0.916, 'ASN': 0.811, 'ASP': 1.015,
+            'CYS': 1.650, 'GLN': 0.669, 'GLU': 0.956, 'GLY': 0.788,
+            'HIS': 2.286, 'ILE': 1.006, 'LEU': 1.045, 'LYS': 0.468,
+            'MET': 1.894, 'PHE': 1.952, 'PRO': 0.212, 'SER': 0.883,
+            'THR': 0.730, 'TRP': 3.084, 'TYR': 1.672, 'VAL': 0.884
+        }
+
+        total_features = [
+            'x', 'y', 'z',
+            'r', 'theta', 'phi',
+            'sasa', 'charge',
+            'hydrophobicity',
+            'binding_probability',
+            'sequence_entropy'
+        ]
 
         # features to use should be subset of total_features
         assert(set(features_to_use).issubset(set(total_features)))
@@ -92,13 +117,22 @@ class PocketDataset(Dataset):
             '/' + pocket[0:-2] + '.profile'
         pop_dir = self.pop_dir + pocket[0:-2] + '.pops'
 
-        x, edge_index, edge_attr = read_pocket(pocket_dir, profile_dir,
-                                               pop_dir, self.hydrophobicity,
-                                               self.binding_probability, self.features_to_use,
-                                               self.threshold
-                                               )
-        data = Data(x=x, edge_index=edge_index,
-                    edge_attr=edge_attr, y=torch.tensor([label]))
+        x, edge_index, edge_attr = read_pocket(
+            pocket_dir, profile_dir,
+            pop_dir,
+            self.hydrophobicity,
+            self.binding_probability,
+            self.features_to_use,
+            self.threshold
+        )
+
+        data = Data(
+            x=x,
+            edge_index=edge_index,
+            edge_attr=edge_attr,
+            y=torch.tensor([label])
+        )
+
         return data
 
 
@@ -115,21 +149,30 @@ class PairDataset(Dataset):
         self.threshold = 4.5  # distance threshold to form an undirected edge between two atoms
 
         # hydrophobicities are hardcoded
-        self.hydrophobicity = {'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
-                               'CYS': 2.5, 'GLN': -3.5, 'GLU': -3.5, 'GLY': -0.4,
-                               'HIS': -3.2, 'ILE': 4.5, 'LEU': 3.8, 'LYS': -3.9,
-                               'MET': 1.9, 'PHE': 2.8, 'PRO': -1.6, 'SER': -0.8,
-                               'THR': -0.7, 'TRP': -0.9, 'TYR': -1.3, 'VAL': 4.2}
+        self.hydrophobicity = {
+            'ALA': 1.8, 'ARG': -4.5, 'ASN': -3.5, 'ASP': -3.5,
+            'CYS': 2.5, 'GLN': -3.5, 'GLU': -3.5, 'GLY': -0.4,
+            'HIS': -3.2, 'ILE': 4.5, 'LEU': 3.8, 'LYS': -3.9,
+            'MET': 1.9, 'PHE': 2.8, 'PRO': -1.6, 'SER': -0.8,
+            'THR': -0.7, 'TRP': -0.9, 'TYR': -1.3, 'VAL': 4.2
+        }
 
         # binding probabilities are hardcoded
-        self.binding_probability = {'ALA': 0.701, 'ARG': 0.916, 'ASN': 0.811, 'ASP': 1.015,
-                                    'CYS': 1.650, 'GLN': 0.669, 'GLU': 0.956, 'GLY': 0.788,
-                                    'HIS': 2.286, 'ILE': 1.006, 'LEU': 1.045, 'LYS': 0.468,
-                                    'MET': 1.894, 'PHE': 1.952, 'PRO': 0.212, 'SER': 0.883,
-                                    'THR': 0.730, 'TRP': 3.084, 'TYR': 1.672, 'VAL': 0.884}
+        self.binding_probability = {
+            'ALA': 0.701, 'ARG': 0.916, 'ASN': 0.811, 'ASP': 1.015,
+            'CYS': 1.650, 'GLN': 0.669, 'GLU': 0.956, 'GLY': 0.788,
+            'HIS': 2.286, 'ILE': 1.006, 'LEU': 1.045, 'LYS': 0.468,
+            'MET': 1.894, 'PHE': 1.952, 'PRO': 0.212, 'SER': 0.883,
+            'THR': 0.730, 'TRP': 3.084, 'TYR': 1.672, 'VAL': 0.884
+        }
 
-        total_features = ['x', 'y', 'z', 'charge', 'hydrophobicity',
-                          'binding_probability', 'r', 'theta', 'phi', 'sasa', 'sequence_entropy']
+        total_features = [
+            'x', 'y', 'z',
+            'charge', 'hydrophobicity',
+            'binding_probability',
+            'r', 'theta', 'phi',
+            'sasa', 'sequence_entropy'
+        ]
 
         # features to use should be subset of total_features
         assert(set(features_to_use).issubset(set(total_features)))
@@ -165,29 +208,36 @@ class PairDataset(Dataset):
             pair[1] + '/' + pair[1][0:-2] + '.profile'
         pop_b_dir = self.pop_dir + pair[1][0:-2] + '.pops'
 
-        x_a, edge_index_a, edge_attr_a = read_pocket(pocket_a_dir, profile_a_dir,
-                                                     pop_a_dir, self.hydrophobicity,
-                                                     self.binding_probability, self.features_to_use,
-                                                     self.threshold
-                                                     )
+        x_a, edge_index_a, edge_attr_a = read_pocket(
+            pocket_a_dir, profile_a_dir,
+            pop_a_dir, self.hydrophobicity,
+            self.binding_probability, self.features_to_use,
+            self.threshold
+        )
 
-        x_b, edge_index_b, edge_attr_b = read_pocket(pocket_b_dir, profile_b_dir,
-                                                     pop_b_dir, self.hydrophobicity,
-                                                     self.binding_probability,
-                                                     self.features_to_use, self.threshold
-                                                     )
+        x_b, edge_index_b, edge_attr_b = read_pocket(
+            pocket_b_dir, profile_b_dir,
+            pop_b_dir, self.hydrophobicity,
+            self.binding_probability,
+            self.features_to_use, self.threshold
+        )
 
-        data = PairData(x_a=x_a, edge_index_a=edge_index_a, edge_attr_a=edge_attr_a,
-                        x_b=x_b, edge_index_b=edge_index_b, edge_attr_b=edge_attr_b, y=y)
+        data = PairData(
+            x_a=x_a, edge_index_a=edge_index_a, edge_attr_a=edge_attr_a,
+            x_b=x_b, edge_index_b=edge_index_b, edge_attr_b=edge_attr_b, y=y
+        )
 
         return data
 
 
-def read_pocket(mol_path, profile_path, pop_path, hydrophobicity, binding_probability, features_to_use, threshold):
+def read_pocket(mol_path, profile_path, pop_path,
+                hydrophobicity, binding_probability,
+                features_to_use, threshold):
     """Read the mol2 file as a dataframe."""
     atoms = PandasMol2().read_mol2(mol_path)
     atoms = atoms.df[['atom_id', 'subst_name',
-                      'atom_type', 'atom_name', 'x', 'y', 'z', 'charge']]
+                      'atom_type', 'atom_name',
+                      'x', 'y', 'z', 'charge']]
     atoms['residue'] = atoms['subst_name'].apply(lambda x: x[0:3])
     atoms['hydrophobicity'] = atoms['residue'].apply(
         lambda x: hydrophobicity[x])
@@ -449,10 +499,12 @@ def amino_single_to_triple(single):
     """Converts the single letter amino acid abbreviation to 
     the triple letter abbreviation."""
 
-    single_to_triple_dict = {'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS',
-                             'G': 'GLY', 'Q': 'GLN', 'E': 'GLU', 'H': 'HIS', 'I': 'ILE',
-                             'L': 'LEU', 'K': 'LYS', 'M': 'MET', 'F': 'PHE', 'P': 'PRO',
-                             'S': 'SER', 'T': 'THR', 'W': 'TRP', 'Y': 'TYR', 'V': 'VAL'}
+    single_to_triple_dict = {
+        'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS',
+        'G': 'GLY', 'Q': 'GLN', 'E': 'GLU', 'H': 'HIS', 'I': 'ILE',
+        'L': 'LEU', 'K': 'LYS', 'M': 'MET', 'F': 'PHE', 'P': 'PRO',
+        'S': 'SER', 'T': 'THR', 'W': 'TRP', 'Y': 'TYR', 'V': 'VAL'
+    }
 
     for i in single_to_triple_dict.keys():
         if i == single:
@@ -464,7 +516,8 @@ def amino_single_to_triple(single):
 class PairData(Data):
     """Paired data type. Each object has 2 graphs."""
 
-    def __init__(self, x_a, edge_index_a, edge_attr_a, x_b, edge_index_b, edge_attr_b, y):
+    def __init__(self, x_a, edge_index_a, edge_attr_a,
+                 x_b, edge_index_b, edge_attr_b, y):
         super(PairData, self).__init__(y=y)
         self.x_a = x_a
         self.edge_index_a = edge_index_a
@@ -483,8 +536,10 @@ class PairData(Data):
             return super(PairData, self).__inc__(key, value)
 
 
-def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster_th,
-                         train_pos_th, train_neg_th, val_pos_th, val_neg_th):
+def divide_and_gen_pairs(cluster_file_dir, subcluster_dict,
+                         num_classes, cluster_th,
+                         train_pos_th, train_neg_th,
+                         val_pos_th, val_neg_th):
     """
     Divide the dataset and generate pairs of pockets for train, 
     validation, and test.
@@ -514,11 +569,17 @@ def divide_and_gen_pairs(cluster_file_dir, subcluster_dict, num_classes, cluster
 
     # train pairs
     train_pos_pairs, train_neg_pairs = gen_pairs(
-        clusters=train_clusters, pos_pair_th=train_pos_th, neg_pair_th=train_neg_th)
+        clusters=train_clusters,
+        pos_pair_th=train_pos_th,
+        neg_pair_th=train_neg_th
+    )
 
     # validation pairs
     val_pos_pairs, val_neg_pairs = gen_pairs(
-        clusters=val_clusters, pos_pair_th=val_pos_th, neg_pair_th=val_neg_th)
+        clusters=val_clusters,
+        pos_pair_th=val_pos_th,
+        neg_pair_th=val_neg_th
+    )
 
     return train_pos_pairs, train_neg_pairs, val_pos_pairs, val_neg_pairs
 
@@ -551,10 +612,12 @@ def read_cluster_file_from_yaml(cluster_file_dir):
 
 def select_classes(clusters, num_classes, th):
     """
-    Keep the relatively large clusters and limit the number of pockets in super-large clusters.
+    Keep the relatively large clusters and limit the number 
+    of pockets in super-large clusters.
 
     Arguments:
-        clusters: list of pocket lists. The lists are already ranked according to length.
+        clusters: list of pocket lists. The lists 
+                  are already ranked according to length.
         num_classes: number of classes to keep.
         th: threshold of maximum number of pockets in one class.
     """
@@ -580,7 +643,8 @@ def divide_clusters(clusters):
     Shuffle and divide the clusters into train, validation and test
     """
     # shuffle the pockets in each cluster
-    [random.shuffle(x) for x in clusters]  # random.shuffle happens inplace
+    # random.shuffle happens inplace
+    [random.shuffle(x) for x in clusters]  
 
     # sizes of the clusters
     cluster_sizes = [len(x) for x in clusters]
