@@ -25,7 +25,7 @@ def get_args():
 
     parser.add_argument('-run',
                         required=False,
-                        default=0,
+                        default=999,
                         type=int,
                         help='which experiment.')
 
@@ -230,6 +230,15 @@ if __name__ == "__main__":
     clusters = merge_clusters(clusters, merge_info)
     num_classes = len(clusters)
     print('number of classes after merging: ', num_classes)
+
+    num_data = sum([len(x) for x in clusters])
+    print('number of pockets before exclusion')
+    to_exclude = ['4jdwA00', '6bwhB00', '1t5cA01', '5yhzA00', '2hs0A00']
+    for p in to_exclude:
+        for cluster in clusters:
+            if p in cluster:
+                cluster.remove(p)
+    print('number of pockets after exclusion')
 
     # divide the clusters into train, validation and test
     train_clusters, test_clusters = divide_clusters_train_test(clusters)
