@@ -232,13 +232,14 @@ if __name__ == "__main__":
     print('number of classes after merging: ', num_classes)
 
     num_data = sum([len(x) for x in clusters])
-    print('number of pockets before exclusion')
+    print('number of pockets before exclusion: ', num_data)
     to_exclude = ['4jdwA00', '6bwhB00', '1t5cA01', '5yhzA00', '2hs0A00']
     for p in to_exclude:
         for cluster in clusters:
             if p in cluster:
                 cluster.remove(p)
-    print('number of pockets after exclusion')
+    num_data = sum([len(x) for x in clusters])
+    print('number of pockets after exclusion', num_data)
 
     # divide the clusters into train, validation and test
     train_clusters, test_clusters = divide_clusters_train_test(clusters)
