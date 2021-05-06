@@ -20,6 +20,6 @@ if __name__ == "__main__":
     pocket_center = pocket_centers['2ddoA00']
     docking_box = docking_boxes['2ddoA00']
 
-    smina_dock('smina', protein, ligand, pocket_center, docking_box, './test.out')
+    smina_dock('smina', protein, ligand, pocket_center, docking_box)
 
 

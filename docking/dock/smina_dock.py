@@ -92,9 +92,6 @@ if __name__ == "__main__":
     # smina installed via conda
     smina_path = 'smina'
 
-    # number of errors occured during docking
-    error_cnt = 0
-
     # get 14 label ligands
     label_ligands_dir = '../../../smina/ligands/'
     label_ligands_paths = []
@@ -140,13 +137,11 @@ if __name__ == "__main__":
     if end > len(cluster):
         end = len(cluster)
 
+    num_errors = 0
     for pocket in cluster[start:end + 1]:
         if pocket in pocket_centers:
             # add true lable to target list
             target.append(label)
-
-            # path to store output file
-            out_path = out_dir + pocket + '.out'
 
             # path of protein
             protein = protein_dir + pocket[0:-2] + '.pdbqt'
@@ -163,16 +158,20 @@ if __name__ == "__main__":
                 # docking box (cubic) size
                 docking_box = docking_boxes[ligand_labels[ligand_class]]
 
-                score = smina_dock(
+                score, _ = smina_dock(
                     'smina', 
                     protein, 
                     ligand, 
                     pocket_center,
-                    docking_box, 
-                    out_path
+                    docking_box
                 )
 
                 scores.append(score)
+
+            # this pocketed is excluded if something went wrong
+            if None in scores:
+                num_errors += 1
+                continue
 
             # compute predicted class
             pred = np.argmin(np.array(scores))
@@ -180,6 +179,17 @@ if __name__ == "__main__":
 
             # append results
             prediction.append(pred)
+
+    # save the target and predicitons in a yaml file
+    prediction_path = out_dir + 'preds-class'
+    prediction_path += (str(label) + '-' + str(start) +
+                        '-' + str(end) + '.yaml')
+    # print(prediction)
+    with open(prediction_path, 'w') as file:
+        yaml.dump(prediction, file)
+
+    # number of erroneous dockings
+    print('total number of erroneous during docking: ', num_errors)
 
 
     

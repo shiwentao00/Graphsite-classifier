@@ -1,7 +1,17 @@
 import subprocess
 
+def parse_smina_output(result):
+    """parse the output texts of smina and return
+    the free energy of the best docking pose"""    
+    # binary stream to string
+    result = result.decode('utf-8')
+    result = result.split('\n')
 
-def smina_dock(smina, protein, ligand, pocket_center, docking_box, out_path, exhaustiveness=8, num_modes=2, energy_range=99):
+    # line 29 is the result of best docking pose
+    return float(result[29].split()[1])
+
+def smina_dock(smina, protein, ligand, pocket_center, docking_box, 
+                exhaustiveness=8, num_modes=2, energy_range=99):
     x = pocket_center[0]
     y = pocket_center[1]
     z = pocket_center[2]
@@ -10,18 +20,19 @@ def smina_dock(smina, protein, ligand, pocket_center, docking_box, out_path, exh
         smina + ' -r {} -l {}'.format(protein, ligand) +
         ' --center_x {} --center_y {} --center_z {}'.format(x, y, z) +
         ' --size_x {} --size_y {} --size_z {}'.format(box_size, box_size, box_size) +
-        ' -o {}'.format(out_path) +
+        # ' -o {}'.format(out_path) +
         ' --exhaustiveness {}'.format(exhaustiveness) +
         ' --num_modes {}'.format(num_modes) +
         ' --energy_range {}'.format(energy_range),
         shell=True,
-        stdout=subprocess.PIPE,
-        text=True
+        capture_output=True
+        # stdout=subprocess.PIPE,
+        # text=True
     )
     if p.returncode == 0:
         result = p.stdout
-        print(result)
-        # return float(result.split()[-15]), p.returncode
+        score = parse_smina_output(result)
+        return score, p.returncode
     else:
         return None, p.returncode
 
