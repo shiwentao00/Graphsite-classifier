@@ -1,8 +1,5 @@
 """list the proteins used in this project"""
 import yaml
-from os import listdir
-from os.path import isfile, join
-from tqdm import tqdm
 
 
 def read_cluster_file_from_yaml(cluster_file_dir):
@@ -39,10 +36,10 @@ def merge_clusters(clusters, merge_info):
 
 if __name__ == "__main__":
     # recreate dataset with the same split as when training
-    with open('../train_classifier.yaml') as f:
+    with open('../../train_classifier.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
-    cluster_file_dir = '../../data/clusters_after_remove_files_with_no_popsa.yaml'
+    cluster_file_dir = '../../../data/clusters_after_remove_files_with_no_popsa.yaml'
     pocket_dir = config['pocket_dir']
     merge_info = config['merge_info']
 
@@ -50,14 +47,14 @@ if __name__ == "__main__":
     clusters = merge_clusters(clusters, merge_info)
 
     # get the input files
-    in_dir = '../../data/googlenet-dataset/'
+    in_dir = '../../../data/googlenet-dataset/'
     protein_paths = []
     proteins = []
     for cluster in clusters:
         for x in cluster:
-            proteins.append(x[0:-2])
+            proteins.append(x[0:5])
             protein_paths.append(
-                '/googlenet-dataset/{}/{}.pdb'.format(x, x[0:-2]))
+                '/googlenet-dataset/{}/{}.pdb'.format(x, x[0:5]))
     print('total number of pockets: ', len(proteins))
 
     # remove duplicates
