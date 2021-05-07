@@ -6,7 +6,7 @@ def parse_smina_output(result):
     # binary stream to string
     result = result.decode('utf-8')
     result = result.split('\n')
-
+    
     # line 29 is the result of best docking pose
     return float(result[29].split()[1])
 
@@ -29,6 +29,8 @@ def smina_dock(smina, protein, ligand, pocket_center, docking_box,
         # stdout=subprocess.PIPE,
         # text=True
     )
+    print(p.stdout)
+    print(p.stderr)
     if p.returncode == 0:
         result = p.stdout
         score = parse_smina_output(result)
