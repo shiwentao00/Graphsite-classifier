@@ -24,7 +24,7 @@ def get_args():
 
     parser.add_argument('-end',
                         type=int,
-                        default=5,
+                        default=20,
                         required=True,
                         help='Start index of selected pockets in this class')
     return parser.parse_args()
@@ -127,12 +127,16 @@ if __name__ == "__main__":
     with open(docking_box_path, 'r') as f:
         docking_boxes = yaml.full_load(f)
 
+    # molecular weights for normalizing free energy after dokcing
+    with open('../molecular_weight/ligand_weights.yaml', 'r') as f:
+        ligand_weights = yaml.full_load(f)
+
     # target labels and prediction of all data points
-    target, prediction = [], []
+    target, prediction, norm_prediction = [], [], []
 
     label = which_class
     cluster = clusters[label]
-    print('computing class {}...'.format(label))
+    # print('computing class {}...'.format(label))
 
     if end > len(cluster):
         end = len(cluster)
@@ -149,14 +153,20 @@ if __name__ == "__main__":
             # center of docking search space
             pocket_center = pocket_centers[pocket]
 
-            scores = []  # docking scores for each class
+            # docking scores for each class
+            scores = []  
+            normalized_scores = []
+
             # for each label ligands
             for ligand_class in range(14):
                 # current ligand path
                 ligand = label_ligands_paths[ligand_class]
 
+                # name of ligand
+                ligand_name = ligand_labels[ligand_class]
+
                 # docking box (cubic) size
-                docking_box = docking_boxes[ligand_labels[ligand_class]]
+                docking_box = docking_boxes[ligand_name]
 
                 score, _ = smina_dock(
                     'smina', 
@@ -167,6 +177,10 @@ if __name__ == "__main__":
                 )
 
                 scores.append(score)
+                if score is not None:
+                    normalized_scores.append(score / ligand_weights[ligand_name])
+                else:
+                    normalized_scores.append(None)
 
             # this pocketed is excluded if something went wrong
             if None in scores:
@@ -176,18 +190,28 @@ if __name__ == "__main__":
             # compute predicted class
             pred = np.argmin(np.array(scores))
             pred = pred.item()
-            
-            # append results
             prediction.append(pred)
             print("{}, prediction: {}".format(scores, pred))
+
+            # compute predicted class with normalized free energy
+            norm_pred = np.argmin(np.array(normalized_scores))
+            norm_pred = norm_pred.item()
+            norm_prediction.append(norm_pred)
+            print("{}, prediction: {}".format(normalized_scores, norm_pred))
 
     # save the target and predicitons in a yaml file
     prediction_path = out_dir + 'preds-class'
     prediction_path += (str(label) + '-' + str(start) +
                         '-' + str(end) + '.yaml')
-    # print(prediction)
     with open(prediction_path, 'w') as file:
         yaml.dump(prediction, file)
+
+    # save the target and normalized predicitons in a yaml file
+    norm_prediction_path = out_dir + 'norm-preds-class'
+    norm_prediction_path += (str(label) + '-' + str(start) +
+                        '-' + str(end) + '.yaml')
+    with open(norm_prediction_path, 'w') as file:
+        yaml.dump(norm_prediction, file)
 
     # number of erroneous dockings
     print('total number of erroneous during docking: ', num_errors)
