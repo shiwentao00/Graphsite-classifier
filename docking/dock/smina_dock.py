@@ -24,7 +24,7 @@ def get_args():
 
     parser.add_argument('-end',
                         type=int,
-                        default=10,
+                        default=5,
                         required=True,
                         help='Start index of selected pockets in this class')
     return parser.parse_args()
@@ -176,9 +176,10 @@ if __name__ == "__main__":
             # compute predicted class
             pred = np.argmin(np.array(scores))
             pred = pred.item()
-            print(scores)
+            
             # append results
             prediction.append(pred)
+            print("{}, prediction: {}".format(scores, pred))
 
     # save the target and predicitons in a yaml file
     prediction_path = out_dir + 'preds-class'
