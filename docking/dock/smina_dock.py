@@ -176,7 +176,7 @@ if __name__ == "__main__":
             # compute predicted class
             pred = np.argmin(np.array(scores))
             pred = pred.item()
-
+            print(scores)
             # append results
             prediction.append(pred)
 

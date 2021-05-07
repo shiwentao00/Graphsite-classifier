@@ -29,8 +29,9 @@ def smina_dock(smina, protein, ligand, pocket_center, docking_box,
         # stdout=subprocess.PIPE,
         # text=True
     )
-    print(p.stdout)
-    print(p.stderr)
+    
+    # print(p.stdout)
+    # print(p.stderr)
     if p.returncode == 0:
         result = p.stdout
         score = parse_smina_output(result)
