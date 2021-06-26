@@ -2,7 +2,7 @@
 Plot the atoms in 3d Euclidean space to visualize the graph representaion.
 Pocket: 5x06F00
 """
-from mpl_toolkits import mplot3d
+#from mpl_toolkits import mplot3d
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import distance
@@ -107,8 +107,7 @@ if __name__ == "__main__":
     #ax = plt.gca()
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    ax.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.05, 0.8), loc=2, borderaxespad=0.)
-    #ax.legend(bbox_to_anchor=(0.05, 0.8), loc=2, borderaxespad=0.)
+    #ax.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.05, 0.8), loc=2, borderaxespad=0.)
 
     ax.xaxis.pane.fill = False
     ax.xaxis.pane.set_edgecolor('white')
