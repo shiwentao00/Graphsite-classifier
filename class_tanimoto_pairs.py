@@ -20,8 +20,20 @@ def get_args():
 
     parser.add_argument('-out',
                         required=False,
-                        default='./data/class_tanimoto_pairs/',
+                        default='../data/class_tanimoto_pairs/',
                         help='random seed for splitting dataset.')
+
+    parser.add_argument('-high_th',
+                        required=False,
+                        default=0.9,
+                        type=float,
+                        help='the higher threshold')
+
+    parser.add_argument('-low_th',
+                        required=False,
+                        default=0.35,
+                        type=float,
+                        help='the lower threshold')
 
     return parser.parse_args()
 
@@ -34,6 +46,8 @@ def compute_similarity(fp_a, fp_b):
 if __name__ == "__main__":
     args = get_args()
     cls = int(args.cls)
+    high_th = float(args.high_th)
+    low_th = float(args.low_th)
     out = args.out
 
     # load the 14 classes
@@ -76,9 +90,9 @@ if __name__ == "__main__":
                 fp_b = fps[another_pocket]
                 if fp_a and fp_b:
                     s = compute_similarity(fp_a, fp_b)
-                    if s >= 0.9:
+                    if s >= high_th:
                         similar_pairs.append((pocket, another_pocket))
-                    elif s <= 0.35:
+                    elif s <= low_th:
                         different_pairs.append((pocket, another_pocket))
                     success += 1
     success_rate = success / total
