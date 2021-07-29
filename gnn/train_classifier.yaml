@@ -1,9 +1,9 @@
 ---
  # directory configuration
- cluster_file_dir: "../data/clusters_after_remove_files_with_no_popsa.yaml"
- pocket_dir: "../data/googlenet-dataset/"
- pop_dir: "../data/pops-googlenet/"
- trained_model_dir: "../trained_models/"
+ cluster_file_dir: "../../data/clusters_after_remove_files_with_no_popsa.yaml"
+ pocket_dir: "../../data/googlenet-dataset/"
+ pop_dir: "../../data/pops-googlenet/"
+ trained_model_dir: "../../trained_models/"
  loss_dir: "./results/"
  confusion_matrix_dir: "./results/"
 

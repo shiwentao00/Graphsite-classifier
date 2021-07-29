@@ -1,8 +1,8 @@
 """Find similar and disimilar pairs within a certain class"""
 import argparse
 import yaml
-from dataloader import read_cluster_file_from_yaml
-from dataloader import merge_clusters
+from gnn.dataloader import read_cluster_file_from_yaml
+from gnn.dataloader import merge_clusters
 from tqdm import tqdm
 import rdkit.Chem as Chem
 from rdkit.Chem import MACCSkeys
