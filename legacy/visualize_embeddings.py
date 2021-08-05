@@ -71,6 +71,8 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, image_path
     plt.legend(bbox_to_anchor=(0.58, 1), loc=2,
                borderaxespad=0., frameon=False)
 
+    ax.set_title('tSNE visualization of pockets')
+
     if which_algorithm == 'tsne':
         plt.xlabel('tSNE_1')
         plt.ylabel('tSNE_2')
