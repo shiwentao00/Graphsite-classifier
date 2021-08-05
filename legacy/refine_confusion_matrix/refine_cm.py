@@ -63,8 +63,14 @@ fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
 #colors = "viridis"
 #colors = "inferno"
 #colors = "magma"
-colors = "cividis"
-ax = sns.heatmap(cm, annot=True, linewidths=.5, cmap=colors)
+#colors = "cividis"
+#cmap = "YlGnBu"
+cmap = sns.light_palette("green", as_cmap=True)
+ax.set_title('Normalized confusion matrix')
+ax = sns.heatmap(cm, 
+                 annot=True, fmt='.2',
+                 #linewidths=.5, 
+                 cmap=cmap)
 ax.set(xlabel='Predicted label', ylabel='True label')
 plt.savefig('./confusion_matrix.png', bbox_inches='tight')
 plt.savefig('./confusion_matrix.tif', bbox_inches='tight')
