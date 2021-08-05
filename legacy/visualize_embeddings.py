@@ -10,7 +10,7 @@ from sklearn.manifold import TSNE
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
-import umap
+#import umap
 from sklearn.decomposition import PCA
 
 
@@ -28,7 +28,7 @@ def get_args():
                         help='which experiment.')
 
     parser.add_argument('-which_algorithm',
-                        default='umap',
+                        default='tsne',
                         help='which algorithm to use for manifold learning.')
 
     return parser.parse_args()
@@ -68,7 +68,7 @@ def visualize_embeddings(embeddings, labels, cluster_ids, image_path, image_path
                          s=15,
                          palette=cust_palette
                          )
-    plt.legend(bbox_to_anchor=(0.55, 1), loc=2,
+    plt.legend(bbox_to_anchor=(0.58, 1), loc=2,
                borderaxespad=0., frameon=False)
 
     if which_algorithm == 'tsne':
@@ -89,6 +89,7 @@ if __name__ == "__main__":
 
     merge_info = [0, 2, 3, 4, 6, 7, 8, 9]
     print('how to merge clusters: ', merge_info)
+    '''
     cluster_name_dict = {0: '0: ADP and ANP',
                          2: '2: heme',
                          3: '3: glucopyranose and fructose',
@@ -97,6 +98,15 @@ if __name__ == "__main__":
                          7: '7: lipid',
                          8: '8: glucopyranose',
                          9: '9: UMP and TMP'}
+    '''
+    cluster_name_dict = {0: 'ADP and ANP',
+                         2: 'heme',
+                         3: 'glucopyranose and fructose',
+                         4: 'benzene ring',
+                         6: 'chlorophyll',
+                         7: 'lipid',
+                         8: 'glucopyranose',
+                         9: 'UMP and TMP'}
     cluster_ids = [cluster_name_dict[x]
                    for x in merge_info]  # use original cluster ids
 
