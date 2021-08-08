@@ -26,7 +26,7 @@ def read_pocket(mol_path, profile_path, pop_path,
     edge_attr = torch.tensor(edge_attr, dtype=torch.float)
     edge_index = torch.tensor(edge_index, dtype=torch.long)
 
-    return node_feature, edge_attr, edge_index
+    return node_feature, edge_index, edge_attr
 
 
 def dataloader_gen(pocket_dir, pop_dir, pos_pairs, neg_pairs, features_to_use,
