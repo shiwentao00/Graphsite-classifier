@@ -2,23 +2,25 @@
 import random
 import itertools
 import torch
-from graphsite import pocket_to_graph
+from graphsite import PocketToGraph
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 import yaml
 
+pocket_to_graph = PocketToGraph()
+
 def read_pocket(mol_path, profile_path, pop_path,
                 hydrophobicity, binding_probability,
                 features_to_use, threshold):
-    """read the pocket as a Pytorch-geometric graph"""
+    """Read the pocket as a Pytorch-geometric graph."""
     node_feature, edge_index, edge_attr = pocket_to_graph(
-        mol_path, 
-        profile_path, 
-        pop_path,
-        hydrophobicity, 
-        binding_probability,
-        features_to_use, 
-        threshold
+        mol_path=mol_path, 
+        profile_path=profile_path, 
+        pop_path=pop_path,
+        hydrophobicity=hydrophobicity, 
+        binding_probability=binding_probability,
+        features_to_use=features_to_use, 
+        threshold=threshold
     )
 
     # convert the data to pytorch tensors
