@@ -1,18 +1,12 @@
 # Copyright: Wentao Shi, 2020
-import random
-import itertools
 import numpy as np
 import pandas as pd
 from biopandas.mol2 import PandasMol2
 from scipy.spatial import distance
-import torch
-from torch_geometric.data import Data, Dataset
-from torch_geometric.data import DataLoader
 import statistics
-import yaml
 
 
-def read_pocket(mol_path, profile_path, pop_path,
+def pocket_to_graph(mol_path, profile_path, pop_path,
                 hydrophobicity, binding_probability,
                 features_to_use, threshold):
     """Read the mol2 file as a dataframe."""
@@ -107,7 +101,7 @@ def compute_edge_attr(edge_index, bonds):
     return edge_attr
 
 
-def form_graph(atoms, bonds, features_to_use, threshold):
+def form_graph(atoms, bonds, features_to_use, threshold, coordinate_normalize_factor=300):
     """
     Form a graph data structure (Pytorch geometric) according to the input data frame.
     Rule: Each atom represents a node. If the distance between two atoms are less than or
@@ -139,20 +133,20 @@ def form_graph(atoms, bonds, features_to_use, threshold):
     # set the element whose value is larger than threshold to 0
     A_dist[threshold_condition] = 0
 
-    result = np.where(A_dist > 0)
-    result = np.vstack((result[0], result[1]))
-    edge_attr = compute_edge_attr(result, bonds)
-    edge_attr = torch.tensor(edge_attr, dtype=torch.float)
-    edge_index = torch.tensor(result, dtype=torch.long)
+    edge_index = np.where(A_dist > 0)
+    edge_index = np.vstack((edge_index[0], edge_index[1]))
+    edge_attr = compute_edge_attr(edge_index, bonds)
+    #edge_attr = torch.tensor(edge_attr, dtype=torch.float)
+    #edge_index = torch.tensor(edge_index, dtype=torch.long)
 
     # normalize large features
-    atoms['x'] = atoms['x']/300
-    atoms['y'] = atoms['y']/300
-    atoms['z'] = atoms['z']/300
+    atoms['x'] = atoms['x'] / coordinate_normalize_factor
+    atoms['y'] = atoms['y'] / coordinate_normalize_factor
+    atoms['z'] = atoms['z'] / coordinate_normalize_factor
 
-    node_features = torch.tensor(
-        atoms[features_to_use].to_numpy(), dtype=torch.float32)
-    return node_features, edge_index, edge_attr
+    node_feature = atoms[features_to_use].to_numpy()
+    #node_feature = torch.tensor(node_feature, dtype=torch.float32)
+    return node_feature, edge_index, edge_attr
 
 
 def compute_spherical_coord(data):
