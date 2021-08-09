@@ -2,12 +2,12 @@
 import random
 import itertools
 import torch
-from graphsite import PocketToGraph
+from graphsite import Graphsite
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 import yaml
 
-pocket_to_graph = PocketToGraph()
+pocket_to_graph = Graphsite()
 
 def read_pocket(mol_path, profile_path, pop_path,
                 hydrophobicity, binding_probability,

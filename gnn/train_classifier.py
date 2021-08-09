@@ -369,8 +369,9 @@ if __name__ == "__main__":
 
     print('train report:')
     print(train_report)
-    #print('train confusion matrix:')
-    # print(train_confusion_mat)
+    print('train confusion matrix:')
+    print(train_confusion_mat)
+
     fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
     confusion_matrix_path = confusion_matrix_dir + \
         'confusion_matrix_{}_train.png'.format(run)
@@ -381,8 +382,8 @@ if __name__ == "__main__":
 
     print('test report: ')
     print(test_report)
-    #print('test confusion matrix:')
-    # print(test_confusion_mat)
+    print('test confusion matrix:')
+    print(test_confusion_mat)
     fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
     confusion_matrix_path = confusion_matrix_dir + \
         'confusion_matrix_{}_test.png'.format(run)
