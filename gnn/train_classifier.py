@@ -178,6 +178,33 @@ def gen_classification_report(dataloader):
     return report, confusion_mat
 
 
+def plot_cm(cm, figure_path):
+    """
+    Plot the input confusion matrix. 
+    """
+    import seaborn as sns
+    sns.set_theme()
+    font = {'size': 8}
+    matplotlib.rc('font', **font)
+    fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
+
+    #colors= "coolwarm"
+    #colors = "summer"
+    #colors = "viridis"
+    #colors = "inferno"
+    #colors = "magma"
+    #colors = "cividis"
+    #cmap = "YlGnBu"
+    cmap = sns.light_palette("green", as_cmap=True)
+    ax.set_title('Normalized confusion matrix')
+    ax = sns.heatmap(cm, 
+                     annot=True, fmt='.2',
+                     #linewidths=.5, 
+                     cmap=cmap)
+    ax.set(xlabel='Predicted label', ylabel='True label')
+    plt.savefig(figure_path, bbox_inches='tight')
+
+
 if __name__ == "__main__":
     with open('./train_classifier.yaml') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
@@ -369,27 +396,22 @@ if __name__ == "__main__":
 
     print('train report:')
     print(train_report)
-    print('train confusion matrix:')
-    print(train_confusion_mat)
+    #print('train confusion matrix:')
+    #print(train_confusion_mat)
 
-    fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
     confusion_matrix_path = confusion_matrix_dir + \
         'confusion_matrix_{}_train.png'.format(run)
-    metrics.ConfusionMatrixDisplay(
-        train_confusion_mat, display_labels=None).plot(ax=ax)
-    plt.savefig(confusion_matrix_path)
+    plot_cm(train_confusion_mat, confusion_matrix_path)
     print('---------------------------------------')
 
     print('test report: ')
     print(test_report)
-    print('test confusion matrix:')
-    print(test_confusion_mat)
-    fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
+    #print('test confusion matrix:')
+    #print(test_confusion_mat)
+    
     confusion_matrix_path = confusion_matrix_dir + \
         'confusion_matrix_{}_test.png'.format(run)
-    metrics.ConfusionMatrixDisplay(
-        test_confusion_mat, display_labels=None).plot(ax=ax)
-    plt.savefig(confusion_matrix_path)
+    plot_cm(test_confusion_mat, confusion_matrix_path)
     print('---------------------------------------')
 
     print('program finished.')
