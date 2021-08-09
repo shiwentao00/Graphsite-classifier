@@ -183,7 +183,7 @@ def plot_cm(cm, figure_path):
     Plot the input confusion matrix. 
     """
     import seaborn as sns
-    sns.set_theme()
+    #sns.set_theme()
     font = {'size': 8}
     matplotlib.rc('font', **font)
     fig, ax = plt.subplots(figsize=(8, 7), dpi=300)
@@ -408,7 +408,7 @@ if __name__ == "__main__":
     print(test_report)
     #print('test confusion matrix:')
     #print(test_confusion_mat)
-    
+
     confusion_matrix_path = confusion_matrix_dir + \
         'confusion_matrix_{}_test.png'.format(run)
     plot_cm(test_confusion_mat, confusion_matrix_path)
