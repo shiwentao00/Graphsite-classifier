@@ -25,7 +25,7 @@
  focal_gamma_ascent_epoch: [25, 100, 170] # gamma = 1, 2, 3
 
  # train configuration
- num_epoch: 1
+ num_epoch: 150
  lr_decay_epoch: [100, 170]
  batch_size: 256
  learning_rate: 0.003
