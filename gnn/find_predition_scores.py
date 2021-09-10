@@ -36,8 +36,8 @@ class PocketDatasetwithName(PocketDataset):
 
 if __name__ == "__main__":
     # which experiment
-    run = 61
-    seed = 21
+    run = 60
+    seed = 20
     random.seed(seed) 
     print(f'run {run}, seed {seed}')
 
