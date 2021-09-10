@@ -95,7 +95,8 @@ if __name__ == "__main__":
     # inference
     model.eval()
 
-    for data in testloader:
+    res = []
+    for data in tqdm(testloader):
         data = data.to(device)
         output = model(data.x, data.edge_index, data.edge_attr, data.batch)
         prob = F.softmax(output, dim=-1) # class probability
@@ -112,11 +113,15 @@ if __name__ == "__main__":
         pred_prob_cpu = pred_prob_cpu[0]
 
         if label == 13: # morpholine rings
-            print('{} {} {}'.format(name, pred_cpu, pred_prob_cpu))
+            res.append('{} {} {}'.format(name, pred_cpu, pred_prob_cpu))
+            
         #print('name:', name)
         #print('label: ', label)
         #print('pred: ', pred_cpu)
         #print('prob: ', pred_prob_cpu)
         #print('-----------------------------------')
+
+        for x in res:
+            print(res)
 
             
