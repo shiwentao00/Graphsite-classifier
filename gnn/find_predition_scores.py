@@ -133,7 +133,9 @@ if __name__ == "__main__":
         pred_cpu = pred_cpu[0]
         pred_prob_cpu = pred_prob_cpu[0]
 
-        if label == 13: # morpholine rings
+        # morpholine rings: 12
+        # phosphite:13
+        if label == 12: 
             res.append('{} {} {}'.format(name, pred_cpu, pred_prob_cpu))
             
         #print('name:', name)
