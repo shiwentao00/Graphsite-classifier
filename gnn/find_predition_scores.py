@@ -13,6 +13,24 @@ from model import GraphSiteClassifier
 from tqdm import tqdm
 
 
+def get_args():
+    parser = argparse.ArgumentParser('python')
+
+    parser.add_argument('-run',
+                        required=False,
+                        default=0,
+                        type=int,
+                        help='which experiment.')
+
+    parser.add_argument('-seed',
+                        required=False,
+                        default=23,
+                        type=int,
+                        help='random seed for splitting dataset.')
+
+    return parser.parse_args()
+
+
 class PocketDatasetwithName(PocketDataset):
     """dataset class with each data containing pocket name."""
     def __init__(self, pocket_dir, pop_dir, clusters, features_to_use):
@@ -36,8 +54,9 @@ class PocketDatasetwithName(PocketDataset):
 
 if __name__ == "__main__":
     # which experiment
-    run = 60
-    seed = 20
+    args = get_args()
+    run = int(args.run)
+    seed = int(args.seed)
     random.seed(seed) 
     print(f'run {run}, seed {seed}')
 
