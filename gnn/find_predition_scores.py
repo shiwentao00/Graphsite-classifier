@@ -36,9 +36,10 @@ class PocketDatasetwithName(PocketDataset):
 
 if __name__ == "__main__":
     # which experiment
-    run = 62
-    seed = 22
+    run = 61
+    seed = 21
     random.seed(seed) 
+    print(f'run {run}, seed {seed}')
 
     # hardware to use
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
