@@ -19,7 +19,7 @@ def get_args():
 
     parser.add_argument('-run',
                         required=False,
-                        default=0,
+                        default=63,
                         type=int,
                         help='which experiment.')
 
@@ -87,13 +87,18 @@ if __name__ == "__main__":
 
     # divide the clusters into train, validation and test
     train_clusters, test_clusters = divide_clusters_train_test(clusters)
+
+    # 4csvA00 is from cluster 63, but it is a very intersting pocket,
+    # let's see the model's prediction for it.
+    test_clusters[12].append('4csvA00')
+
     num_train_pockets = sum([len(x) for x in train_clusters])
     num_test_pockets = sum([len(x) for x in test_clusters])
     print('number of pockets in training set: ', num_train_pockets)
     print('number of pockets in test set: ', num_test_pockets)
-    print('first 5 pockets in train set of cluster 0 before merging (to verify reproducibility):')
+    print('first 5 pockets in train set of cluster 0 (to verify reproducibility):')
     print(train_clusters[0][0:5])
-    print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
+    print('first 5 pockets in test set of cluster 0 (to verify reproducibility):')
     print(test_clusters[0][0:5])
 
     testset = PocketDatasetwithName(pocket_dir=pocket_dir, pop_dir=pop_dir, clusters=test_clusters, features_to_use=features_to_use)
