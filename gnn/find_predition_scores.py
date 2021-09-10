@@ -121,7 +121,8 @@ if __name__ == "__main__":
         #print('prob: ', pred_prob_cpu)
         #print('-----------------------------------')
 
-        for x in res:
-            print(res)
+    print('******** Morpholine Rings ********')
+    for x in res:
+        print(x)
 
             
