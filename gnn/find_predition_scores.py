@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     # hardware to use
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # detect cpu or gpu
-    #print('device: ', device)
+    print('device: ', device)
 
     # recreate dataset with the same split as when training
     with open('./train_classifier.yaml') as f:
