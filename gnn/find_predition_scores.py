@@ -1,6 +1,7 @@
 """
 Print the confidence score of the predicted class.
 """
+import argparse
 import yaml
 import random
 import torch
