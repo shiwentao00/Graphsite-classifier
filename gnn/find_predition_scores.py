@@ -9,7 +9,7 @@ from dataloader import read_cluster_file_from_yaml, divide_clusters_train_test
 from dataloader import PocketDataset, read_pocket
 from dataloader import merge_clusters
 from torch_geometric.data import Data, DataLoader
-from model import GraphSite
+from model import GraphSiteClassifier
 from tqdm import tqdm
 
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     num_channels = 3
     deg = None
 
-    model = GraphSite(num_classes=num_classes, num_features=num_features, dim=model_size, 
+    model = GraphSiteClassifier(num_classes=num_classes, num_features=num_features, dim=model_size, 
                   train_eps=True, num_edge_attr=1, which_model=which_model, num_layers=num_layers,
                   num_channels=num_channels, deg=deg).to(device)
 

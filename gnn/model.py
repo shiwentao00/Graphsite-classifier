@@ -487,7 +487,7 @@ class JKEGINEmbeddingNet(torch.nn.Module):
         return x
 
 
-class GraphSite(torch.nn.Module):
+class GraphSiteClassifier(torch.nn.Module):
     """Standard classifier to classify the binding sites."""
 
     def __init__(self, num_classes, num_features, dim, train_eps,
@@ -498,7 +498,7 @@ class GraphSite(torch.nn.Module):
         ['jk', 'residual', 'jknmm', and 'normal'].
         deg: for PNAEmbeddingNet only, can not be None when which_model=='pna'.
         """
-        super(GraphSite, self).__init__()
+        super(GraphSiteClassifier, self).__init__()
         self.num_classes = num_classes
 
         # use one of the embedding net
