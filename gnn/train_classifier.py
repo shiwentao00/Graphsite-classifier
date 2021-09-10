@@ -9,7 +9,7 @@ from dataloader import read_cluster_file_from_yaml
 from dataloader import divide_clusters_train_test
 from dataloader import pocket_loader_gen
 from dataloader import merge_clusters
-from model import GraphSiteClassifier, FocalLoss
+from model import GraphsiteClassifier, FocalLoss
 from torch_geometric.utils import degree
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import numpy as np
@@ -306,7 +306,7 @@ if __name__ == "__main__":
     # the channel number for nmm model
     num_channels = config['num_channels']
 
-    model = GraphSiteClassifier(num_classes=num_classes, num_features=num_features,
+    model = GraphsiteClassifier(num_classes=num_classes, num_features=num_features,
                       dim=model_size, train_eps=True, num_edge_attr=1,
                       which_model=which_model, num_layers=num_layers,
                       num_channels=num_channels, deg=deg

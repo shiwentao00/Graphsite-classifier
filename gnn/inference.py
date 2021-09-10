@@ -7,7 +7,7 @@ import yaml
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data import DataLoader
 from dataloader import read_pocket
-from model import GraphSite
+from model import GraphsiteClassifier
 import sklearn.metrics as metrics
 
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     num_features = len(features_to_use)
     num_classes = len(clusters)
 
-    model = GraphSite(
+    model = GraphsiteClassifier(
         num_classes=num_classes, num_features=num_features,
         dim=model_size, train_eps=True, num_edge_attr=1,
         which_model=which_model, num_layers=num_layers,
