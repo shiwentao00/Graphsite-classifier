@@ -132,7 +132,8 @@ def test():
 
 
 def compute_class_weights(clusters):
-    """Compute the weights of each class/cluster 
+    """
+    Compute the weights of each class/cluster 
     according to number of data.   
 
     Arguments:
@@ -269,21 +270,25 @@ if __name__ == "__main__":
     print('first 5 pockets in test set of cluster 0 before merging (to verify reproducibility):')
     print(test_clusters[0][0:5])
 
-    train_loader, train_size, train_set = pocket_loader_gen(pocket_dir=pocket_dir,
-                                                            pop_dir=pop_dir,
-                                                            clusters=train_clusters,
-                                                            features_to_use=features_to_use,
-                                                            batch_size=batch_size,
-                                                            shuffle=True,
-                                                            num_workers=num_workers)
+    train_loader, train_size, train_set = pocket_loader_gen(
+        pocket_dir=pocket_dir,
+        pop_dir=pop_dir,
+        clusters=train_clusters,
+        features_to_use=features_to_use,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=num_workers
+    )
 
-    test_loader, test_size, _ = pocket_loader_gen(pocket_dir=pocket_dir,
-                                                  pop_dir=pop_dir,
-                                                  clusters=test_clusters,
-                                                  features_to_use=features_to_use,
-                                                  batch_size=batch_size,
-                                                  shuffle=False,
-                                                  num_workers=num_workers)
+    test_loader, test_size, _ = pocket_loader_gen(
+        pocket_dir=pocket_dir,
+        pop_dir=pop_dir,
+        clusters=test_clusters,
+        features_to_use=features_to_use,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=num_workers
+    )
 
     which_model = config['which_model']
     model_size = config['model_size']
@@ -306,25 +311,39 @@ if __name__ == "__main__":
     # the channel number for nmm model
     num_channels = config['num_channels']
 
-    model = GraphsiteClassifier(num_classes=num_classes, num_features=num_features,
-                      dim=model_size, train_eps=True, num_edge_attr=1,
-                      which_model=which_model, num_layers=num_layers,
-                      num_channels=num_channels, deg=deg
-                      ).to(device)
+    model = GraphsiteClassifier(
+        num_classes=num_classes, 
+        num_features=num_features,
+        dim=model_size, 
+        train_eps=True, 
+        num_edge_attr=1,
+        which_model=which_model, 
+        num_layers=num_layers,
+        num_channels=num_channels, 
+        deg=deg
+    ).to(device)
     print('model architecture:')
     print(model)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate,
-                                 weight_decay=weight_decay, amsgrad=False
-                                 )
+    optimizer = torch.optim.Adam(
+        model.parameters(), 
+        lr=learning_rate,
+        weight_decay=weight_decay, 
+        amsgrad=False
+    )
     print('optimizer:')
     print(optimizer)
 
     # decay learning rate when validation accuracy stops increasing.
-    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5,
-                                  patience=10, cooldown=40,
-                                  min_lr=0.0001, verbose=True
-                                  )
+    scheduler = ReduceLROnPlateau(
+        optimizer, 
+        mode='max', 
+        factor=0.5,
+        patience=10, 
+        cooldown=40,
+        min_lr=0.0001, 
+        verbose=True
+    )
     print('learning rate scheduler: ')
     print(scheduler)
 

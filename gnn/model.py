@@ -74,8 +74,10 @@ class GraphsiteClassifier(torch.nn.Module):
         self.fc2 = Linear(dim, self.num_classes)
 
     def forward(self, x, edge_index, edge_attr, batch):
-        x = self.embedding_net(x=x, edge_index=edge_index,
-                               edge_attr=edge_attr, batch=batch)
+        x = self.embedding_net(
+            x=x, edge_index=edge_index,
+            edge_attr=edge_attr, batch=batch
+        )
         x = F.dropout(x, p=0.5, training=self.training)
         x = F.leaky_relu(self.fc1(x))
         x = F.dropout(x, p=0.5, training=self.training)
@@ -94,8 +96,11 @@ class ResidualEmbeddingNet(torch.nn.Module):
         super(ResidualEmbeddingNet, self).__init__()
 
         # first graph convolution layer, increasing dimention
-        nn1 = Sequential(Linear(num_features, dim),
-                         LeakyReLU(), Linear(dim, dim))
+        nn1 = Sequential(
+            Linear(num_features, dim),
+            LeakyReLU(), 
+            Linear(dim, dim)
+        )
         self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
 
         # residual blocks
@@ -149,8 +154,11 @@ class JKEmbeddingNet(torch.nn.Module):
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        nn0 = Sequential(Linear(num_features, dim),
-                         LeakyReLU(), Linear(dim, dim))
+        nn0 = Sequential(
+            Linear(num_features, dim),
+            LeakyReLU(), 
+            Linear(dim, dim)
+        )
         self.conv0 = SCNWMConv(nn0, train_eps, num_features, num_edge_attr)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
@@ -321,8 +329,11 @@ class JKEGINEmbeddingNet(torch.nn.Module):
         self.layer_aggregate = layer_aggregate
 
         # first layer
-        nn0 = Sequential(Linear(num_features, dim),
-                         LeakyReLU(), Linear(dim, dim))
+        nn0 = Sequential(
+            Linear(num_features, dim),
+            LeakyReLU(), 
+            Linear(dim, dim)
+        )
         self.conv0 = GINConv(nn=nn0, train_eps=train_eps)
         self.bn0 = torch.nn.BatchNorm1d(dim)
 
@@ -421,11 +432,12 @@ class SCNWMConv(GINConv):
         num_features: number of features of input nodes.
         """
         super(SCNWMConv, self).__init__(nn=nn, train_eps=train_eps)
-        self.edge_transformer = Sequential(Linear(num_edge_attr, 8),
-                                           LeakyReLU(),
-                                           Linear(8, 1),
-                                           ELU()
-                                           )
+        self.edge_transformer = Sequential(
+            Linear(num_edge_attr, 8),
+            LeakyReLU(),
+            Linear(8, 1),
+            ELU()
+        )
 
     def forward(self, x, edge_index, edge_attr, size=None):
         # x: OptPairTensor
@@ -459,16 +471,19 @@ class SCNWMConv(GINConv):
 
 class ResidualBlock(torch.nn.Module):
     """
-    A residual block which has two graph neural network layers. The output and input are summed 
-    so that the module can learn identity function.
+    A residual block which has two graph neural network layers. The output and input 
+    are summed so that the module can learn identity function.
     """
 
     def __init__(self, num_features, dim, train_eps, num_edge_attr):
         super(ResidualBlock, self).__init__()
 
         self.bn1 = torch.nn.BatchNorm1d(dim)
-        nn1 = Sequential(Linear(num_features, dim),
-                         LeakyReLU(), Linear(dim, dim))
+        nn1 = Sequential(
+            Linear(num_features, dim),
+            LeakyReLU(), 
+            Linear(dim, dim)
+        )
         self.conv1 = SCNWMConv(nn1, train_eps, num_features, num_edge_attr)
 
     def forward(self, x, edge_index, edge_attr):
@@ -493,10 +508,12 @@ class NWMConv(MessagePassing):
 
     def __init__(self, num_edge_attr=1, train_eps=True, eps=0):
         super(NWMConv, self).__init__(aggr='add')
-        self.edge_nn = Sequential(Linear(num_edge_attr, 8),
-                                  LeakyReLU(),
-                                  Linear(8, 1),
-                                  ELU())
+        self.edge_nn = Sequential(
+            Linear(num_edge_attr, 8),
+            LeakyReLU(),
+            Linear(8, 1),
+            ELU()
+        )
         if train_eps:
             self.eps = torch.nn.Parameter(torch.Tensor([eps]))
         else:
@@ -536,8 +553,11 @@ class MCNWMConv(torch.nn.Module):
     def __init__(self, in_dim, out_dim, num_channels,
                  num_edge_attr=1, train_eps=True, eps=0):
         super(MCNWMConv, self).__init__()
-        self.nn = Sequential(Linear(in_dim * num_channels,
-                                    out_dim), LeakyReLU(), Linear(out_dim, out_dim))
+        self.nn = Sequential(
+            Linear(in_dim * num_channels, out_dim), 
+            LeakyReLU(), 
+            Linear(out_dim, out_dim)
+        )
         self.NMMs = ModuleList()
 
         # add the message passing modules
@@ -562,7 +582,7 @@ class MCNWMConv(torch.nn.Module):
 
 class FocalLoss(torch.nn.Module):
     """
-    Implement the Focal Loss introduced in the paper "Focal Loss for Dense Object Detection"
+    Implement the Focal Loss introduced in the paper "Focal Loss for Dense Object Detection".
     """
 
     def __init__(self, gamma=2, alpha=1, reduction='mean'):
@@ -838,7 +858,9 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         return loss.mean(), loss.sum(), loss.shape
 
     def __compute_similar_loss(self, embedding, label, pos_pair_idx, num_pairs):
-        """Get all the positive pairs and compute the loss"""
+        """
+        Get all the positive pairs and compute the loss.
+        """
         # compute the number of pairs sent to the loss
         total_num_pairs = pos_pair_idx.shape[0]
         num_pairs = min(num_pairs, total_num_pairs)
@@ -864,7 +886,9 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         return loss
 
     def __compute_dissimilar_loss(self, embedding, label, neg_pair_idx, num_pairs):
-        """Select the most dissimilar pairs in the mini-batch and compute the loss"""
+        """
+        Select the most dissimilar pairs in the mini-batch and compute the loss.
+        """
         # compute the number of pairs sent to the loss
         total_num_pairs = neg_pair_idx.shape[0]
         num_pairs = min(num_pairs, total_num_pairs)
@@ -890,7 +914,9 @@ class SelectiveContrastiveLoss(torch.nn.Module):
         return loss
 
     def set_select_hard_pairs(self, select_hard_pairs):
-        """used to alternate the pair selection during training"""
+        """
+        Used to alternate the pair selection during training.
+        """
         assert(select_hard_pairs in [True, False])
         self.select_hard_pairs = select_hard_pairs
 
