@@ -1,10 +1,10 @@
 # Graphsite-classifier   
-Graphsite-classifier is a deep graph neural network to classify ligand-binding sites on proteins. It is implemented with Pytorch and Pytorch-geometric. During training, the binding sites are transformed on-the-fly to graphs that contain both spacial and chemical features. A customized graph neural network (GNN) classifier is then trained on the graph representations of the binding pockets. The following figure illustrates the convertion from a binding pocket (A) to a graph (B):
+Graphsite-classifier is a deep graph neural network to classify ligand-binding sites on proteins. It is implemented with Pytorch and Pytorch-geometric. During training, the binding sites are transformed on-the-fly to graphs that contain both spacial and chemical features. A customized graph neural network (GNN) classifier is then trained on the graph representations of the binding pockets. The following figure illustrates the application pipeline:
 <p align="center">
 <img width="820" height="280" src="docs/gnn.png">
 </p>
 
-If you find this repo useful in your work please cite our paper :)
+For more details, please reference our paper. If you find this repo useful in your work please cite our paper :)
 ```
 Currently under peer review
 ```
