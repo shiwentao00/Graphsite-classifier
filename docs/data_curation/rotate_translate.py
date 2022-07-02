@@ -18,8 +18,7 @@ def transform(l):
     # This is my covariance matrix obtained from 3 x N points
     cov_mat = np.cov(np.array(ppdb.df["ATOM"][['x_coord', 'y_coord', 'z_coord']].T))
     eigen_values, eigen_vectors = LA.eig(cov_mat)
-    # From here I see matmul(R, R.T) = I this says that eigen_vectors is rotation matrix	
-    #print(np.matmul(eigen_vectors, eigen_vectors.T))	
+    # matmul(R, R.T) = I => that eigen_vectors is rotation matrix		
     # get the box coordinates to get the center of the pocket
     box = subprocess.check_output("obabel -ipdb POCKETS_UNTRANSFORMED/"+l+" -obox | grep 'CENTER' | tr -s ' '", shell=True)
     box = ''.join(map(chr,box)).rstrip().split(" ")[5:]
@@ -32,7 +31,6 @@ def transform(l):
     df['y_coord'] = df['y_coord'].fillna(box.y_coord.values[0])
     df['z_coord'] = df['z_coord'].fillna(box.z_coord.values[0])
     ppdb.df["ATOM"][['x_coord', 'y_coord', 'z_coord']] = ppdb.df["ATOM"][['x_coord', 'y_coord', 'z_coord']].subtract(df)
-    #ppdb.to_pdb(path="POCKETS_TRANSFORMED/"+l+"_org.pdb",records=None, gz=False, append_newline=True)
     ppdb.df["ATOM"][['x_coord', 'y_coord', 'z_coord']] = np.matmul(ppdb.df["ATOM"][['x_coord', 'y_coord', 'z_coord']].to_numpy(), eigen_vectors)
     ppdb.df['ATOM'] = ppdb.df['ATOM'][ppdb.df['ATOM']['element_symbol'] != 'H']
     ppdb.to_pdb(path="POCKETS_TRANSFORMED/"+l+"_rot.pdb",records=None, gz=False, append_newline=True)
@@ -43,4 +41,3 @@ if __name__ == "__main__":
 	ls = [l for l in os.listdir("POCKETS_UNTRANSFORMED") if ".pdb" in l]
 	for l in ls:
 		transform(l)
-

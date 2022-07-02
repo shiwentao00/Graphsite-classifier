@@ -19,21 +19,21 @@
   * 2.renumber.py will delete files that could not be renumbered
   ```
   mkdir PDB_CHAINS
-  python3.8 1.separate_pdb_chains.py
-  python3.8 2.renumber.py
+  python3.8 separate_pdb_chains.py
+  python3.8 renumber.py
   ```
 
 ### <> Run POPScomp
 * Script below uses only ATOM from PDB to create POPS
 * Only PDBs mentioned in the **cavity_centers.csv** will be kept for further analysis. 
   ```
-    python3.8 3.run_pops.py
+    python3.8 run_pops.py
   ```
 
 ### <> Convert PDB to FASTA
 * This script converts PDB to FASTA
   ```
-  python3.8 4.pdb2seq.py
+  python3.8 pdb2seq.py
   ```
 
 ### <> POCKETS with 17 closest residues to cavity center
@@ -41,14 +41,14 @@
 * If the cavity center is **HETATM** then the POCKET will include only residues with **ATOM** not **HETATM**
   ```
   mkdir POCKETS_UNTRANSFORMED
-  python3.8 5.find_17_closest_residues_to_cavity_center.py
+  python3.8 find_17_closest_residues_to_cavity_center.py
   ```
 
 ### <> Transform the POCKET
 * This script aligns POCKET center to origin (0, 0, 0) and aligns principal axes with eigen vector
   ```
   mkdir POCKETS_TRANSFORMED
-  python3.8 6.rotate_translate.py
+  python3.8 rotate_translate.py
   ```
 
 ### <> Convert POCKET PDBs to MOL2
