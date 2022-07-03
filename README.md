@@ -12,8 +12,9 @@ Currently under peer review
 ## Dataset
 The dataset consists of 21,125 binding pockets which are grouped into 14 classes. The details of the classes are described [here](docs/data.md). There are three files needed for training:
 1. ```clusters.yaml```: contains information about the initial clustering information of the binding sites. Multiple clusters will be merged into one class before training. 
-2. ```dataset.tar.gz```: contains all binding site data in this project.
-3. ```pops.tar.gz```: contains information of node feature contact surface area.
+2. ```pocket-dataset.tar.gz```: contains all binding site data in this project.
+3. ```pops-dataset.tar.gz```: contains information of node feature contact surface area.
+The procedures and scripts to create the ```.mol2```, ```.pops```, and ```.profile``` files can be seen [here](docs/data_curation/readme.md). 
 
 ## Usage
 ### Dependency
