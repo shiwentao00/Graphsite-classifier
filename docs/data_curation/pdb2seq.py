@@ -4,7 +4,7 @@ import os, sys
 
 
 def pdb2seq(pdbf):
-    PDBFile = "CHAINS_FOR_POPS_CALCULATIONS/"+pdbf
+    PDBFile = "PDB_CHAINS/"+pdbf
     with open(PDBFile, 'r') as pdb_file:
         for record in SeqIO.parse(pdb_file, 'pdb-atom'):
             header = '>' + pdbf.replace(".pdb", "")
@@ -15,7 +15,7 @@ def pdb2seq(pdbf):
 
 
 if __name__=="__main__":
-    list_of_pdb_with_cavity_center = [l for l in os.listdir("CHAINS_FOR_POPS_CALCULATIONS")]
+    list_of_pdb_with_cavity_center = [l for l in os.listdir("PDB_CHAINS")]
     os.system("mkdir PROFILES")
     for pdbf in list_of_pdb_with_cavity_center:
         pdb2seq(pdbf)
