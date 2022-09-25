@@ -10,7 +10,7 @@ _Wentao Shi, Manali Singha, Limeng Pu, Gopal Srivastava, Jagannathan Ramanujam, 
 _Biomolecules 12, no. 8 (2022): 1053_
 
 ## Dataset
-The dataset used in the experiment can be accessed via this [OSF repo](https://osf.io/43cdv/). The dataset consists of 21,125 binding pockets which are grouped into 14 classes. The details of the classes are described [here](docs/data.md). There are three files needed for training:
+The dataset used in the experiment can be accessed via this [OSF repo](https://osf.io/svwkb/). The dataset consists of 21,125 binding pockets which are grouped into 14 classes. The details of the classes are described [here](docs/data.md). There are three files needed for training:
 1. ```clusters.yaml```: contains information about the initial clustering information of the binding sites. Multiple clusters will be merged into one class before training. 
 2. ```pocket-dataset.tar.gz```: contains all binding site data in this project.
 3. ```pops-dataset.tar.gz```: contains information of node feature contact surface area.    
