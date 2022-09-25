@@ -4,10 +4,10 @@ Graphsite-classifier is a deep graph neural network to classify ligand-binding s
 <img width="820" height="280" src="docs/gnn.png">
 </p>
 
-For more details, please reference our paper. If you find this repo useful in your work please cite our paper :)
-```
-Currently under peer review
-```
+For more details, please reference our paper. If you find this repo useful in your work please cite our paper :)\
+**GraphSite: Ligand Binding Site Classification with Deep Graph Learning** \
+_Wentao Shi, Manali Singha, Limeng Pu, Gopal Srivastava, Jagannathan Ramanujam, and Michal Brylinski_ \
+_Biomolecules 12, no. 8 (2022): 1053_
 
 ## Dataset
 The dataset used in the experiment can be accessed via this [OSF repo](https://osf.io/43cdv/). The dataset consists of 21,125 binding pockets which are grouped into 14 classes. The details of the classes are described [here](docs/data.md). There are three files needed for training:
