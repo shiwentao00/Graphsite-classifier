@@ -8,6 +8,7 @@ def read_pdb(pdbf):
     pdb = PDBParser().get_structure(pdbf.replace(".pdb", ""), pdbf)
     for chain in pdb.get_chains():
         chain = chain.get_id()
+        # Need to have pdbtools installed in the system to run pdb_selchain
         os.system("pdb_selchain -"+chain+" "+ pdbf+" > PDB_CHAINS/"+pdbf.replace(".pdb", "_"+chain+".pdb"))
     return
 
