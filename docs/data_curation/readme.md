@@ -21,6 +21,7 @@
   python separate_pdb_chains.py
   python renumber.py
   ```
+* Note: Before running ```separate_pdb_chains.py``` please make sure that pdbtools is installed in the system
 
 ### 3. Run POPScomp
 * Use chain PDB files to run POPScomp 
@@ -28,6 +29,7 @@
   cd PDB_CHAINS
   for file in *.pdb; do pops --pdb $file --atomOut --popsOut $file.pops; done
   ```
+* POPScomp(v 3.1.7) needs to be installed before running ```pops```
 
 ### 4. Convert PDB to FASTA
 * This script converts PDB to FASTA
@@ -76,3 +78,4 @@
  - biopandas (https://pypi.org/project/biopandas/)
  - POPScomp 3.1.7
  - PROFILpro 1.2
+ - pdbtools
