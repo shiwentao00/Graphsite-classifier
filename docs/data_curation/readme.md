@@ -74,5 +74,5 @@
  - python3.7+
  - biopython (https://github.com/biopython/biopython)
  - biopandas (https://pypi.org/project/biopandas/)
- - POPScomp 3.1.7
- - PROFILpro 1.2
+ - POPScomp 3.1.7 (https://github.com/Fraternalilab/POPScomp/wiki/Installation)
+ - PROFILpro 1.2 
