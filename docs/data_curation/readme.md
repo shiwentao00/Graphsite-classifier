@@ -3,6 +3,14 @@
 * Cavity center with their respective PDB IDs are given in cavity_centers.csv
 * All the data were created using python3.8
 
+## Prerequisites
+ - python3.7+
+ - biopython (https://github.com/biopython/biopython)
+ - biopandas (https://pypi.org/project/biopandas/)
+ - POPScomp 3.1.7 (https://github.com/Fraternalilab/POPScomp/wiki/Installation)
+ - SCRATCH-1D_1.3 (https://download.igb.uci.edu)
+ - pdbtools (http://www.bonvinlab.org/pdb-tools/)
+
 ## **Steps**
 
 ### 1. Download PDBs
@@ -71,11 +79,3 @@
   mkdir POCKETS_TRANSFORMED_MOL2
   mv *.mol2 POCKETS_TRANSFORMED_MOL2
   ```
- 
- # Prerequisites
- - python3.7+
- - biopython (https://github.com/biopython/biopython)
- - biopandas (https://pypi.org/project/biopandas/)
- - POPScomp 3.1.7 (https://github.com/Fraternalilab/POPScomp/wiki/Installation)
- - SCRATCH-1D_1.3 (https://download.igb.uci.edu)
- - pdbtools (http://www.bonvinlab.org/pdb-tools/)
