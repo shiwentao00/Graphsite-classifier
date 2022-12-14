@@ -60,7 +60,7 @@
 * This script aligns POCKET center to origin (0, 0, 0) and aligns principal axes with eigen vectors
   ```
   mkdir POCKETS_TRANSFORMED
-  python rotate_translate.py
+  python rotate_translate.py 
   ```
 
 ### 8. Convert POCKET PDBs to MOL2
