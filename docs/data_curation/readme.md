@@ -3,6 +3,14 @@
 * Cavity center with their respective PDB IDs are given in cavity_centers.csv
 * All the data were created using python3.8
 
+## Prerequisites
+ - python3.7+
+ - biopython (https://github.com/biopython/biopython)
+ - biopandas (https://pypi.org/project/biopandas/)
+ - POPScomp 3.1.7 (https://github.com/Fraternalilab/POPScomp/wiki/Installation)
+ - SCRATCH-1D_1.3 (https://download.igb.uci.edu)
+ - pdbtools (http://www.bonvinlab.org/pdb-tools/)
+
 ## **Steps**
 
 ### 1. Download PDBs
@@ -21,6 +29,7 @@
   python separate_pdb_chains.py
   python renumber.py
   ```
+* Note: Please ensure installation of pdbtools in the system before the use of ```separate_pdb_chains.py```
 
 ### 3. Run POPScomp
 * Use chain PDB files to run POPScomp 
@@ -28,6 +37,7 @@
   cd PDB_CHAINS
   for file in *.pdb; do pops --pdb $file --atomOut --popsOut $file.pops; done
   ```
+* Note: Please ensure installation of POPScomp in the system before the use of ```pops```
 
 ### 4. Convert PDB to FASTA
 * This script converts PDB to FASTA
@@ -58,7 +68,7 @@
 * This script aligns POCKET center to origin (0, 0, 0) and aligns principal axes with eigen vectors
   ```
   mkdir POCKETS_TRANSFORMED
-  python rotate_translate.py
+  python rotate_translate.py 
   ```
 
 ### 8. Convert POCKET PDBs to MOL2
@@ -69,10 +79,3 @@
   mkdir POCKETS_TRANSFORMED_MOL2
   mv *.mol2 POCKETS_TRANSFORMED_MOL2
   ```
- 
- # Prerequisites
- - python3.7+
- - biopython (https://github.com/biopython/biopython)
- - biopandas (https://pypi.org/project/biopandas/)
- - POPScomp 3.1.7
- - PROFILpro 1.2
