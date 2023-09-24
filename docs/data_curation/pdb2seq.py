@@ -15,7 +15,7 @@ def pdb2seq(pdbf):
 
 
 if __name__=="__main__":
-    list_of_pdb_with_cavity_center = [l for l in os.listdir("PDB_CHAINS")]
+    list_of_pdb_with_cavity_center = [l for l in os.listdir("PDB_CHAINS") if l.endswith(".pdb")]]
     os.system("mkdir PROFILES")
     for pdbf in list_of_pdb_with_cavity_center:
         pdb2seq(pdbf)
